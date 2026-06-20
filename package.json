@@ -1,0 +1,28 @@
+{
+  "name": "evex-new",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@10.33.0",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "agents:check": "node scripts/sync-agent-catalog.mjs --check",
+    "agents:sync": "node scripts/sync-agent-catalog.mjs",
+    "build": "turbo run build",
+    "check": "turbo run check",
+    "dev": "turbo run dev --filter=@evex-new/web",
+    "email:preview": "pnpm --filter @evex-new/web email:preview",
+    "fix": "turbo run fix",
+    "start": "pnpm --filter @evex-new/web start",
+    "typecheck": "turbo run typecheck"
+  },
+  "devDependencies": {
+    "turbo": "^2.8.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "hono": "4.12.25"
+    }
+  }
+}

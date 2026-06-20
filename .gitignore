@@ -1,0 +1,29 @@
+# v0 sandbox internal files
+__v0_runtime_loader.js
+__v0_devtools.tsx
+__v0_jsx-dev-runtime.ts
+.snowflake/
+.v0-trash/
+.vercel/
+
+# Environment variables
+.env*.local
+
+# Common ignores
+node_modules
+.turbo/
+apps/*/.turbo/
+packages/*/.turbo/
+.next/
+apps/*/.next/
+apps/agents/*/.eve/
+apps/agents/*/.output/
+apps/agents/*/.vercel/
+.DS_Store
+.vercel
+.env*
+next-env.d.ts
+tsconfig.tsbuildinfo
+out/
+# Typefully config (contains API key)
+.typefully/

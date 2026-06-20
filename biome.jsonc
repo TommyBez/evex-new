@@ -1,0 +1,25 @@
+{
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "extends": [
+    "ultracite/biome/core",
+    "ultracite/biome/react",
+    "ultracite/biome/next"
+  ],
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single",
+      "trailingCommas": "all",
+      "semicolons": "asNeeded"
+    }
+  },
+  "files": {
+    "includes": [
+      "!.agents",
+      "!apps/agents/*/.eve",
+      "!apps/agents/*/.output",
+      "!apps/agents/*/.vercel",
+      "!apps/web/components/ui/*",
+      "!apps/web/.next"
+    ]
+  }
+}

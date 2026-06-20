@@ -1,0 +1,69 @@
+{
+  "$schema": "https://turborepo.dev/schema.json",
+  "globalDependencies": [
+    ".env",
+    ".env.local",
+    "apps/*/.env",
+    "apps/*/.env.local"
+  ],
+  "tasks": {
+    "@evex-new/agent-catalog#build": {
+      "outputs": []
+    },
+    "build": {
+      "dependsOn": [
+        "^build"
+      ],
+      "env": [
+        "BETTER_AUTH_SECRET",
+        "BETTER_AUTH_URL",
+        "DATABASE_URL",
+        "GITHUB_CLIENT_ID",
+        "GITHUB_CLIENT_SECRET",
+        "NODE_ENV",
+        "RESEND_API_KEY",
+        "VERCEL",
+        "VERCEL_BRANCH_URL",
+        "VERCEL_ENV",
+        "VERCEL_URL"
+      ],
+      "outputs": [
+        ".next/**",
+        ".eve/**",
+        ".output/**",
+        ".vercel/output/**"
+      ]
+    },
+    "check": {
+      "dependsOn": [
+        "^check"
+      ]
+    },
+    "dev": {
+      "cache": false,
+      "passThroughEnv": [
+        "BETTER_AUTH_SECRET",
+        "BETTER_AUTH_URL",
+        "DATABASE_URL",
+        "GITHUB_CLIENT_ID",
+        "GITHUB_CLIENT_SECRET",
+        "NODE_ENV",
+        "RESEND_API_KEY",
+        "VERCEL",
+        "VERCEL_BRANCH_URL",
+        "VERCEL_ENV",
+        "VERCEL_URL"
+      ],
+      "persistent": true
+    },
+    "fix": {
+      "cache": false
+    },
+    "typecheck": {
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": []
+    }
+  }
+}

@@ -1,0 +1,143 @@
+'use server'
+
+import { del, put } from '@vercel/blob'
+import { eq } from 'drizzle-orm'
+import { revalidatePath, updateTag } from 'next/cache'
+import { headers } from 'next/headers'
+import { auth } from '@/lib/auth'
+import { checkHuman } from '@/lib/bot-id'
+import { cacheTags, getProfileTag } from '@/lib/cache-tags'
+import { db } from '@/lib/db'
+import { profile } from '@/lib/db/schema'
+
+async function getUserId() {
+  const session = await auth.api.getSession({ headers: await headers() })
+  if (!session?.user) {
+    throw new Error('Unauthorized')
+  }
+  return session.user.id
+}
+
+export interface ProfileData {
+  avatarUrl: string | null
+  bio: string
+  githubUrl: string | null
+  linkedinUrl: string | null
+  twitterUrl: string | null
+  websiteUrl: string | null
+}
+
+const MAX_AVATAR_BYTES = 4 * 1024 * 1024 // 4MB
+const HTTP_URL_PREFIX = /^https?:\/\//i
+const ALLOWED_AVATAR_TYPES = [
+  'image/png',
+  'image/jpeg',
+  'image/webp',
+  'image/gif',
+]
+
+// Normalize an optional URL: trim, drop empties, and ensure a protocol.
+function normalizeUrl(value: FormDataEntryValue | null): string | null {
+  if (typeof value !== 'string') {
+    return null
+  }
+  const trimmed = value.trim()
+  if (!trimmed) {
+    return null
+  }
+  if (HTTP_URL_PREFIX.test(trimmed)) {
+    return trimmed
+  }
+  return `https://${trimmed}`
+}
+
+export async function getProfile(): Promise<ProfileData> {
+  const userId = await getUserId()
+  const [row] = await db
+    .select()
+    .from(profile)
+    .where(eq(profile.userId, userId))
+    .limit(1)
+
+  return {
+    bio: row?.bio ?? '',
+    avatarUrl: row?.avatarUrl ?? null,
+    websiteUrl: row?.websiteUrl ?? null,
+    githubUrl: row?.githubUrl ?? null,
+    twitterUrl: row?.twitterUrl ?? null,
+    linkedinUrl: row?.linkedinUrl ?? null,
+  }
+}
+
+export type SaveProfileResult = { ok: true } | { ok: false; error: string }
+
+export async function saveProfile(
+  formData: FormData,
+): Promise<SaveProfileResult> {
+  const botCheck = await checkHuman()
+  if (!botCheck.ok) {
+    return { ok: false, error: botCheck.error }
+  }
+
+  const userId = await getUserId()
+
+  const bio = (formData.get('bio') as string | null)?.trim().slice(0, 500) ?? ''
+  const websiteUrl = normalizeUrl(formData.get('websiteUrl'))
+  const githubUrl = normalizeUrl(formData.get('githubUrl'))
+  const twitterUrl = normalizeUrl(formData.get('twitterUrl'))
+  const linkedinUrl = normalizeUrl(formData.get('linkedinUrl'))
+
+  const [existing] = await db
+    .select()
+    .from(profile)
+    .where(eq(profile.userId, userId))
+    .limit(1)
+
+  let avatarUrl = existing?.avatarUrl ?? null
+
+  const file = formData.get('avatar')
+  if (file instanceof File && file.size > 0) {
+    if (!ALLOWED_AVATAR_TYPES.includes(file.type)) {
+      return { ok: false, error: 'Avatar must be a PNG, JPEG, WEBP, or GIF.' }
+    }
+    if (file.size > MAX_AVATAR_BYTES) {
+      return { ok: false, error: 'Avatar must be smaller than 4MB.' }
+    }
+    const ext = file.name.split('.').pop()?.toLowerCase() || 'png'
+    const blob = await put(`avatars/${userId}-${Date.now()}.${ext}`, file, {
+      access: 'public',
+      contentType: file.type,
+    })
+    // Best-effort cleanup of the previous avatar.
+    if (existing?.avatarUrl) {
+      try {
+        await del(existing.avatarUrl)
+      } catch {
+        // ignore — orphaned blob is not fatal
+      }
+    }
+    avatarUrl = blob.url
+  }
+
+  const values = {
+    userId,
+    bio,
+    avatarUrl,
+    websiteUrl,
+    githubUrl,
+    twitterUrl,
+    linkedinUrl,
+    updatedAt: new Date(),
+  }
+
+  await db
+    .insert(profile)
+    .values(values)
+    .onConflictDoUpdate({ target: profile.userId, set: values })
+
+  updateTag(getProfileTag(userId))
+  updateTag(cacheTags.agents)
+  updateTag(cacheTags.leaderboard)
+  revalidatePath('/profile')
+  return { ok: true }
+}
