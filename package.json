@@ -7,8 +7,6 @@
     "node": ">=24"
   },
   "scripts": {
-    "agents:check": "node scripts/sync-agent-catalog.mjs --check",
-    "agents:sync": "node scripts/sync-agent-catalog.mjs",
     "build": "turbo run build",
     "check": "turbo run check",
     "dev": "turbo run dev --filter=@evex-new/web",

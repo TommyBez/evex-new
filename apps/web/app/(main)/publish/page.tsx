@@ -14,7 +14,7 @@ const steps = [
   'Create a new app under apps/agents/<slug>.',
   'Add agent.catalog.json with metadata, static author info, and dependencies.',
   'Keep the Eve source inside that app, including agent/ and optional evals/.',
-  'Run pnpm agents:sync, then pnpm check and pnpm build before opening the PR.',
+  'Update packages/agent-catalog/src/catalog.ts, then run pnpm check and pnpm build before opening the PR.',
 ] as const
 
 export default function ContributeAgentPage() {
@@ -55,7 +55,7 @@ export default function ContributeAgentPage() {
           <h2 className="font-medium text-foreground text-sm">Validation</h2>
         </div>
         <pre className="mt-3 overflow-x-auto rounded-md bg-muted p-4 font-mono text-muted-foreground text-xs">
-          <code>{'pnpm agents:sync\npnpm check\npnpm build'}</code>
+          <code>{'pnpm check\npnpm build'}</code>
         </pre>
       </Card>
 

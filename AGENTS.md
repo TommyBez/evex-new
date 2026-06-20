@@ -131,7 +131,7 @@ Most formatting and common issues are automatically fixed by Biome. Run `pnpm dl
 ### Running / lint / build (commands live in `package.json`)
 - Dev server: `pnpm dev` (runs `@evex-new/web` through Turborepo on port 3000).
 - Lint/format check: `pnpm run check` (ultracite/biome through Turborepo). Use `pnpm run fix` for auto-fixes.
-- Agent catalog: `pnpm agents:sync` after adding/changing an app in `apps/agents/*`; `pnpm agents:check` verifies the generated catalog is committed.
+- Agent catalog: update `packages/agent-catalog/src/catalog.ts` when adding/changing an app in `apps/agents/*`; the catalog is source code, not a generated artifact.
 - Build: `pnpm build` (builds the web app and the current Eve app packages). `apps/web` currently uses `next build --webpack`; `next build` with Turbopack stayed in the compile phase locally without surfacing a useful error.
 
 ### Database (required to run the app)

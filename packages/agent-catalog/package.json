@@ -7,8 +7,8 @@
     ".": "./src/index.ts"
   },
   "scripts": {
-    "build": "node ../../scripts/sync-agent-catalog.mjs --check",
-    "check": "node ../../scripts/sync-agent-catalog.mjs --check",
+    "build": "tsc --noEmit --pretty false",
+    "check": "tsc --noEmit --pretty false",
     "typecheck": "tsc --noEmit --pretty false"
   },
   "devDependencies": {

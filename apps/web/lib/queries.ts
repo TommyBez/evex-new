@@ -282,7 +282,7 @@ export interface PublicProfile {
 }
 
 // Account profile data remains dynamic. It is no longer the source of truth for
-// Agent authorship comes from agent.catalog.json in each agent app.
+// Agent authorship comes from the source-owned agent catalog.
 export async function getPublicProfile(
   userId: string,
 ): Promise<PublicProfile | null> {

@@ -70,8 +70,8 @@ Agent apps live under `apps/agents/<slug>`. The initial catalog contains:
 - `github-release-scout`
 - `resend-lifecycle-mailer`
 
-To add an agent, create a new app folder with `agent.catalog.json`, run
-`pnpm agents:sync`, and open a pull request.
+To add an agent, create a new app folder with `agent.catalog.json`, update
+`packages/agent-catalog/src/catalog.ts`, and open a pull request.
 
 ## Development
 
@@ -86,8 +86,6 @@ Open [http://localhost:3000](http://localhost:3000) to run the app locally.
 pnpm check    # lint & format
 pnpm fix      # auto-fix
 pnpm build    # production build
-pnpm agents:sync   # rebuild the static agent catalog
-pnpm agents:check  # verify the catalog is current
 ```
 
 ## Stack
