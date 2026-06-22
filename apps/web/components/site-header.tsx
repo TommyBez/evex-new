@@ -34,7 +34,6 @@ export function SiteHeaderFallback() {
         <div className="flex items-center gap-2">
           <Skeleton className="size-7 rounded-md" />
           <Skeleton className="h-8 w-16" />
-          <Skeleton className="h-8 w-24" />
         </div>
       </div>
     </header>
@@ -89,19 +88,12 @@ export async function SiteHeader() {
           {user ? (
             <UserMenu email={user.email} name={user.name} />
           ) : (
-            <>
-              <Button
-                className="hidden px-3 min-[430px]:inline-flex"
-                render={<Link href="/sign-in">Sign In</Link>}
-                size="sm"
-                variant="ghost"
-              />
-              <Button
-                className="rounded-md px-3"
-                render={<Link href="/sign-up">Get Started</Link>}
-                size="sm"
-              />
-            </>
+            <Button
+              className="hidden px-3 min-[430px]:inline-flex"
+              render={<Link href="/sign-in">Sign In</Link>}
+              size="sm"
+              variant="ghost"
+            />
           )}
         </nav>
       </div>
