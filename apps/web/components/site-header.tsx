@@ -1,6 +1,7 @@
 import { headers } from 'next/headers'
 import Link from 'next/link'
 import { BrandMark } from '@/components/brand-mark'
+import { GitHubStarButton } from '@/components/github-star-button'
 import { MobileNavMenu } from '@/components/mobile-nav-menu'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { Button } from '@/components/ui/button'
@@ -32,6 +33,7 @@ export function SiteHeaderFallback() {
         </div>
 
         <div className="flex items-center gap-2">
+          <Skeleton className="h-7 w-14 sm:w-20" />
           <Skeleton className="size-7 rounded-md" />
           <Skeleton className="h-8 w-16" />
         </div>
@@ -64,14 +66,6 @@ export async function SiteHeader() {
           >
             Leaderboard
           </Link>
-          <a
-            className="hidden font-medium text-muted-foreground text-sm transition-colors hover:text-foreground sm:inline-flex"
-            href="https://github.com/TommyBez/evex"
-            rel="noreferrer noopener"
-            target="_blank"
-          >
-            GitHub
-          </a>
           {user ? (
             <Link
               className="hidden font-medium text-muted-foreground text-sm transition-colors hover:text-foreground sm:inline-flex"
@@ -83,7 +77,7 @@ export async function SiteHeader() {
         </div>
 
         <nav className="flex shrink-0 items-center gap-1.5 sm:gap-2">
-          <MobileNavMenu isAuthenticated={Boolean(user)} />
+          <GitHubStarButton />
           <ThemeToggle />
           {user ? (
             <UserMenu email={user.email} name={user.name} />
@@ -95,6 +89,7 @@ export async function SiteHeader() {
               variant="ghost"
             />
           )}
+          <MobileNavMenu isAuthenticated={Boolean(user)} />
         </nav>
       </div>
     </header>
