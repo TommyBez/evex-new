@@ -1,4 +1,4 @@
-import { EVEX_REGISTRY_NAMESPACE } from '@evex-new/agent-registry'
+import { EVEX_REGISTRY_NAMESPACE } from '@evex/agent-registry'
 import { headers } from 'next/headers'
 
 // Resolve the public base URL of this deployment so we can build absolute

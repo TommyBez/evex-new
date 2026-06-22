@@ -20,7 +20,7 @@ import { getTopAgents, getTopAuthors } from '@/lib/queries'
 export const metadata: Metadata = createPageMetadata({
   title: 'Leaderboard',
   description:
-    'The most installed agents and top authors on the evex-new registry.',
+    'The most installed agents and top authors on the evex registry.',
   path: '/leaderboard',
 })
 
@@ -135,8 +135,8 @@ async function TopAuthors() {
         {authors.map((author, i) => (
           <Item
             className="min-w-0 rounded-none border-0 border-border border-b last:border-b-0"
-            key={author.userId}
-            render={<Link href={`/authors/${author.userId}`} />}
+            key={author.authorUsername}
+            render={<Link href={`/authors/${author.authorUsername}`} />}
             variant="default"
           >
             <ItemMedia className="gap-3">

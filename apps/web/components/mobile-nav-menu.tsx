@@ -1,10 +1,10 @@
 'use client'
 
 import {
+  ExternalLink,
   Heart,
   LogIn,
   Menu,
-  Plus,
   Search,
   Trophy,
   UserRound,
@@ -67,16 +67,18 @@ export function MobileNavMenu({
             </Link>
           </DrawerClose>
           <DrawerClose asChild>
-            <Link
+            <a
               className="flex min-h-11 items-center gap-3 rounded-md px-3 font-medium text-sm transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
-              href="/publish"
+              href="https://github.com/TommyBez/evex"
+              rel="noreferrer noopener"
+              target="_blank"
             >
-              <Plus
+              <ExternalLink
                 aria-hidden="true"
                 className="size-4 text-muted-foreground"
               />
-              Contribute Agent
-            </Link>
+              GitHub Repository
+            </a>
           </DrawerClose>
 
           <div className="my-2 h-px bg-border" />

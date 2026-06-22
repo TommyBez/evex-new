@@ -44,7 +44,7 @@ function getSender(): string {
     throw new Error('RESEND_FROM_EMAIL is required to send OTP emails')
   }
 
-  return from.includes('<') ? from : `evex-new <${from}>`
+  return from.includes('<') ? from : `evex <${from}>`
 }
 
 function getOtpCopy(type: AuthOtpType): { purpose: string; subject: string } {
@@ -52,22 +52,22 @@ function getOtpCopy(type: AuthOtpType): { purpose: string; subject: string } {
     case 'forget-password':
       return {
         purpose: 'reset your password',
-        subject: 'Your evex-new password reset code',
+        subject: 'Your evex password reset code',
       }
     case 'email-verification':
       return {
         purpose: 'verify your email address',
-        subject: 'Your evex-new verification code',
+        subject: 'Your evex verification code',
       }
     case 'change-email':
       return {
         purpose: 'change your email address',
-        subject: 'Your evex-new email change code',
+        subject: 'Your evex email change code',
       }
     case 'sign-in':
       return {
-        purpose: 'access your evex-new account',
-        subject: 'Your evex-new access code',
+        purpose: 'access your evex account',
+        subject: 'Your evex access code',
       }
     default:
       throw new Error('Unsupported OTP email type')
@@ -93,7 +93,7 @@ function getTextBody({
   purpose: string
 }): string {
   return [
-    `Your evex-new code is ${otp}.`,
+    `Your evex code is ${otp}.`,
     `Use it to ${purpose}. It expires in ${expiresInMinutes} minutes.`,
     'If you did not request this code, you can ignore this email.',
   ].join('\n')

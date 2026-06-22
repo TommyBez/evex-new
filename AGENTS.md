@@ -126,10 +126,10 @@ Most formatting and common issues are automatically fixed by Biome. Run `pnpm dl
 
 ## Cursor Cloud specific instructions
 
-`evex-new` is a pnpm/Turborepo monorepo. `apps/web` is the Next.js 16 App Router registry UI, and `apps/agents/<slug>` contains standalone Eve apps. Agents are code-owned and added by pull request; the database stores runtime state only, not canonical agent metadata or files. Runtime data still lives in Postgres via `drizzle-orm`/`pg`, and auth is handled by `better-auth` (email+password, plus optional GitHub OAuth).
+`evex` is a pnpm/Turborepo monorepo. `apps/web` is the Next.js 16 App Router registry UI, and `apps/agents/<slug>` contains standalone Eve apps. Agents are code-owned and added by pull request; the database stores runtime state only, not canonical agent metadata or files. Runtime data still lives in Postgres via `drizzle-orm`/`pg`, and auth is handled by `better-auth` (email+password, plus optional GitHub OAuth).
 
 ### Running / lint / build (commands live in `package.json`)
-- Dev server: `pnpm dev` (runs `@evex-new/web` through Turborepo on port 3000).
+- Dev server: `pnpm dev` (runs `@evex/web` through Turborepo on port 3000).
 - Lint/format check: `pnpm run check` (ultracite/biome through Turborepo). Use `pnpm run fix` for auto-fixes.
 - Agent catalog: update the root `registry.json` and the relevant `apps/agents/*/registry.json` when adding/changing an app; route handlers serve it through `loadRegistry` / `loadRegistryItem`.
 - Build: `pnpm build` (builds the web app and the current Eve app packages).

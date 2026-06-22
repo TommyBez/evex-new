@@ -1,5 +1,4 @@
 import { PackageSearch } from 'lucide-react'
-import Link from 'next/link'
 import { Suspense } from 'react'
 import { AgentCard } from '@/components/agent-card'
 import { BrowseFilters } from '@/components/browse-filters'
@@ -46,7 +45,7 @@ function Hero() {
               aria-hidden="true"
               className="size-1.5 rounded-full bg-brand"
             />
-            evex-new · the eve agent registry
+            evex · the eve agent registry
           </span>
           <h1 className="mt-5 text-balance font-semibold text-4xl text-foreground leading-[1.05] sm:text-5xl">
             Install Community Agents with One Command
@@ -58,7 +57,15 @@ function Hero() {
           <div className="mt-8 flex flex-wrap items-center gap-4">
             <Button
               className="h-10 rounded-md px-4"
-              render={<Link href="/publish">Contribute Agent</Link>}
+              render={
+                <a
+                  href="https://github.com/TommyBez/evex"
+                  rel="noreferrer noopener"
+                  target="_blank"
+                >
+                  Open Repository
+                </a>
+              }
               size="lg"
             />
             <a
@@ -124,21 +131,21 @@ function HeroDemo() {
           <span className="text-brand">$</span>{' '}
           <span className="text-graphite-foreground">
             {
-              'npx shadcn@latest registry add @evex-new=https://evex-new.sh/r/{name}.json'
+              'npx shadcn@latest registry add @evex=https://evex.sh/r/{name}.json'
             }
           </span>
           {'\n'}
           <span className="text-graphite-foreground/50">
-            {'> added @evex-new registry'}
+            {'> added @evex registry'}
           </span>
           {'\n'}
           <span className="text-brand">$</span>{' '}
           <span className="text-graphite-foreground">
-            npx shadcn@latest add @evex-new/code-reviewer
+            npx shadcn@latest add @evex/code-reviewer
           </span>
           {'\n'}
           <span className="text-graphite-foreground/50">
-            {'> resolving @evex-new/code-reviewer...'}
+            {'> resolving @evex/code-reviewer...'}
           </span>
           {'\n'}
           <span className="text-brand">✓</span>{' '}
@@ -179,7 +186,17 @@ async function AgentResults({
         icon={PackageSearch}
         title="No Agents Found"
       >
-        <Button render={<Link href="/publish">Contribute Agent</Link>} />
+        <Button
+          render={
+            <a
+              href="https://github.com/TommyBez/evex"
+              rel="noreferrer noopener"
+              target="_blank"
+            >
+              Open Repository
+            </a>
+          }
+        />
       </RegistryEmptyState>
     )
   }

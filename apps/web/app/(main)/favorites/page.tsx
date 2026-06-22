@@ -12,7 +12,7 @@ import { getFavoriteAgents } from '@/lib/queries'
 
 export const metadata = createPageMetadata({
   title: 'Favorites',
-  description: 'Your saved eve agents on evex-new.',
+  description: 'Your saved eve agents on evex.',
   path: '/favorites',
   noIndex: true,
 })

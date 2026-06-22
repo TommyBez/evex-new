@@ -2,7 +2,7 @@ import { generatedRegistry, generatedRegistryItems } from './generated/registry'
 import type { RegistryCatalog, RegistryItem } from './types'
 
 export const EVEX_REGISTRY_NAME = generatedRegistry.name
-export const EVEX_REGISTRY_NAMESPACE = '@evex-new'
+export const EVEX_REGISTRY_NAMESPACE = '@evex'
 
 const registryItemsByName: Readonly<Record<string, RegistryItem>> =
   generatedRegistryItems

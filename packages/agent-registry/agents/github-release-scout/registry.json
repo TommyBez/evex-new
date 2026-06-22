@@ -6,9 +6,15 @@
       "type": "registry:item",
       "title": "GitHub Release Scout",
       "description": "Connects to GitHub, gathers recently merged pull requests, and prepares release notes that preserve traceability to PR numbers, labels, and rollout risk.",
-      "author": "evex-new",
-      "categories": ["devops"],
-      "dependencies": ["eve@^0.11.4", "@octokit/rest@^22.0.1", "zod@4.3.6"],
+      "author": "TommyBez",
+      "categories": [
+        "devops"
+      ],
+      "dependencies": [
+        "eve@^0.11.4",
+        "@octokit/rest@^22.0.1",
+        "zod@4.3.6"
+      ],
       "files": [
         {
           "path": "agent/agent.ts",
@@ -34,11 +40,6 @@
       "meta": {
         "slug": "github-release-scout",
         "category": "devops",
-        "author": {
-          "id": "evex-new",
-          "name": "evex-new",
-          "url": "https://evex-new.sh"
-        },
         "createdAt": "2026-06-20T00:00:00.000Z",
         "updatedAt": "2026-06-20T00:00:00.000Z"
       }

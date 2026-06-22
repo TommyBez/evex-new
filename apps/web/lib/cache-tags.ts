@@ -10,8 +10,8 @@ export function getAgentTag(slug: string) {
   return `agent:${slug}`
 }
 
-export function getAuthorAgentsTag(userId: string) {
-  return `author-agents:${userId}`
+export function getAuthorAgentsTag(githubUsername: string) {
+  return `author-agents:${githubUsername}`
 }
 
 export function getProfileTag(userId: string) {

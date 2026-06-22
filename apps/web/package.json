@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "@base-ui/react": "^1.5.0",
-    "@evex-new/agent-registry": "workspace:*",
+    "@evex/agent-registry": "workspace:*",
     "@vercel/analytics": "1.6.1",
     "@vercel/blob": "^2.4.0",
     "better-auth": "^1.6.19",
@@ -50,7 +50,7 @@
     "ultracite": "7.8.3",
     "zod": "4.3.6"
   },
-  "name": "@evex-new/web",
+  "name": "@evex/web",
   "scripts": {
     "build": "next build",
     "check": "ultracite check",

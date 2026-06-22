@@ -19,6 +19,6 @@
   },
   "iconLibrary": "lucide",
   "registries": {
-    "@evex-new": "https://evex-new.sh/r/{name}.json"
+    "@evex": "https://evex.sh/r/{name}.json"
   }
 }

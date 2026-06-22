@@ -1,7 +1,7 @@
 import { createOgImage, ogImageContentType, ogImageSize } from '@/lib/og-image'
 import { getAgentBySlug } from '@/lib/queries'
 
-export const alt = 'Agent on evex-new'
+export const alt = 'Agent on evex'
 export const size = ogImageSize
 export const contentType = ogImageContentType
 export const runtime = 'nodejs'
@@ -19,7 +19,7 @@ export default async function Image({
       {
         eyebrow: 'agent',
         title: 'Agent not found',
-        description: 'This evex-new registry item is no longer available.',
+        description: 'This evex registry item is no longer available.',
       },
       { status: 404 },
     )
@@ -29,11 +29,11 @@ export default async function Image({
     eyebrow: `${agent.category} agent`,
     title: agent.name,
     description: agent.title || agent.description,
-    footer: `npx shadcn@latest add @evex-new/${agent.slug}`,
+    footer: `npx shadcn@latest add @evex/${agent.slug}`,
     meta: [
       `by ${agent.authorName}`,
       `${agent.installCount} installs`,
-      `@evex-new/${agent.slug}`,
+      `@evex/${agent.slug}`,
     ],
   })
 }

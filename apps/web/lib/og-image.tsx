@@ -155,7 +155,7 @@ export function createOgImage(
             }}
           >
             <div style={{ fontSize: 30, fontWeight: 800, lineHeight: 1 }}>
-              evex-new
+              evex
             </div>
             <div
               style={{

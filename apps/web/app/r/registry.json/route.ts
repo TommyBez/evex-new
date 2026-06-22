@@ -1,4 +1,4 @@
-import { getRegistry } from '@evex-new/agent-registry'
+import { getRegistry } from '@evex/agent-registry'
 import { NextResponse } from 'next/server'
 
 // Public shadcn registry catalog generated from the agent registry package.

@@ -8,7 +8,7 @@ import { createPageMetadata } from '@/lib/metadata'
 
 export const metadata = createPageMetadata({
   title: 'Sign up',
-  description: 'Create an evex-new account to publish and manage eve agents.',
+  description: 'Create an evex account to save and manage eve agents.',
   path: '/sign-up',
   noIndex: true,
 })

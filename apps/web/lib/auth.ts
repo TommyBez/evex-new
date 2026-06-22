@@ -7,6 +7,7 @@ import {
   shouldBypassAuthOtp,
 } from '@/lib/auth-environment'
 import { pool } from '@/lib/db'
+import { githubUsernameKey, readGithubUsername } from '@/lib/github'
 
 function getOrigin(value: string | undefined): string | null {
   if (!value) {
@@ -82,10 +83,32 @@ function getTrustedOrigins(): string[] {
 export const auth = betterAuth({
   database: pool,
   baseURL: getAuthBaseUrl(),
+  user: {
+    additionalFields: {
+      githubUsername: {
+        type: 'string',
+        required: false,
+        input: false,
+      },
+    },
+  },
+  account: {
+    accountLinking: {
+      updateUserInfoOnLink: true,
+    },
+  },
   socialProviders: {
     github: {
       clientId: process.env.GITHUB_CLIENT_ID as string,
       clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
+      overrideUserInfoOnSignIn: true,
+      mapProfileToUser: (profile) => {
+        const githubUsername = readGithubUsername(profile.login)
+
+        return githubUsername
+          ? { githubUsername: githubUsernameKey(githubUsername) }
+          : {}
+      },
     },
   },
   plugins: [

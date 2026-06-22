@@ -25,6 +25,10 @@ async function readJson(filePath) {
   return JSON.parse(await fs.readFile(filePath, 'utf8'))
 }
 
+function isRecord(value) {
+  return Boolean(value) && typeof value === 'object' && !Array.isArray(value)
+}
+
 async function collectFiles(directory) {
   const entries = await fs.readdir(directory, { withFileTypes: true })
   const files = []
@@ -70,6 +74,20 @@ function readDependencies(packageJson) {
   )
 }
 
+function readPackageAuthor(packageJson) {
+  const { author } = packageJson
+  if (typeof author === 'string' && author.trim()) {
+    return author.trim()
+  }
+
+  if (isRecord(author) && typeof author.name === 'string') {
+    const name = author.name.trim()
+    return name || null
+  }
+
+  return null
+}
+
 function toTargetPath(relativePath) {
   return relativePath === 'README.md'
     ? '~/agent/README.md'
@@ -94,40 +112,39 @@ async function main() {
   const slug = process.argv.at(2)
   if (!slug) {
     throw new Error(
-      'Usage: pnpm --filter @evex-new/agent-registry registry:scaffold <agent-slug>',
+      'Usage: pnpm --filter @evex/agent-registry registry:scaffold <agent-slug>',
     )
   }
 
   const agentRoot = path.join(agentsDir, slug)
   const packageJson = await readJson(path.join(agentRoot, 'package.json'))
   const readme = await fs.readFile(path.join(agentRoot, 'README.md'), 'utf8')
+  const author = readPackageAuthor(packageJson)
   const now = new Date().toISOString()
   const category = 'general'
+  const item = {
+    name: slug,
+    type: 'registry:item',
+    title: readReadmeTitle(readme, slug),
+    description: packageJson.description ?? readReadmeDescription(readme),
+    categories: [category],
+    dependencies: readDependencies(packageJson),
+    files: await buildFiles(agentRoot),
+    meta: {
+      slug,
+      category,
+      createdAt: now,
+      updatedAt: now,
+    },
+  }
+
+  if (author) {
+    item.author = author
+  }
+
   const registry = {
     $schema: REGISTRY_SCHEMA_URL,
-    items: [
-      {
-        name: slug,
-        type: 'registry:item',
-        title: readReadmeTitle(readme, slug),
-        description: packageJson.description ?? readReadmeDescription(readme),
-        author: 'evex-new',
-        categories: [category],
-        dependencies: readDependencies(packageJson),
-        files: await buildFiles(agentRoot),
-        meta: {
-          slug,
-          category,
-          author: {
-            id: 'evex-new',
-            name: 'evex-new',
-            url: 'https://evex-new.sh',
-          },
-          createdAt: now,
-          updatedAt: now,
-        },
-      },
-    ],
+    items: [item],
   }
 
   await fs.writeFile(

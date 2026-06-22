@@ -7,12 +7,14 @@ import { db } from '@/lib/db'
 import { agentInstallMetric } from '@/lib/db/schema'
 import { getAgentBySlug } from '@/lib/queries'
 
-function revalidateRegistryCaches(slug: string, authorId: string) {
+function revalidateRegistryCaches(slug: string, authorUsername: string | null) {
   revalidateTag(cacheTags.agents, 'max')
   revalidateTag(cacheTags.leaderboard, 'max')
   revalidateTag(cacheTags.registryStats, 'max')
   revalidateTag(getAgentTag(slug), 'max')
-  revalidateTag(getAuthorAgentsTag(authorId), 'max')
+  if (authorUsername) {
+    revalidateTag(getAuthorAgentsTag(authorUsername), 'max')
+  }
 }
 
 // Increment install count. Called from the public registry endpoint, so it is
@@ -38,5 +40,5 @@ export async function incrementInstallCount(slug: string): Promise<void> {
       },
     })
 
-  revalidateRegistryCaches(slug, agent.userId)
+  revalidateRegistryCaches(slug, agent.authorUsername)
 }

@@ -15,36 +15,42 @@ import {
 import type { AgentWithAuthor } from '@/lib/agent-types'
 import { createPageMetadata, siteConfig } from '@/lib/metadata'
 import {
-  getStaticAgentsByUser,
+  getStaticAgentsByAuthorUsername,
   getStaticAuthorProfile,
   listStaticAgents,
 } from '@/lib/static-agents'
 
 export function generateStaticParams() {
   const agents = listStaticAgents()
-  return [...new Set(agents.map((agent) => agent.userId))].map((authorId) => ({
-    authorId,
+  return [
+    ...new Set(
+      agents
+        .map((agent) => agent.authorUsername)
+        .filter((username): username is string => Boolean(username)),
+    ),
+  ].map((githubUsername) => ({
+    githubUsername,
   }))
 }
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ authorId: string }>
+  params: Promise<{ githubUsername: string }>
 }): Promise<Metadata> {
-  const { authorId } = await params
-  const author = getStaticAuthorProfile(authorId)
+  const { githubUsername } = await params
+  const author = getStaticAuthorProfile(githubUsername)
   if (!author) {
     return createPageMetadata({
       title: 'Author not found',
-      description: 'This evex-new author is no longer available.',
-      path: `/authors/${authorId}`,
+      description: 'This evex author is no longer available.',
+      path: `/authors/${githubUsername}`,
       noIndex: true,
     })
   }
 
-  const description = `${author.name}'s eve agents on evex-new`
-  const path = `/authors/${author.userId}`
+  const description = `${author.name}'s eve agents on evex`
+  const path = `/authors/${author.githubUsername}`
 
   return {
     title: author.name,
@@ -71,20 +77,20 @@ export async function generateMetadata({
 export default function AuthorPage({
   params,
 }: {
-  params: Promise<{ authorId: string }>
+  params: Promise<{ githubUsername: string }>
 }) {
   return (
     <Suspense fallback={<AuthorSkeleton />}>
-      {params.then(({ authorId }) => (
-        <AuthorContent authorId={authorId} />
+      {params.then(({ githubUsername }) => (
+        <AuthorContent githubUsername={githubUsername} />
       ))}
     </Suspense>
   )
 }
 
-function AuthorContent({ authorId }: { authorId: string }) {
-  const author = getStaticAuthorProfile(authorId)
-  const agents = getStaticAgentsByUser(authorId)
+function AuthorContent({ githubUsername }: { githubUsername: string }) {
+  const author = getStaticAuthorProfile(githubUsername)
+  const agents = getStaticAgentsByAuthorUsername(githubUsername)
   if (!author) {
     notFound()
   }
@@ -111,7 +117,7 @@ function AuthorContent({ authorId }: { authorId: string }) {
           </h1>
           <p className="mt-2 max-w-xl text-pretty text-muted-foreground leading-relaxed">
             {author.agentCount} {author.agentCount === 1 ? 'agent' : 'agents'}{' '}
-            published on evex-new
+            published on evex
             <Suspense fallback={<span>.</span>}>
               <AuthorInstallSummary agents={agents} />
             </Suspense>

@@ -6,22 +6,34 @@ import { revalidatePath, updateTag } from 'next/cache'
 import { headers } from 'next/headers'
 import { auth } from '@/lib/auth'
 import { checkHuman } from '@/lib/bot-id'
-import { cacheTags, getProfileTag } from '@/lib/cache-tags'
+import { cacheTags, getAuthorAgentsTag, getProfileTag } from '@/lib/cache-tags'
 import { db } from '@/lib/db'
-import { profile } from '@/lib/db/schema'
+import { profile, user } from '@/lib/db/schema'
+import { githubProfileUrl } from '@/lib/github'
 
-async function getUserId() {
+async function getCurrentUserIdentity() {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session?.user) {
     throw new Error('Unauthorized')
   }
-  return session.user.id
+
+  const [row] = await db
+    .select({ githubUsername: user.githubUsername })
+    .from(user)
+    .where(eq(user.id, session.user.id))
+    .limit(1)
+
+  return {
+    githubUsername: row?.githubUsername ?? null,
+    id: session.user.id,
+  }
 }
 
 export interface ProfileData {
   avatarUrl: string | null
   bio: string
   githubUrl: string | null
+  githubUsername: string | null
   linkedinUrl: string | null
   twitterUrl: string | null
   websiteUrl: string | null
@@ -52,18 +64,32 @@ function normalizeUrl(value: FormDataEntryValue | null): string | null {
 }
 
 export async function getProfile(): Promise<ProfileData> {
-  const userId = await getUserId()
+  const currentUser = await getCurrentUserIdentity()
   const [row] = await db
-    .select()
-    .from(profile)
-    .where(eq(profile.userId, userId))
+    .select({
+      avatarUrl: profile.avatarUrl,
+      bio: profile.bio,
+      githubUrl: profile.githubUrl,
+      githubUsername: user.githubUsername,
+      linkedinUrl: profile.linkedinUrl,
+      twitterUrl: profile.twitterUrl,
+      websiteUrl: profile.websiteUrl,
+    })
+    .from(user)
+    .leftJoin(profile, eq(profile.userId, user.id))
+    .where(eq(user.id, currentUser.id))
     .limit(1)
+
+  const githubUsername = row?.githubUsername ?? currentUser.githubUsername
 
   return {
     bio: row?.bio ?? '',
     avatarUrl: row?.avatarUrl ?? null,
     websiteUrl: row?.websiteUrl ?? null,
-    githubUrl: row?.githubUrl ?? null,
+    githubUsername,
+    githubUrl: githubUsername
+      ? githubProfileUrl(githubUsername)
+      : (row?.githubUrl ?? null),
     twitterUrl: row?.twitterUrl ?? null,
     linkedinUrl: row?.linkedinUrl ?? null,
   }
@@ -79,11 +105,14 @@ export async function saveProfile(
     return { ok: false, error: botCheck.error }
   }
 
-  const userId = await getUserId()
+  const currentUser = await getCurrentUserIdentity()
+  const userId = currentUser.id
 
   const bio = (formData.get('bio') as string | null)?.trim().slice(0, 500) ?? ''
   const websiteUrl = normalizeUrl(formData.get('websiteUrl'))
-  const githubUrl = normalizeUrl(formData.get('githubUrl'))
+  const githubUrl = currentUser.githubUsername
+    ? githubProfileUrl(currentUser.githubUsername)
+    : normalizeUrl(formData.get('githubUrl'))
   const twitterUrl = normalizeUrl(formData.get('twitterUrl'))
   const linkedinUrl = normalizeUrl(formData.get('linkedinUrl'))
 
@@ -138,6 +167,10 @@ export async function saveProfile(
   updateTag(getProfileTag(userId))
   updateTag(cacheTags.agents)
   updateTag(cacheTags.leaderboard)
+  if (currentUser.githubUsername) {
+    updateTag(getAuthorAgentsTag(currentUser.githubUsername))
+    revalidatePath(`/authors/${currentUser.githubUsername}`)
+  }
   revalidatePath('/profile')
   return { ok: true }
 }

@@ -1,25 +1,24 @@
 import type { Metadata } from 'next'
 
-const DEFAULT_SITE_URL = 'https://evex-new.sh'
+const DEFAULT_SITE_URL = 'https://evex.sh'
 const TRAILING_SLASHES = /\/+$/
 
 export const siteConfig = {
-  name: 'evex-new',
-  title: 'evex-new - Install eve agents',
-  description:
-    'Discover, contribute, and install eve agents with a single shadcn command.',
+  name: 'evex',
+  title: 'evex - Install eve agents',
+  description: 'Discover and install eve agents with a single shadcn command.',
 }
 
 export const defaultOpenGraphImage = {
   url: '/opengraph-image',
   width: 1200,
   height: 630,
-  alt: 'evex-new - the eve agent registry',
+  alt: 'evex - the eve agent registry',
 }
 
 export const defaultTwitterImage = {
   url: '/twitter-image',
-  alt: 'evex-new - the eve agent registry',
+  alt: 'evex - the eve agent registry',
 }
 
 export function getSiteUrl(): string {

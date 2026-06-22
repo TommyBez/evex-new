@@ -15,7 +15,7 @@ export function SiteHeaderFallback() {
         <div className="flex min-w-0 items-center gap-6">
           <Link className="flex items-center gap-2 text-foreground" href="/">
             <BrandMark />
-            <span className="brand-wordmark">evex-new</span>
+            <span className="brand-wordmark">evex</span>
           </Link>
           <Link
             className="hidden font-medium text-muted-foreground text-sm sm:inline-flex"
@@ -51,7 +51,7 @@ export async function SiteHeader() {
         <div className="flex min-w-0 items-center gap-6">
           <Link className="flex items-center gap-2 text-foreground" href="/">
             <BrandMark />
-            <span className="brand-wordmark">evex-new</span>
+            <span className="brand-wordmark">evex</span>
           </Link>
           <Link
             className="hidden font-medium text-muted-foreground text-sm transition-colors hover:text-foreground sm:inline-flex"
@@ -65,12 +65,14 @@ export async function SiteHeader() {
           >
             Leaderboard
           </Link>
-          <Link
+          <a
             className="hidden font-medium text-muted-foreground text-sm transition-colors hover:text-foreground sm:inline-flex"
-            href="/publish"
+            href="https://github.com/TommyBez/evex"
+            rel="noreferrer noopener"
+            target="_blank"
           >
-            Contribute
-          </Link>
+            GitHub
+          </a>
           {user ? (
             <Link
               className="hidden font-medium text-muted-foreground text-sm transition-colors hover:text-foreground sm:inline-flex"

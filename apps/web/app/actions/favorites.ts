@@ -56,13 +56,15 @@ export async function toggleFavorite(
       )
   }
 
-  revalidateFavoritePaths(agentSlug, agent.userId)
+  revalidateFavoritePaths(agentSlug, agent.authorUsername)
   return { ok: true, isFavorite: shouldFavorite }
 }
 
-function revalidateFavoritePaths(slug: string, authorId: string) {
+function revalidateFavoritePaths(slug: string, authorUsername: string | null) {
   revalidatePath('/')
   revalidatePath('/favorites')
   revalidatePath(`/agents/${slug}`)
-  revalidatePath(`/authors/${authorId}`)
+  if (authorUsername) {
+    revalidatePath(`/authors/${authorUsername}`)
+  }
 }

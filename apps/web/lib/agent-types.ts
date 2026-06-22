@@ -1,6 +1,6 @@
 export interface CatalogAgentAuthor {
   readonly avatarUrl?: string
-  readonly id: string
+  readonly githubUsername: string | null
   readonly name: string
   readonly url?: string
 }
@@ -9,6 +9,7 @@ export interface AgentWithAuthor {
   author: CatalogAgentAuthor
   authorAvatarUrl: string | null
   authorName: string
+  authorUsername: string | null
   category: string
   createdAt: Date
   dependencies: string
@@ -19,7 +20,6 @@ export interface AgentWithAuthor {
   slug: string
   title: string
   updatedAt: Date
-  userId: string
 }
 
 export interface AgentRegistryFile {
@@ -32,8 +32,8 @@ export interface AgentRegistryFile {
 export interface StaticAuthorProfile {
   agentCount: number
   avatarUrl: string | null
+  githubUsername: string
   name: string
   totalInstalls: number
   url: string | null
-  userId: string
 }

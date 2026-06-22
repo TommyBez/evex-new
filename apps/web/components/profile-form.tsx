@@ -45,6 +45,7 @@ export function ProfileForm({
   const [githubUrl, setGithubUrl] = useState(profile.githubUrl ?? '')
   const [twitterUrl, setTwitterUrl] = useState(profile.twitterUrl ?? '')
   const [linkedinUrl, setLinkedinUrl] = useState(profile.linkedinUrl ?? '')
+  const hasVerifiedGithub = Boolean(profile.githubUsername)
 
   useEffect(() => {
     setPreview(profile.avatarUrl)
@@ -183,12 +184,19 @@ export function ProfileForm({
                 GitHub
               </FieldLabel>
               <Input
+                disabled={hasVerifiedGithub}
                 id="githubUrl"
-                name="githubUrl"
+                name={hasVerifiedGithub ? undefined : 'githubUrl'}
                 onChange={(e) => setGithubUrl(e.target.value)}
                 placeholder="https://github.com/username"
+                readOnly={hasVerifiedGithub}
                 value={githubUrl}
               />
+              {hasVerifiedGithub ? (
+                <FieldDescription>
+                  Connected as @{profile.githubUsername}.
+                </FieldDescription>
+              ) : null}
             </Field>
             <Field>
               <FieldLabel

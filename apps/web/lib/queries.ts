@@ -4,8 +4,8 @@ import {
   EVEX_REGISTRY_NAME,
   getRegistry,
   getRegistryItem,
-} from '@evex-new/agent-registry'
-import { and, desc, eq, inArray } from 'drizzle-orm'
+} from '@evex/agent-registry'
+import { and, desc, eq, inArray, sql } from 'drizzle-orm'
 import { cacheLife, cacheTag } from 'next/cache'
 import type {
   AgentRegistryFile,
@@ -26,18 +26,15 @@ import {
   profile,
   user,
 } from '@/lib/db/schema'
+import {
+  githubProfileUrl,
+  githubUsernameKey,
+  readGithubUsername,
+} from '@/lib/github'
 
 type RegistryCatalogItem = ReturnType<typeof getRegistry>['items'][number]
 
-interface RegistryAuthorMeta {
-  avatarUrl?: unknown
-  id?: unknown
-  name?: unknown
-  url?: unknown
-}
-
 interface RegistryAgentMeta {
-  author?: RegistryAuthorMeta
   category?: unknown
   createdAt?: unknown
   dependencies?: unknown
@@ -60,15 +57,12 @@ function readMeta(item: RegistryCatalogItem): RegistryAgentMeta {
 }
 
 function readAuthor(item: RegistryCatalogItem): CatalogAgentAuthor {
-  const meta = readMeta(item)
-  const author = meta.author ?? {}
-  const fallbackAuthorName = item.author ?? EVEX_REGISTRY_NAME
+  const githubUsername = readString(item.author)
 
   return {
-    id: readString(author.id) ?? EVEX_REGISTRY_NAME,
-    name: readString(author.name) ?? fallbackAuthorName,
-    url: readString(author.url) ?? undefined,
-    avatarUrl: readString(author.avatarUrl) ?? undefined,
+    githubUsername,
+    name: githubUsername ?? EVEX_REGISTRY_NAME,
+    url: githubUsername ? githubProfileUrl(githubUsername) : undefined,
   }
 }
 
@@ -155,12 +149,77 @@ export async function getInstallCountMap(
   }
 }
 
+interface VerifiedAuthorProfile {
+  avatarUrl: string | null
+  githubUrl: string
+  name: string
+}
+
+async function getVerifiedAuthorProfileMap(
+  githubUsernames: readonly (string | null)[],
+): Promise<Map<string, VerifiedAuthorProfile>> {
+  const usernameKeys = [
+    ...new Set(
+      githubUsernames
+        .map((username) => githubUsernameKey(username))
+        .filter((username) => username.length > 0),
+    ),
+  ]
+
+  if (usernameKeys.length === 0) {
+    return new Map()
+  }
+
+  try {
+    const rows = await db
+      .select({
+        name: user.name,
+        image: user.image,
+        githubUsername: user.githubUsername,
+        avatarUrl: profile.avatarUrl,
+      })
+      .from(user)
+      .leftJoin(profile, eq(profile.userId, user.id))
+      .where(inArray(sql<string>`lower(${user.githubUsername})`, usernameKeys))
+
+    const profileMap = new Map<string, VerifiedAuthorProfile>()
+
+    for (const row of rows) {
+      const githubUsername = readGithubUsername(row.githubUsername)
+
+      if (!githubUsername) {
+        continue
+      }
+
+      profileMap.set(githubUsernameKey(githubUsername), {
+        avatarUrl: row.avatarUrl ?? row.image ?? null,
+        githubUrl: githubProfileUrl(githubUsername),
+        name: row.name,
+      })
+    }
+
+    return profileMap
+  } catch {
+    return new Map()
+  }
+}
+
 function toAgentWithAuthor(
   agent: RegistryCatalogItem,
   installCounts: Map<string, number>,
+  verifiedAuthors: Map<string, VerifiedAuthorProfile>,
 ): AgentWithAuthor {
   const meta = readMeta(agent)
-  const author = readAuthor(agent)
+  const registryAuthor = readAuthor(agent)
+  const verifiedAuthor = verifiedAuthors.get(
+    githubUsernameKey(registryAuthor.githubUsername),
+  )
+  const author = {
+    ...registryAuthor,
+    avatarUrl: verifiedAuthor?.avatarUrl ?? registryAuthor.avatarUrl,
+    name: verifiedAuthor?.name ?? registryAuthor.name,
+    url: verifiedAuthor?.githubUrl ?? registryAuthor.url,
+  }
   const slug = readString(meta.slug) ?? agent.name
   const title = agent.title ?? agent.name
 
@@ -178,15 +237,23 @@ function toAgentWithAuthor(
     slug,
     title,
     updatedAt: readDate(meta.updatedAt),
-    userId: author.id,
+    authorUsername: registryAuthor.githubUsername,
   }
 }
 
 async function hydrateAgents(agents: readonly RegistryCatalogItem[]) {
-  const installCounts = await getInstallCountMap(
-    agents.map((agent) => readString(readMeta(agent).slug) ?? agent.name),
+  const [installCounts, verifiedAuthors] = await Promise.all([
+    getInstallCountMap(
+      agents.map((agent) => readString(readMeta(agent).slug) ?? agent.name),
+    ),
+    getVerifiedAuthorProfileMap(
+      agents.map((agent) => readAuthor(agent).githubUsername),
+    ),
+  ])
+
+  return agents.map((agent) =>
+    toAgentWithAuthor(agent, installCounts, verifiedAuthors),
   )
-  return agents.map((agent) => toAgentWithAuthor(agent, installCounts))
 }
 
 export async function listAgents(opts?: {
@@ -258,47 +325,59 @@ export function getAgentFiles(slug: string): AgentRegistryFile[] {
   }
 }
 
-export async function getAgentsByUser(
-  userId: string,
+export async function getAgentsByAuthorUsername(
+  githubUsername: string,
 ): Promise<AgentWithAuthor[]> {
   'use cache'
   cacheLife('minutes')
   cacheTag(cacheTags.agents)
-  cacheTag(getAuthorAgentsTag(userId))
+  cacheTag(getAuthorAgentsTag(githubUsernameKey(githubUsername)))
 
   const catalogAgents = getCatalogAgents()
   return (
     await hydrateAgents(
-      catalogAgents.filter((agent) => readAuthor(agent).id === userId),
+      catalogAgents.filter(
+        (agent) =>
+          githubUsernameKey(readAuthor(agent).githubUsername) ===
+          githubUsernameKey(githubUsername),
+      ),
     )
   ).sort(compareByInstalls)
 }
 
 export async function getStaticAuthorProfile(
-  authorId: string,
+  githubUsername: string,
 ): Promise<StaticAuthorProfile | null> {
   'use cache'
   cacheLife('minutes')
   cacheTag(cacheTags.agents)
-  cacheTag(getAuthorAgentsTag(authorId))
+  cacheTag(getAuthorAgentsTag(githubUsernameKey(githubUsername)))
 
   const catalogAgents = getCatalogAgents()
-  const agents = await getAgentsByUser(authorId)
+  const agents = await getAgentsByAuthorUsername(githubUsername)
   const author = catalogAgents
     .map((agent) => readAuthor(agent))
-    .find((candidate) => candidate.id === authorId)
+    .find(
+      (candidate) =>
+        githubUsernameKey(candidate.githubUsername) ===
+        githubUsernameKey(githubUsername),
+    )
 
-  if (!author) {
+  if (!author?.githubUsername) {
     return null
   }
 
+  const verifiedAuthor = (
+    await getVerifiedAuthorProfileMap([author.githubUsername])
+  ).get(githubUsernameKey(author.githubUsername))
+
   return {
     agentCount: agents.length,
-    avatarUrl: author.avatarUrl ?? null,
-    name: author.name,
+    avatarUrl: verifiedAuthor?.avatarUrl ?? author.avatarUrl ?? null,
+    githubUsername: author.githubUsername,
+    name: verifiedAuthor?.name ?? author.name,
     totalInstalls: agents.reduce((sum, agent) => sum + agent.installCount, 0),
-    url: author.url ?? null,
-    userId: author.id,
+    url: verifiedAuthor?.githubUrl ?? author.url ?? null,
   }
 }
 
@@ -355,6 +434,7 @@ export interface PublicProfile {
   avatarUrl: string | null
   bio: string
   githubUrl: string | null
+  githubUsername: string | null
   linkedinUrl: string | null
   name: string
   twitterUrl: string | null
@@ -379,6 +459,7 @@ export async function getPublicProfile(
       avatarUrl: profile.avatarUrl,
       websiteUrl: profile.websiteUrl,
       githubUrl: profile.githubUrl,
+      githubUsername: user.githubUsername,
       twitterUrl: profile.twitterUrl,
       linkedinUrl: profile.linkedinUrl,
     })
@@ -396,7 +477,10 @@ export async function getPublicProfile(
     bio: row.bio ?? '',
     avatarUrl: row.avatarUrl ?? null,
     websiteUrl: row.websiteUrl ?? null,
-    githubUrl: row.githubUrl ?? null,
+    githubUsername: row.githubUsername ?? null,
+    githubUrl: row.githubUsername
+      ? githubProfileUrl(row.githubUsername)
+      : (row.githubUrl ?? null),
     twitterUrl: row.twitterUrl ?? null,
     linkedinUrl: row.linkedinUrl ?? null,
   }
@@ -415,9 +499,9 @@ export async function getTopAgents(limit = 20): Promise<AgentWithAuthor[]> {
 export interface AuthorRanking {
   agentCount: number
   authorName: string
+  authorUsername: string
   avatarUrl: string | null
   totalInstalls: number
-  userId: string
 }
 
 export async function getTopAuthors(limit = 20): Promise<AuthorRanking[]> {
@@ -429,16 +513,21 @@ export async function getTopAuthors(limit = 20): Promise<AuthorRanking[]> {
   const authorMap = new Map<string, AuthorRanking>()
 
   for (const agent of agents) {
-    const existing = authorMap.get(agent.userId) ?? {
+    if (!agent.authorUsername) {
+      continue
+    }
+
+    const authorKey = githubUsernameKey(agent.authorUsername)
+    const existing = authorMap.get(authorKey) ?? {
       agentCount: 0,
       authorName: agent.authorName,
+      authorUsername: agent.authorUsername,
       avatarUrl: agent.authorAvatarUrl,
       totalInstalls: 0,
-      userId: agent.userId,
     }
     existing.agentCount += 1
     existing.totalInstalls += agent.installCount
-    authorMap.set(agent.userId, existing)
+    authorMap.set(authorKey, existing)
   }
 
   return [...authorMap.values()]
@@ -457,9 +546,13 @@ export async function getRegistryStats() {
   cacheTag(cacheTags.registryStats)
 
   const agents = await hydrateAgents(getCatalogAgents())
+  const authorKeys = agents
+    .map((agent) => githubUsernameKey(agent.authorUsername))
+    .filter((authorKey) => authorKey.length > 0)
+
   return {
     total: agents.length,
     installs: agents.reduce((sum, agent) => sum + agent.installCount, 0),
-    authors: new Set(agents.map((agent) => agent.userId)).size,
+    authors: new Set(authorKeys).size,
   }
 }

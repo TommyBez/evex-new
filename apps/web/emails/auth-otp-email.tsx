@@ -34,7 +34,7 @@ export function AuthOtpEmail({
           lang="en"
         >
           <Preview>
-            {`Your evex-new code expires in ${expiresInMinutes} minutes.`}
+            {`Your evex code expires in ${expiresInMinutes} minutes.`}
           </Preview>
           <Container
             className="mx-auto w-full max-w-[600px] px-5"
@@ -48,7 +48,7 @@ export function AuthOtpEmail({
                 </Column>
                 <Column className="align-middle">
                   <Text className="m-0 font-mono font-semibold text-[18px] text-foreground leading-none">
-                    evex-new
+                    evex
                   </Text>
                   <Text className="m-0 mt-1 font-medium font-mono text-[11px] text-mutedForeground uppercase leading-none">
                     Agent registry
@@ -65,7 +65,7 @@ export function AuthOtpEmail({
                 as="h1"
                 className="m-0 font-sans font-semibold text-[24px] text-foreground leading-8"
               >
-                Sign in to evex-new
+                Sign in to evex
               </Heading>
               <Text className="m-0 mt-3 text-[16px] text-mutedForeground leading-6">
                 Use this code to {purpose}. It expires in {expiresInMinutes}{' '}
@@ -84,7 +84,7 @@ export function AuthOtpEmail({
             </Section>
 
             <Text className="m-0 mt-5 text-center font-mono text-[12px] text-mutedForeground leading-5">
-              evex-new · Browse, publish, and install AI agents
+              evex · Browse and install AI agents
             </Text>
           </Container>
         </Body>

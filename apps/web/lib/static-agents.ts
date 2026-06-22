@@ -4,25 +4,18 @@ import {
   EVEX_REGISTRY_NAME,
   getRegistry,
   getRegistryItem,
-} from '@evex-new/agent-registry'
+} from '@evex/agent-registry'
 import type {
   AgentRegistryFile,
   AgentWithAuthor,
   CatalogAgentAuthor,
   StaticAuthorProfile,
 } from '@/lib/agent-types'
+import { githubProfileUrl, githubUsernameKey } from '@/lib/github'
 
 type RegistryCatalogItem = ReturnType<typeof getRegistry>['items'][number]
 
-interface RegistryAuthorMeta {
-  avatarUrl?: unknown
-  id?: unknown
-  name?: unknown
-  url?: unknown
-}
-
 interface RegistryAgentMeta {
-  author?: RegistryAuthorMeta
   category?: unknown
   createdAt?: unknown
   dependencies?: unknown
@@ -45,15 +38,12 @@ function readMeta(item: RegistryCatalogItem): RegistryAgentMeta {
 }
 
 function readAuthor(item: RegistryCatalogItem): CatalogAgentAuthor {
-  const meta = readMeta(item)
-  const author = meta.author ?? {}
-  const fallbackAuthorName = item.author ?? EVEX_REGISTRY_NAME
+  const githubUsername = readString(item.author)
 
   return {
-    id: readString(author.id) ?? EVEX_REGISTRY_NAME,
-    name: readString(author.name) ?? fallbackAuthorName,
-    url: readString(author.url) ?? undefined,
-    avatarUrl: readString(author.avatarUrl) ?? undefined,
+    githubUsername,
+    name: githubUsername ?? EVEX_REGISTRY_NAME,
+    url: githubUsername ? githubProfileUrl(githubUsername) : undefined,
   }
 }
 
@@ -134,7 +124,7 @@ function toStaticAgent(agent: RegistryCatalogItem): AgentWithAuthor {
     slug,
     title,
     updatedAt: readDate(meta.updatedAt),
-    userId: author.id,
+    authorUsername: author.githubUsername,
   }
 }
 
@@ -183,36 +173,43 @@ export function getStaticAgentFiles(slug: string): AgentRegistryFile[] {
   }
 }
 
-export function getStaticAgentsByUser(userId: string): AgentWithAuthor[] {
+export function getStaticAgentsByAuthorUsername(
+  githubUsername: string,
+): AgentWithAuthor[] {
+  const authorKey = githubUsernameKey(githubUsername)
   return listStaticAgents()
-    .filter((agent) => agent.userId === userId)
+    .filter((agent) => githubUsernameKey(agent.authorUsername) === authorKey)
     .sort(compareByCreatedAt)
 }
 
 export function getStaticAuthorProfile(
-  authorId: string,
+  githubUsername: string,
 ): StaticAuthorProfile | null {
-  const agents = getStaticAgentsByUser(authorId)
+  const agents = getStaticAgentsByAuthorUsername(githubUsername)
   const author = agents.at(0)?.author
 
-  if (!author) {
+  if (!author?.githubUsername) {
     return null
   }
 
   return {
     agentCount: agents.length,
     avatarUrl: author.avatarUrl ?? null,
+    githubUsername: author.githubUsername,
     name: author.name,
     totalInstalls: 0,
     url: author.url ?? null,
-    userId: author.id,
   }
 }
 
 export function getStaticRegistryStats() {
   const agents = listStaticAgents()
+  const authorKeys = agents
+    .map((agent) => githubUsernameKey(agent.authorUsername))
+    .filter((authorKey) => authorKey.length > 0)
+
   return {
     total: agents.length,
-    authors: new Set(agents.map((agent) => agent.userId)).size,
+    authors: new Set(authorKeys).size,
   }
 }

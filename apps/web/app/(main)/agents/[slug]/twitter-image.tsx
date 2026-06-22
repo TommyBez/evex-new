@@ -1,6 +1,6 @@
 import OpenGraphImage from './opengraph-image'
 
-export const alt = 'Agent on evex-new'
+export const alt = 'Agent on evex'
 export const size = {
   width: 1200,
   height: 630,

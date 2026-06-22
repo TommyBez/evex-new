@@ -6,9 +6,15 @@
       "type": "registry:item",
       "title": "Linear Sprint Triage",
       "description": "Fetches Linear team issues, highlights unassigned or high-priority work, and separates delivery risk from simple backlog hygiene.",
-      "author": "evex-new",
-      "categories": ["productivity"],
-      "dependencies": ["eve@^0.11.4", "@linear/sdk@^86.0.0", "zod@4.3.6"],
+      "author": "TommyBez",
+      "categories": [
+        "productivity"
+      ],
+      "dependencies": [
+        "eve@^0.11.4",
+        "@linear/sdk@^86.0.0",
+        "zod@4.3.6"
+      ],
       "files": [
         {
           "path": "agent/agent.ts",
@@ -34,11 +40,6 @@
       "meta": {
         "slug": "linear-sprint-triage",
         "category": "productivity",
-        "author": {
-          "id": "evex-new",
-          "name": "evex-new",
-          "url": "https://evex-new.sh"
-        },
         "createdAt": "2026-06-20T00:00:00.000Z",
         "updatedAt": "2026-06-20T00:00:00.000Z"
       }

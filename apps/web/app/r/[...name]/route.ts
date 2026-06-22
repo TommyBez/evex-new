@@ -1,7 +1,7 @@
 import {
   getRegistryItem,
   RegistryItemNotFoundError,
-} from '@evex-new/agent-registry'
+} from '@evex/agent-registry'
 import { after, connection, NextResponse } from 'next/server'
 import { incrementInstallCount } from '@/app/actions/agents'
 

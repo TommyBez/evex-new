@@ -27,15 +27,6 @@ function isRecord(value) {
   return Boolean(value) && typeof value === 'object' && !Array.isArray(value)
 }
 
-function readObjectProperty(source, key, context) {
-  const value = source[key]
-  if (!isRecord(value)) {
-    throw new Error(`${context} must define an object "${key}" field.`)
-  }
-
-  return value
-}
-
 async function readJson(filePath) {
   const raw = await fs.readFile(filePath, 'utf8')
   try {
@@ -43,63 +34,6 @@ async function readJson(filePath) {
   } catch (error) {
     throw new Error(`Invalid JSON in ${filePath}.`, { cause: error })
   }
-}
-
-async function pathExists(filePath) {
-  try {
-    await fs.access(filePath)
-    return true
-  } catch {
-    return false
-  }
-}
-
-async function collectFiles(directory) {
-  const entries = await fs.readdir(directory, { withFileTypes: true })
-  const sortedEntries = entries.toSorted((left, right) =>
-    left.name.localeCompare(right.name),
-  )
-  const files = []
-
-  for (const entry of sortedEntries) {
-    if (entry.name.startsWith('.')) {
-      continue
-    }
-
-    const entryPath = path.join(directory, entry.name)
-    if (entry.isDirectory()) {
-      const nestedFiles = await collectFiles(entryPath)
-      for (const nestedFile of nestedFiles) {
-        files.push(nestedFile)
-      }
-      continue
-    }
-
-    if (entry.isFile()) {
-      files.push(entryPath)
-    }
-  }
-
-  return files
-}
-
-function readRuntimeDependencies(packageJson, packagePath) {
-  const dependencies = packageJson.dependencies
-  if (!dependencies) {
-    return []
-  }
-
-  if (!isRecord(dependencies)) {
-    throw new Error(`${packagePath} dependencies must be an object.`)
-  }
-
-  return Object.entries(dependencies).map(([name, range]) => {
-    if (typeof range !== 'string') {
-      throw new Error(`${packagePath} dependency "${name}" must be a string.`)
-    }
-
-    return `${name}@${range}`
-  })
 }
 
 function getRegistryItem(registryJson, registryPath) {
@@ -125,38 +59,89 @@ function getRegistryItem(registryJson, registryPath) {
   return item
 }
 
-function toTargetPath(relativePath) {
-  return relativePath === 'README.md'
-    ? '~/agent/README.md'
-    : `~/${relativePath}`
-}
-
-async function buildFileDescriptors(agentRoot) {
-  const agentSourceDir = path.join(agentRoot, 'agent')
-  const sourceFiles = await collectFiles(agentSourceDir)
-  const readmePath = path.join(agentRoot, 'README.md')
-
-  if (await pathExists(readmePath)) {
-    sourceFiles.push(readmePath)
+function validateDependencies(item, registryPath) {
+  if (!item.dependencies) {
+    return
   }
 
-  return sourceFiles.map((sourcePath) => {
-    const relativePath = toPosixPath(path.relative(agentRoot, sourcePath))
+  if (!Array.isArray(item.dependencies)) {
+    throw new Error(`${registryPath} item dependencies must be an array.`)
+  }
 
-    return {
-      path: relativePath,
-      sourcePath,
-      target: toTargetPath(relativePath),
-      type: REGISTRY_FILE_TYPE,
+  for (const dependency of item.dependencies) {
+    if (typeof dependency !== 'string' || dependency.length === 0) {
+      throw new Error(`${registryPath} item dependencies must be strings.`)
     }
-  })
+  }
+}
+
+function normalizeSourceFilePath(filePath, registryPath) {
+  if (typeof filePath !== 'string' || filePath.length === 0) {
+    throw new Error(`${registryPath} file path must be a non-empty string.`)
+  }
+
+  if (path.isAbsolute(filePath) || filePath.includes('\\')) {
+    throw new Error(`${registryPath} file path must be a relative POSIX path.`)
+  }
+
+  const normalizedPath = path.posix.normalize(filePath)
+  if (normalizedPath !== filePath || normalizedPath.startsWith('../')) {
+    throw new Error(`${registryPath} file path must not traverse directories.`)
+  }
+
+  if (normalizedPath !== 'README.md' && !normalizedPath.startsWith('agent/')) {
+    throw new Error(
+      `${registryPath} file path must be README.md or live under agent/.`,
+    )
+  }
+
+  return normalizedPath
+}
+
+async function readRegistryFiles(item, agentRoot, registryPath) {
+  if (!Array.isArray(item.files)) {
+    throw new Error(`${registryPath} item files must be an array.`)
+  }
+
+  const files = []
+
+  for (const file of item.files) {
+    if (!isRecord(file)) {
+      throw new Error(`${registryPath} item files must be objects.`)
+    }
+
+    if (file.type !== REGISTRY_FILE_TYPE) {
+      throw new Error(
+        `${registryPath} file type must be "${REGISTRY_FILE_TYPE}".`,
+      )
+    }
+
+    const sourcePath = normalizeSourceFilePath(file.path, registryPath)
+    const absoluteSourcePath = path.join(agentRoot, sourcePath)
+    const relativeSourcePath = toPosixPath(
+      path.relative(agentRoot, absoluteSourcePath),
+    )
+
+    if (relativeSourcePath !== sourcePath) {
+      throw new Error(`${registryPath} file path must stay inside the agent.`)
+    }
+
+    await fs.access(absoluteSourcePath)
+
+    files.push({
+      ...file,
+      path: sourcePath,
+      sourcePath: absoluteSourcePath,
+    })
+  }
+
+  return files
 }
 
 function toCatalogFile(file) {
+  const { content: _content, sourcePath: _sourcePath, ...descriptor } = file
   return {
-    path: file.path,
-    target: file.target,
-    type: file.type,
+    ...descriptor,
   }
 }
 
@@ -170,31 +155,26 @@ async function toItemFile(file) {
 async function buildAgentEntry(agentSlug) {
   const agentRoot = path.join(agentsDir, agentSlug)
   const registryPath = path.join(agentRoot, 'registry.json')
-  const packagePath = path.join(agentRoot, 'package.json')
   const registryJson = await readJson(registryPath)
-  const packageJson = await readJson(packagePath)
   const item = getRegistryItem(registryJson, registryPath)
 
   if (item.name !== agentSlug) {
     throw new Error(`${registryPath} item name must match "${agentSlug}".`)
   }
 
-  readObjectProperty(packageJson, 'dependencies', packagePath)
+  validateDependencies(item, registryPath)
 
-  const dependencies = readRuntimeDependencies(packageJson, packagePath)
-  const files = await buildFileDescriptors(agentRoot)
-  const { dependencies: _dependencies, files: _files, ...metadata } = item
+  const files = await readRegistryFiles(item, agentRoot, registryPath)
+  const { files: _files, ...metadata } = item
 
   return {
     catalogItem: {
       ...metadata,
-      dependencies,
       files: files.map(toCatalogFile),
     },
     registryItem: {
       $schema: REGISTRY_SCHEMA_URL,
       ...metadata,
-      dependencies,
       files: await Promise.all(files.map(toItemFile)),
     },
   }
@@ -267,8 +247,8 @@ async function buildGeneratedSource() {
 
   const registry = {
     $schema: REGISTRY_SCHEMA_URL,
-    name: 'evex-new',
-    homepage: 'https://evex-new.sh',
+    name: 'evex',
+    homepage: 'https://evex.sh',
     items: catalogItems,
   }
 
@@ -283,7 +263,7 @@ async function main() {
     const currentSource = await fs.readFile(generatedPath, 'utf8')
     if (currentSource !== generatedSource) {
       process.stderr.write(
-        `${GENERATED_FILE} is out of date. Run "pnpm --filter @evex-new/agent-registry generate".\n`,
+        `${GENERATED_FILE} is out of date. Run "pnpm --filter @evex/agent-registry generate".\n`,
       )
       process.exitCode = 1
     }

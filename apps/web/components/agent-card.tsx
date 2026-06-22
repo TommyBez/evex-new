@@ -49,17 +49,28 @@ export function AgentCard({
         </p>
       </div>
       <div className="flex items-center justify-between gap-3 border-border border-t pt-3 text-muted-foreground text-xs">
-        <Link
-          className="relative z-10 flex min-w-0 items-center gap-1.5 transition-colors hover:text-foreground"
-          href={`/authors/${agent.userId}`}
-        >
-          <AuthorAvatar
-            className="size-5"
-            name={agent.authorName}
-            src={agent.authorAvatarUrl}
-          />
-          <span className="truncate">{agent.authorName}</span>
-        </Link>
+        {agent.authorUsername ? (
+          <Link
+            className="relative z-10 flex min-w-0 items-center gap-1.5 transition-colors hover:text-foreground"
+            href={`/authors/${agent.authorUsername}`}
+          >
+            <AuthorAvatar
+              className="size-5"
+              name={agent.authorName}
+              src={agent.authorAvatarUrl}
+            />
+            <span className="truncate">{agent.authorName}</span>
+          </Link>
+        ) : (
+          <span className="flex min-w-0 items-center gap-1.5">
+            <AuthorAvatar
+              className="size-5"
+              name={agent.authorName}
+              src={agent.authorAvatarUrl}
+            />
+            <span className="truncate">{agent.authorName}</span>
+          </span>
+        )}
         <span className="mono-label text-brand opacity-0 transition-opacity group-hover:opacity-100">
           View →
         </span>

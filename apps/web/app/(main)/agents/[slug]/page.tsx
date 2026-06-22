@@ -24,7 +24,7 @@ import {
 import {
   getStaticAgentBySlug,
   getStaticAgentFiles,
-  getStaticAgentsByUser,
+  getStaticAgentsByAuthorUsername,
   listStaticAgents,
 } from '@/lib/static-agents'
 
@@ -43,7 +43,7 @@ export async function generateMetadata({
   if (!agent) {
     return createPageMetadata({
       title: 'Agent not found',
-      description: 'This evex-new registry item is no longer available.',
+      description: 'This evex registry item is no longer available.',
       path: `/agents/${slug}`,
       noIndex: true,
     })
@@ -68,7 +68,7 @@ export async function generateMetadata({
       modifiedTime: agent.updatedAt.toISOString(),
       authors: [agent.authorName],
       section: agent.category,
-      tags: [agent.category, 'eve agent', 'evex-new'],
+      tags: [agent.category, 'eve agent', 'evex'],
     },
     twitter: {
       card: 'summary_large_image',
@@ -100,7 +100,9 @@ function AgentDetailContent({ slug }: { slug: string }) {
 
   const files = getStaticAgentFiles(agent.slug)
   const baseUrl = getSiteUrl()
-  const authorAgents = getStaticAgentsByUser(agent.userId)
+  const authorAgents = agent.authorUsername
+    ? getStaticAgentsByAuthorUsername(agent.authorUsername)
+    : []
   const directCommand = buildInstallCommand(baseUrl, agent.slug)
   const namespaceSetupCommand = buildNamespaceSetupCommand(baseUrl)
   const namespacedInstallCommand = buildNamespacedInstallCommand(agent.slug)
@@ -137,17 +139,28 @@ function AgentDetailContent({ slug }: { slug: string }) {
             {agent.title}
           </p>
           <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-muted-foreground text-sm">
-            <Link
-              className="flex items-center gap-1.5 transition-colors hover:text-foreground"
-              href={`/authors/${agent.userId}`}
-            >
-              <AuthorAvatar
-                className="size-5"
-                name={agent.authorName}
-                src={agent.authorAvatarUrl}
-              />
-              by {agent.authorName}
-            </Link>
+            {agent.authorUsername ? (
+              <Link
+                className="flex items-center gap-1.5 transition-colors hover:text-foreground"
+                href={`/authors/${agent.authorUsername}`}
+              >
+                <AuthorAvatar
+                  className="size-5"
+                  name={agent.authorName}
+                  src={agent.authorAvatarUrl}
+                />
+                by {agent.authorName}
+              </Link>
+            ) : (
+              <span className="flex items-center gap-1.5">
+                <AuthorAvatar
+                  className="size-5"
+                  name={agent.authorName}
+                  src={agent.authorAvatarUrl}
+                />
+                by {agent.authorName}
+              </span>
+            )}
             <span className="flex items-center gap-1.5">
               <Package aria-hidden="true" className="size-4" />
               {files.length} files
@@ -158,7 +171,7 @@ function AgentDetailContent({ slug }: { slug: string }) {
 
       <Card className="mt-8 w-full min-w-0 rounded-md border border-border p-5 shadow-[var(--shadow-card)] ring-0">
         <h2 className="font-medium text-foreground text-sm">
-          Install with @evex-new
+          Install with @evex
         </h2>
         <p className="mt-1 text-muted-foreground text-sm">
           Set up the namespace once, then add this agent by name. Run the
@@ -212,8 +225,8 @@ function AgentDetailContent({ slug }: { slug: string }) {
         <Suspense fallback={<MoreFromAuthorSkeleton />}>
           <MoreFromAuthorSection
             agents={moreFromAuthor}
-            authorId={agent.userId}
             authorName={agent.authorName}
+            authorUsername={agent.authorUsername ?? ''}
           />
         </Suspense>
       )}
@@ -274,12 +287,12 @@ function MoreFromAuthorSkeleton() {
 
 async function MoreFromAuthorSection({
   agents,
-  authorId,
   authorName,
+  authorUsername,
 }: {
   agents: readonly AgentWithAuthor[]
-  authorId: string
   authorName: string
+  authorUsername: string
 }) {
   const runtimeState = await getAgentRuntimeState(
     agents.map((agent) => agent.id),
@@ -299,7 +312,7 @@ async function MoreFromAuthorSection({
           </h2>
           <Link
             className="text-muted-foreground text-sm transition-colors hover:text-foreground"
-            href={`/authors/${authorId}`}
+            href={`/authors/${authorUsername}`}
           >
             View Author →
           </Link>

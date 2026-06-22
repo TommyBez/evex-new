@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { BrandMark } from '@/components/brand-mark'
 import { GitHubIcon, XIcon } from '@/components/social-icons'
 
-const REPO_URL = 'https://github.com/TommyBez/evex-new'
+const REPO_URL = 'https://github.com/TommyBez/evex'
 const X_PROFILE_URL = 'https://x.com/TommyBez85'
 
 export function SiteFooter() {
@@ -13,7 +13,7 @@ export function SiteFooter() {
           <BrandMark />
           <span className="flex items-baseline gap-2">
             <Link className="brand-wordmark text-foreground" href="/">
-              evex-new
+              evex
             </Link>
             <span className="mono-label">the eve agent registry</span>
           </span>
@@ -21,7 +21,7 @@ export function SiteFooter() {
 
         <nav className="flex items-center gap-1">
           <a
-            aria-label="evex-new on GitHub"
+            aria-label="evex on GitHub"
             className="inline-flex size-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
             href={REPO_URL}
             rel="noreferrer noopener"

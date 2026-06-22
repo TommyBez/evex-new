@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   },
   description: siteConfig.description,
   generator: 'Next.js',
-  keywords: ['evex-new', 'eve', 'agents', 'registry', 'shadcn'],
+  keywords: ['evex', 'eve', 'agents', 'registry', 'shadcn'],
   authors: [{ name: siteConfig.name }],
   creator: siteConfig.name,
   publisher: siteConfig.name,

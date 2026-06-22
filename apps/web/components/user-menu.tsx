@@ -50,9 +50,6 @@ export function UserMenu({ name, email }: { name: string; email: string }) {
         <DropdownMenuSeparator />
         <DropdownMenuItem render={<Link href="/favorites">Favorites</Link>} />
         <DropdownMenuItem render={<Link href="/profile">Edit Profile</Link>} />
-        <DropdownMenuItem
-          render={<Link href="/publish">Contribute Agent</Link>}
-        />
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleSignOut}>Sign Out</DropdownMenuItem>
       </DropdownMenuContent>
