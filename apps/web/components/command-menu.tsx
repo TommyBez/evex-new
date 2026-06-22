@@ -267,7 +267,7 @@ export function CommandMenu({
             </CommandGroup>
           </CommandList>
 
-          <div className="flex items-center gap-3 border-border border-t px-3 py-2 text-muted-foreground text-xs">
+          <div className="hidden items-center gap-3 border-border border-t px-3 py-2 text-muted-foreground text-xs sm:flex">
             <span className="flex items-center gap-1.5">
               <Kbd>↵</Kbd>
               to select
