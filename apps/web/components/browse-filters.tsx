@@ -2,7 +2,7 @@
 
 import { Search } from 'lucide-react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useTransition } from 'react'
+import { useCallback, useEffect, useState, useTransition } from 'react'
 import {
   InputGroup,
   InputGroupAddon,
@@ -12,27 +12,71 @@ import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { AGENT_CATEGORIES } from '@/lib/agents'
 import { cn } from '@/lib/utils'
 
+const DEFAULT_CATEGORY = 'all'
+const SEARCH_URL_SYNC_DELAY_MS = 200
+
+function getFiltersPath(search: string, category: string): string {
+  const next = new URLSearchParams()
+  if (search) {
+    next.set('q', search)
+  }
+  if (category !== DEFAULT_CATEGORY) {
+    next.set('category', category)
+  }
+
+  const query = next.toString()
+  return query ? `/?${query}` : '/'
+}
+
 export function BrowseFilters() {
   const router = useRouter()
   const params = useSearchParams()
   const [isPending, startTransition] = useTransition()
 
-  const activeCategory = params.get('category') ?? 'all'
+  const activeCategory = params.get('category') ?? DEFAULT_CATEGORY
   const activeSearch = params.get('q') ?? ''
+  const [searchValue, setSearchValue] = useState(activeSearch)
+  const [selectedCategory, setSelectedCategory] = useState(activeCategory)
+  const [isSearchFocused, setIsSearchFocused] = useState(false)
 
-  const setParam = (key: string, value: string) => {
-    const next = new URLSearchParams(params.toString())
-    if (value && value !== 'all') {
-      next.set(key, value)
-    } else {
-      next.delete(key)
+  const replaceFilters = useCallback(
+    (nextSearch: string, nextCategory: string) => {
+      const path = getFiltersPath(nextSearch, nextCategory)
+
+      startTransition(() => {
+        router.replace(path, { scroll: false })
+      })
+    },
+    [router],
+  )
+
+  useEffect(() => {
+    if (isSearchFocused) {
+      return
     }
-    startTransition(() => {
-      router.replace(`/?${next.toString()}`, { scroll: false })
-    })
-  }
+    setSearchValue(activeSearch)
+  }, [activeSearch, isSearchFocused])
 
-  const categories = ['all', ...AGENT_CATEGORIES] as const
+  useEffect(() => {
+    if (isPending) {
+      return
+    }
+    setSelectedCategory(activeCategory)
+  }, [activeCategory, isPending])
+
+  useEffect(() => {
+    if (searchValue === activeSearch) {
+      return
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      replaceFilters(searchValue, selectedCategory)
+    }, SEARCH_URL_SYNC_DELAY_MS)
+
+    return () => window.clearTimeout(timeoutId)
+  }, [activeSearch, replaceFilters, searchValue, selectedCategory])
+
+  const categories = [DEFAULT_CATEGORY, ...AGENT_CATEGORIES] as const
 
   return (
     <div className="flex flex-col gap-4">
@@ -42,10 +86,12 @@ export function BrowseFilters() {
         </InputGroupAddon>
         <InputGroupInput
           aria-label="Search agents"
-          onChange={(e) => setParam('q', e.target.value)}
+          onBlur={() => setIsSearchFocused(false)}
+          onChange={(e) => setSearchValue(e.target.value)}
+          onFocus={() => setIsSearchFocused(true)}
           placeholder="Search agents..."
           type="search"
-          value={activeSearch}
+          value={searchValue}
         />
       </InputGroup>
       <ToggleGroup
@@ -53,8 +99,12 @@ export function BrowseFilters() {
           'flex-wrap transition-opacity',
           isPending && 'opacity-60',
         )}
-        onValueChange={(values) => setParam('category', values[0] ?? 'all')}
-        value={[activeCategory]}
+        onValueChange={(values) => {
+          const nextCategory = values[0] ?? DEFAULT_CATEGORY
+          setSelectedCategory(nextCategory)
+          replaceFilters(searchValue, nextCategory)
+        }}
+        value={[selectedCategory]}
       >
         {categories.map((c) => (
           <ToggleGroupItem
