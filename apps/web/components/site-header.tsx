@@ -1,6 +1,11 @@
 import { headers } from 'next/headers'
 import Link from 'next/link'
 import { BrandMark } from '@/components/brand-mark'
+import { type CommandAgent, CommandMenu } from '@/components/command-menu'
+import {
+  CommandMenuBarTrigger,
+  CommandMenuIconTrigger,
+} from '@/components/command-menu-trigger'
 import { GitHubStarButton } from '@/components/github-star-button'
 import { MobileNavMenu } from '@/components/mobile-nav-menu'
 import { ThemeToggle } from '@/components/theme-toggle'
@@ -8,6 +13,17 @@ import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { UserMenu } from '@/components/user-menu'
 import { auth } from '@/lib/auth'
+import { listStaticAgents } from '@/lib/static-agents'
+
+function getCommandAgents(): CommandAgent[] {
+  return listStaticAgents().map((agent) => ({
+    slug: agent.slug,
+    name: agent.name,
+    category: agent.category,
+    description: agent.description,
+    authorName: agent.authorName,
+  }))
+}
 
 export function SiteHeaderFallback() {
   return (
@@ -30,9 +46,11 @@ export function SiteHeaderFallback() {
           >
             Leaderboard
           </Link>
+          <Skeleton className="hidden h-8 w-48 rounded-md lg:block lg:w-56" />
         </div>
 
         <div className="flex items-center gap-2">
+          <Skeleton className="size-7 rounded-md lg:hidden" />
           <Skeleton className="h-7 w-14 sm:w-20" />
           <Skeleton className="size-7 rounded-md" />
           <Skeleton className="h-8 w-16" />
@@ -45,6 +63,7 @@ export function SiteHeaderFallback() {
 export async function SiteHeader() {
   const session = await auth.api.getSession({ headers: await headers() })
   const user = session?.user
+  const commandAgents = getCommandAgents()
 
   return (
     <header className="sticky top-0 z-40 w-full border-border border-b bg-background/90 backdrop-blur-md">
@@ -74,9 +93,11 @@ export async function SiteHeader() {
               Favorites
             </Link>
           ) : null}
+          <CommandMenuBarTrigger className="hidden lg:flex" />
         </div>
 
         <nav className="flex shrink-0 items-center gap-1.5 sm:gap-2">
+          <CommandMenuIconTrigger className="lg:hidden" />
           <GitHubStarButton />
           <ThemeToggle />
           {user ? (
@@ -92,6 +113,8 @@ export async function SiteHeader() {
           <MobileNavMenu isAuthenticated={Boolean(user)} />
         </nav>
       </div>
+
+      <CommandMenu agents={commandAgents} isAuthenticated={Boolean(user)} />
     </header>
   )
 }

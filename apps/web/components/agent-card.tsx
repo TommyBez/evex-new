@@ -1,9 +1,11 @@
 import { Download } from 'lucide-react'
 import Link from 'next/link'
 import { AuthorAvatar } from '@/components/author-avatar'
+import { CopyButton } from '@/components/copy-button'
 import { FavoriteButton } from '@/components/favorite-button'
 import { Card } from '@/components/ui/card'
 import type { AgentWithAuthor } from '@/lib/agent-types'
+import { buildNamespacedInstallCommand } from '@/lib/site-url'
 
 export function AgentCard({
   agent,
@@ -14,6 +16,8 @@ export function AgentCard({
   isAuthenticated?: boolean
   isFavorite?: boolean
 }) {
+  const installCommand = buildNamespacedInstallCommand(agent.slug)
+
   return (
     <Card className="group relative flex h-full w-full min-w-0 flex-col gap-4 rounded-md border border-border p-5 shadow-[var(--shadow-card)] ring-0 transition-[background-color,border-color,box-shadow] focus-within:border-input focus-within:bg-muted/40 focus-within:ring-2 focus-within:ring-ring/20 hover:border-input hover:bg-muted/40">
       {/* Overlay link makes the whole card open the agent. The author link
@@ -27,11 +31,18 @@ export function AgentCard({
         <span className="mono-label text-muted-foreground">
           {agent.category}
         </span>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5">
           <span className="mono-label flex items-center gap-1 text-muted-foreground">
             <Download aria-hidden="true" className="size-3" />
             <span className="tabular-nums">{agent.installCount}</span>
           </span>
+          <CopyButton
+            className="relative z-10"
+            label={`Copy install command for ${agent.name}`}
+            stopPropagation
+            toastMessage="Copied install command"
+            value={installCommand}
+          />
           <FavoriteButton
             agentId={agent.id}
             className="relative z-10"

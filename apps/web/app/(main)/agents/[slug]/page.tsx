@@ -225,6 +225,7 @@ function AgentDetailContent({ slug }: { slug: string }) {
   const namespaceSetupCommand = buildNamespaceSetupCommand(baseUrl)
   const namespacedInstallCommand = buildNamespacedInstallCommand(agent.slug)
   const deps = parseDependencies(agent.dependencies)
+  const fileKinds = countFilesByKind(files)
   const moreFromAuthorCount = authorAgents.filter(
     (a) => a.id !== agent.id,
   ).length
@@ -335,10 +336,27 @@ function AgentDetailContent({ slug }: { slug: string }) {
       </Card>
 
       <section className="mt-8">
-        <h2 className="font-semibold text-foreground text-lg">About</h2>
-        <p className="mt-2 whitespace-pre-wrap text-pretty text-muted-foreground leading-relaxed">
-          {agent.description}
-        </p>
+        <h2 className="font-semibold text-foreground text-lg">
+          What&apos;s included
+        </h2>
+        <div className="mt-3 flex flex-wrap gap-2">
+          <Badge variant="outline">{pluralize(files.length, 'file')}</Badge>
+          {fileKinds.subagents > 0 ? (
+            <Badge variant="outline">
+              {pluralize(fileKinds.subagents, 'subagent')}
+            </Badge>
+          ) : null}
+          {fileKinds.skills > 0 ? (
+            <Badge variant="outline">
+              {pluralize(fileKinds.skills, 'skill file')}
+            </Badge>
+          ) : null}
+          {fileKinds.tools > 0 ? (
+            <Badge variant="outline">
+              {pluralize(fileKinds.tools, 'tool')}
+            </Badge>
+          ) : null}
+        </div>
         {deps.length > 0 && (
           <div className="mt-4 flex flex-wrap items-center gap-2">
             <span className="text-muted-foreground text-sm">Dependencies:</span>
@@ -354,7 +372,12 @@ function AgentDetailContent({ slug }: { slug: string }) {
       <Separator className="my-8" />
 
       <section>
-        <h2 className="mb-4 font-semibold text-foreground text-lg">Files</h2>
+        <div className="mb-4 flex items-center gap-2">
+          <h2 className="font-semibold text-foreground text-lg">Files</h2>
+          <span className="mono-label text-muted-foreground/70 tabular-nums">
+            {files.length}
+          </span>
+        </div>
         <AgentFileViewer files={files} />
       </section>
 

@@ -1,6 +1,7 @@
 'use client'
 
 import { CodeEditor } from '@/components/code-editor'
+import { CopyButton } from '@/components/copy-button'
 import {
   Accordion,
   AccordionContent,
@@ -8,6 +9,13 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion'
 import type { AgentRegistryFile } from '@/lib/agent-types'
+
+function getLineCount(content: string): number {
+  if (content.length === 0) {
+    return 0
+  }
+  return content.split('\n').length
+}
 
 interface FileGroup {
   files: AgentRegistryFile[]
@@ -71,36 +79,52 @@ export function AgentFileViewer({ files }: { files: AgentRegistryFile[] }) {
             </span>
           </div>
           <Accordion className="w-full min-w-0">
-            {group.files.map((file) => (
-              <AccordionItem key={file.id} value={file.path}>
-                <AccordionTrigger className="min-w-0 gap-4 py-3 hover:no-underline">
-                  <span className="grid min-w-0 gap-0.5 text-left">
-                    <span className="min-w-0 truncate font-mono text-sm">
-                      {getFileBasename(file.path)}
-                    </span>
-                    <span className="min-w-0 truncate font-mono text-muted-foreground text-xs">
-                      {file.path}
-                    </span>
-                  </span>
-                </AccordionTrigger>
-                <AccordionContent>
-                  <div className="w-full min-w-0 overflow-hidden rounded-md border border-border">
-                    <div className="border-border border-b bg-muted px-4 py-2">
-                      <span className="block truncate font-mono text-muted-foreground text-xs">
+            {group.files.map((file) => {
+              const lineCount = getLineCount(file.content)
+              const basename = getFileBasename(file.path)
+
+              return (
+                <AccordionItem key={file.id} value={file.path}>
+                  <AccordionTrigger className="min-w-0 gap-3 py-3 hover:no-underline">
+                    <span className="grid min-w-0 flex-1 gap-0.5 text-left">
+                      <span className="min-w-0 truncate font-mono text-sm">
+                        {basename}
+                      </span>
+                      <span className="min-w-0 truncate font-mono text-muted-foreground text-xs">
                         {file.path}
                       </span>
+                    </span>
+                    {lineCount > 0 ? (
+                      <span className="mono-label shrink-0 whitespace-nowrap pt-0.5 text-muted-foreground/70 tabular-nums">
+                        {lineCount} lines
+                      </span>
+                    ) : null}
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <div className="w-full min-w-0 overflow-hidden rounded-md border border-border">
+                      <div className="flex items-center gap-2 border-border border-b bg-muted px-3 py-1.5">
+                        <span className="block min-w-0 flex-1 truncate font-mono text-muted-foreground text-xs">
+                          {file.path}
+                        </span>
+                        <CopyButton
+                          label={`Copy ${basename}`}
+                          size="icon-xs"
+                          toastMessage="Copied file contents"
+                          value={file.content}
+                        />
+                      </div>
+                      <CodeEditor
+                        aria-label={file.path}
+                        className="rounded-none border-0"
+                        path={file.path}
+                        readOnly
+                        value={file.content}
+                      />
                     </div>
-                    <CodeEditor
-                      aria-label={file.path}
-                      className="rounded-none border-0"
-                      path={file.path}
-                      readOnly
-                      value={file.content}
-                    />
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            ))}
+                  </AccordionContent>
+                </AccordionItem>
+              )
+            })}
           </Accordion>
         </section>
       ))}
