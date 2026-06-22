@@ -85,7 +85,7 @@ export function AuthForm({ mode }: { mode: 'sign-in' | 'sign-up' }) {
     try {
       const { error } = await authClient.signIn.social({
         provider: 'github',
-        callbackURL: '/favorites',
+        callbackURL: '/',
       })
       if (error) {
         setError(error.message ?? 'Something went wrong')
@@ -151,7 +151,7 @@ export function AuthForm({ mode }: { mode: 'sign-in' | 'sign-up' }) {
         return
       }
 
-      router.push('/favorites')
+      router.push('/')
       router.refresh()
     } catch (error) {
       setError(getErrorMessage(error))

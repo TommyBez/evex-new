@@ -24,7 +24,7 @@ export default function SignUpPage() {
 async function SignUpContent() {
   const session = await auth.api.getSession({ headers: await headers() })
   if (session?.user) {
-    redirect('/favorites')
+    redirect('/')
   }
   return <AuthForm mode="sign-up" />
 }
