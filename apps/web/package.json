@@ -56,7 +56,8 @@
     "email:preview": "email dev --dir emails --port 3001",
     "fix": "ultracite fix",
     "start": "next start",
-    "typecheck": "tsc --noEmit --pretty false"
+    "typecheck": "tsc --noEmit --pretty false",
+    "lint": "pnpm fix"
   },
   "version": "0.1.0",
   "private": true,
