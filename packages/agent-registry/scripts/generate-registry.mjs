@@ -98,9 +98,13 @@ function normalizeSourceFilePath(filePath, registryPath) {
   }
 
   const isAllowedRootFile = ALLOWED_ROOT_FILES.has(normalizedPath)
-  if (!isAllowedRootFile && !normalizedPath.startsWith('agent/')) {
+  if (
+    !isAllowedRootFile &&
+    !normalizedPath.startsWith('agent/') &&
+    !normalizedPath.startsWith('evals/')
+  ) {
     throw new Error(
-      `${registryPath} file path must be README.md, .env.example, or live under agent/.`,
+      `${registryPath} file path must be README.md, .env.example, or live under agent/ or evals/.`,
     )
   }
 
