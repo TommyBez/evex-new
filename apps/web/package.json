@@ -50,7 +50,7 @@
     "ultracite": "7.8.3",
     "zod": "4.3.6"
   },
-  "name": "@evex/web",
+  "name": "evex",
   "scripts": {
     "build": "next build",
     "check": "ultracite check",
