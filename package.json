@@ -2,6 +2,8 @@
   "name": "evex",
   "version": "0.1.0",
   "private": false,
+  "author": "TommyBez",
+  "homepage": "https://evex.sh",
   "packageManager": "pnpm@10.33.0",
   "engines": {
     "node": ">=24"
