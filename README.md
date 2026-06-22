@@ -74,10 +74,11 @@ initial catalog contains:
 - `github-release-scout`
 - `resend-lifecycle-mailer`
 
-To add an agent, create a new source package with `registry.json`, `package.json`,
-`README.md`, and `agent/`, then run:
+To add an agent, create a new source package with `package.json`, `README.md`,
+and `agent/`, then scaffold the editable `registry.json`:
 
 ```bash
+pnpm --filter @evex-new/agent-registry registry:scaffold <slug>
 pnpm --filter @evex-new/agent-registry generate
 ```
 

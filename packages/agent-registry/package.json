@@ -10,6 +10,7 @@
     "build": "node scripts/generate-registry.mjs --check",
     "check": "node scripts/generate-registry.mjs --check",
     "generate": "node scripts/generate-registry.mjs",
+    "registry:scaffold": "node scripts/scaffold-registry-json.mjs",
     "typecheck": "tsc --noEmit --pretty false"
   },
   "devDependencies": {

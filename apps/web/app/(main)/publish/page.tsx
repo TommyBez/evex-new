@@ -12,7 +12,7 @@ export const metadata = createPageMetadata({
 
 const steps = [
   'Create a new package source under packages/agent-registry/agents/<slug>.',
-  'Add registry.json with metadata, static author info, files, and targets.',
+  'Run pnpm --filter @evex-new/agent-registry registry:scaffold <slug>, then edit registry.json as needed.',
   'Keep runtime packages in package.json dependencies; dev tooling stays in devDependencies.',
   'Keep the Eve source inside that folder, including agent/ and optional evals/.',
   'Run pnpm --filter @evex-new/agent-registry generate.',
