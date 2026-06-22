@@ -20,7 +20,6 @@ function getCommandAgents(): CommandAgent[] {
     slug: agent.slug,
     name: agent.name,
     category: agent.category,
-    description: agent.description,
     authorName: agent.authorName,
   }))
 }

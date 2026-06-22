@@ -17,11 +17,10 @@ import {
 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useTheme } from 'next-themes'
-import { useCallback, useEffect, useState } from 'react'
+import { type ReactNode, useCallback, useEffect, useState } from 'react'
 import { GitHubIcon } from '@/components/social-icons'
 import { Button } from '@/components/ui/button'
 import {
-  CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
@@ -43,20 +42,48 @@ const DOCS_URL = 'https://eve.dev/docs/introduction'
 
 export const COMMAND_MENU_EVENT = 'evex:command-menu'
 
-// Lightweight projection of an agent — everything the palette needs to search
-// and route, without the heavier runtime fields.
+// How many agents to render at once. Search runs over the whole catalog, but we
+// only mount a bounded number of rows so the dialog stays fast no matter how
+// large the registry grows.
+const EMPTY_AGENT_LIMIT = 7
+const SEARCH_AGENT_LIMIT = 50
+
+// Lightweight projection of an agent — only what the palette needs to search
+// (name/category/author) and route. Descriptions are intentionally excluded:
+// they were never displayed and shipping them on every page is pure weight.
 export interface CommandAgent {
   authorName: string
   category: string
-  description: string
   name: string
   slug: string
+}
+
+interface PaletteAction {
+  external?: boolean
+  icon: ReactNode
+  key: string
+  label: string
+  run: () => void
 }
 
 // Imperatively open the palette from anywhere (header pill, mobile icon, etc.)
 // without threading state through the React tree.
 export function openCommandMenu() {
   window.dispatchEvent(new Event(COMMAND_MENU_EVENT))
+}
+
+function getAgentHint(params: {
+  query: string
+  total: number
+  shown: number
+}): string | null {
+  if (params.shown >= params.total) {
+    return null
+  }
+  if (params.query.length === 0) {
+    return `Type to search all ${params.total} agents`
+  }
+  return `Refine your search to see ${params.total - params.shown} more`
 }
 
 export function CommandMenu({
@@ -115,6 +142,113 @@ export function CommandMenu({
     [runCommand],
   )
 
+  const query = search.trim().toLowerCase()
+  const matchesQuery = (text: string) =>
+    query.length === 0 || text.toLowerCase().includes(query)
+
+  const matchedAgents =
+    query.length === 0
+      ? agents
+      : agents.filter((agent) =>
+          matchesQuery(`${agent.name} ${agent.category} ${agent.authorName}`),
+        )
+  const visibleAgents = matchedAgents.slice(
+    0,
+    query.length === 0 ? EMPTY_AGENT_LIMIT : SEARCH_AGENT_LIMIT,
+  )
+  const agentHint = getAgentHint({
+    query,
+    total: matchedAgents.length,
+    shown: visibleAgents.length,
+  })
+
+  const visibleCategories = AGENT_CATEGORIES.filter((category) =>
+    matchesQuery(category),
+  )
+
+  const navActions: PaletteAction[] = [
+    {
+      key: 'browse',
+      label: 'Browse agents',
+      icon: <Search aria-hidden="true" />,
+      run: () => goTo('/'),
+    },
+    {
+      key: 'leaderboard',
+      label: 'Leaderboard',
+      icon: <Trophy aria-hidden="true" />,
+      run: () => goTo('/leaderboard'),
+    },
+    ...(isAuthenticated
+      ? [
+          {
+            key: 'favorites',
+            label: 'Favorites',
+            icon: <Heart aria-hidden="true" />,
+            run: () => goTo('/favorites'),
+          },
+          {
+            key: 'profile',
+            label: 'Edit profile',
+            icon: <UserRound aria-hidden="true" />,
+            run: () => goTo('/profile'),
+          },
+        ]
+      : [
+          {
+            key: 'sign-in',
+            label: 'Sign in',
+            icon: <LogIn aria-hidden="true" />,
+            run: () => goTo('/sign-in'),
+          },
+        ]),
+    {
+      key: 'submit',
+      label: 'Submit an agent',
+      icon: <GitHubIcon className="size-4" />,
+      run: () => openExternal(REPO_URL),
+      external: true,
+    },
+    {
+      key: 'docs',
+      label: 'Documentation',
+      icon: <BookOpen aria-hidden="true" />,
+      run: () => openExternal(DOCS_URL),
+      external: true,
+    },
+  ]
+  const visibleNav = navActions.filter((action) => matchesQuery(action.label))
+
+  const themeActions: PaletteAction[] = [
+    {
+      key: 'light',
+      label: 'Light',
+      icon: <Sun aria-hidden="true" />,
+      run: () => runCommand(() => setTheme('light')),
+    },
+    {
+      key: 'dark',
+      label: 'Dark',
+      icon: <Moon aria-hidden="true" />,
+      run: () => runCommand(() => setTheme('dark')),
+    },
+    {
+      key: 'system',
+      label: 'System',
+      icon: <Monitor aria-hidden="true" />,
+      run: () => runCommand(() => setTheme('system')),
+    },
+  ]
+  const visibleTheme = themeActions.filter((action) =>
+    matchesQuery(action.label),
+  )
+
+  const showAgents = visibleAgents.length > 0
+  const showCategories = visibleCategories.length > 0
+  const showNav = visibleNav.length > 0
+  const showTheme = visibleTheme.length > 0
+  const hasResults = showAgents || showCategories || showNav || showTheme
+
   return (
     <Dialog onOpenChange={handleOpenChange} open={open}>
       <DialogContent
@@ -128,6 +262,7 @@ export function CommandMenu({
         <CommandPrimitive
           className="flex size-full flex-col overflow-hidden bg-popover pt-[env(safe-area-inset-top)] text-popover-foreground sm:pt-0"
           loop
+          shouldFilter={false}
         >
           <div className="flex items-center">
             <div className="min-w-0 flex-1">
@@ -151,20 +286,19 @@ export function CommandMenu({
             </DialogClose>
           </div>
           <CommandList className="max-h-none min-h-0 flex-1 px-1 pb-1 sm:max-h-[60vh] sm:flex-initial">
-            <CommandEmpty>No results found.</CommandEmpty>
+            {hasResults ? null : (
+              <div className="py-6 text-center text-muted-foreground text-sm">
+                No results found.
+              </div>
+            )}
 
-            {agents.length > 0 ? (
+            {showAgents ? (
               <CommandGroup heading="Agents">
-                {agents.map((agent) => (
+                {visibleAgents.map((agent) => (
                   <CommandItem
                     key={agent.slug}
-                    keywords={[
-                      agent.category,
-                      agent.authorName,
-                      agent.description,
-                    ]}
                     onSelect={() => goTo(`/agents/${agent.slug}`)}
-                    value={`agent ${agent.name} ${agent.slug}`}
+                    value={`agent:${agent.slug}`}
                   >
                     <Package aria-hidden="true" />
                     <span className="min-w-0 flex-1 truncate">
@@ -175,113 +309,75 @@ export function CommandMenu({
                     </span>
                   </CommandItem>
                 ))}
+                {agentHint ? (
+                  <p className="px-2 py-1.5 text-muted-foreground/70 text-xs">
+                    {agentHint}
+                  </p>
+                ) : null}
               </CommandGroup>
             ) : null}
 
-            <CommandSeparator />
+            {showCategories ? (
+              <>
+                {showAgents && <CommandSeparator />}
+                <CommandGroup heading="Browse by category">
+                  {visibleCategories.map((category) => (
+                    <CommandItem
+                      key={category}
+                      onSelect={() => goTo(`/?category=${category}`)}
+                      value={`category:${category}`}
+                    >
+                      <LayoutGrid aria-hidden="true" />
+                      <span className="capitalize">{category}</span>
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </>
+            ) : null}
 
-            <CommandGroup heading="Browse by category">
-              {AGENT_CATEGORIES.map((category) => (
-                <CommandItem
-                  key={category}
-                  onSelect={() => goTo(`/?category=${category}`)}
-                  value={`category ${category}`}
-                >
-                  <LayoutGrid aria-hidden="true" />
-                  <span className="capitalize">{category}</span>
-                </CommandItem>
-              ))}
-            </CommandGroup>
+            {showNav ? (
+              <>
+                {(showAgents || showCategories) && <CommandSeparator />}
+                <CommandGroup heading="Go to">
+                  {visibleNav.map((action) => (
+                    <CommandItem
+                      key={action.key}
+                      onSelect={action.run}
+                      value={`go:${action.key}`}
+                    >
+                      {action.icon}
+                      {action.label}
+                      {action.external ? (
+                        <ArrowUpRight
+                          aria-hidden="true"
+                          className="ml-auto text-muted-foreground"
+                        />
+                      ) : null}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </>
+            ) : null}
 
-            <CommandSeparator />
-
-            <CommandGroup heading="Go to">
-              <CommandItem onSelect={() => goTo('/')} value="nav browse agents">
-                <Search aria-hidden="true" />
-                Browse agents
-              </CommandItem>
-              <CommandItem
-                onSelect={() => goTo('/leaderboard')}
-                value="nav leaderboard"
-              >
-                <Trophy aria-hidden="true" />
-                Leaderboard
-              </CommandItem>
-              {isAuthenticated ? (
-                <>
-                  <CommandItem
-                    onSelect={() => goTo('/favorites')}
-                    value="nav favorites"
-                  >
-                    <Heart aria-hidden="true" />
-                    Favorites
-                  </CommandItem>
-                  <CommandItem
-                    onSelect={() => goTo('/profile')}
-                    value="nav profile edit"
-                  >
-                    <UserRound aria-hidden="true" />
-                    Edit profile
-                  </CommandItem>
-                </>
-              ) : (
-                <CommandItem
-                  onSelect={() => goTo('/sign-in')}
-                  value="nav sign in"
-                >
-                  <LogIn aria-hidden="true" />
-                  Sign in
-                </CommandItem>
-              )}
-              <CommandItem
-                onSelect={() => openExternal(REPO_URL)}
-                value="nav submit agent github repository"
-              >
-                <GitHubIcon className="size-4" />
-                Submit an agent
-                <ArrowUpRight
-                  aria-hidden="true"
-                  className="ml-auto text-muted-foreground"
-                />
-              </CommandItem>
-              <CommandItem
-                onSelect={() => openExternal(DOCS_URL)}
-                value="nav documentation docs"
-              >
-                <BookOpen aria-hidden="true" />
-                Documentation
-                <ArrowUpRight
-                  aria-hidden="true"
-                  className="ml-auto text-muted-foreground"
-                />
-              </CommandItem>
-            </CommandGroup>
-
-            <CommandSeparator />
-
-            <CommandGroup heading="Theme">
-              <CommandItem
-                onSelect={() => runCommand(() => setTheme('light'))}
-                value="theme light"
-              >
-                <Sun aria-hidden="true" />
-                Light
-              </CommandItem>
-              <CommandItem
-                onSelect={() => runCommand(() => setTheme('dark'))}
-                value="theme dark"
-              >
-                <Moon aria-hidden="true" />
-                Dark
-              </CommandItem>
-              <CommandItem
-                onSelect={() => runCommand(() => setTheme('system'))}
-                value="theme system"
-              >
-                <Monitor aria-hidden="true" />
-                System
-              </CommandItem>
-            </CommandGroup>
+            {showTheme ? (
+              <>
+                {(showAgents || showCategories || showNav) && (
+                  <CommandSeparator />
+                )}
+                <CommandGroup heading="Theme">
+                  {visibleTheme.map((action) => (
+                    <CommandItem
+                      key={action.key}
+                      onSelect={action.run}
+                      value={`theme:${action.key}`}
+                    >
+                      {action.icon}
+                      {action.label}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </>
+            ) : null}
           </CommandList>
 
           <div className="hidden items-center gap-3 border-border border-t px-3 py-2 text-muted-foreground text-xs sm:flex">
