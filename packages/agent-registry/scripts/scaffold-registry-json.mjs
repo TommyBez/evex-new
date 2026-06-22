@@ -3,6 +3,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const REGISTRY_SCHEMA_URL = 'https://ui.shadcn.com/schema/registry.json'
+const ENV_EXAMPLE_FILE = '.env.example'
 const README_TITLE_PATTERN = /^#\s+(.+)$/m
 const LINE_SPLIT_PATTERN = /\r?\n/
 
@@ -89,14 +90,33 @@ function readPackageAuthor(packageJson) {
 }
 
 function toTargetPath(relativePath) {
-  return relativePath === 'README.md'
-    ? '~/agent/README.md'
-    : `~/${relativePath}`
+  if (relativePath === 'README.md') {
+    return '~/agent/README.md'
+  }
+
+  if (relativePath === ENV_EXAMPLE_FILE) {
+    return '~/.env.example'
+  }
+
+  return `~/${relativePath}`
+}
+
+async function fileExists(filePath) {
+  try {
+    await fs.access(filePath)
+    return true
+  } catch {
+    return false
+  }
 }
 
 async function buildFiles(agentRoot) {
   const sourceFiles = await collectFiles(path.join(agentRoot, 'agent'))
   sourceFiles.push(path.join(agentRoot, 'README.md'))
+  const envExamplePath = path.join(agentRoot, ENV_EXAMPLE_FILE)
+  if (await fileExists(envExamplePath)) {
+    sourceFiles.push(envExamplePath)
+  }
 
   return sourceFiles.map((sourcePath) => {
     const relativePath = toPosixPath(path.relative(agentRoot, sourcePath))

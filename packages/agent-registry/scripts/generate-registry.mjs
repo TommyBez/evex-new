@@ -3,10 +3,18 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const CHECK_FLAG = '--check'
+const ENV_EXAMPLE_FILE = '.env.example'
 const GENERATED_FILE = 'src/generated/registry.ts'
 const REGISTRY_FILE_TYPE = 'registry:file'
 const REGISTRY_ITEM_TYPE = 'registry:item'
 const REGISTRY_SCHEMA_URL = 'https://ui.shadcn.com/schema/registry.json'
+const ALLOWED_ROOT_FILES = new Set(['README.md', ENV_EXAMPLE_FILE])
+const BUILT_IN_ENV_VARS = new Set(['CI', 'NODE_ENV'])
+const ENV_ASSIGNMENT_PATTERN = /^\s*([A-Za-z_][A-Za-z0-9_]*)\s*=/gm
+const PROCESS_ENV_BRACKET_PATTERN =
+  /\bprocess\.env\[['"`]([A-Za-z_][A-Za-z0-9_]*)['"`]\]/g
+const PROCESS_ENV_DOT_PATTERN =
+  /\bprocess\.env\.([A-Za-z_][A-Za-z0-9_]*)/g
 const HIGH_SURROGATE_START = 0xd8_00
 const LOW_SURROGATE_START = 0xdc_00
 const MAX_ASCII_CODE_POINT = 0x7f
@@ -89,9 +97,10 @@ function normalizeSourceFilePath(filePath, registryPath) {
     throw new Error(`${registryPath} file path must not traverse directories.`)
   }
 
-  if (normalizedPath !== 'README.md' && !normalizedPath.startsWith('agent/')) {
+  const isAllowedRootFile = ALLOWED_ROOT_FILES.has(normalizedPath)
+  if (!isAllowedRootFile && !normalizedPath.startsWith('agent/')) {
     throw new Error(
-      `${registryPath} file path must be README.md or live under agent/.`,
+      `${registryPath} file path must be README.md, .env.example, or live under agent/.`,
     )
   }
 
@@ -138,6 +147,77 @@ async function readRegistryFiles(item, agentRoot, registryPath) {
   return files
 }
 
+function addEnvMatches(content, pattern, envVars) {
+  pattern.lastIndex = 0
+
+  for (const match of content.matchAll(pattern)) {
+    const envVar = match[1]
+    if (envVar && !BUILT_IN_ENV_VARS.has(envVar)) {
+      envVars.add(envVar)
+    }
+  }
+}
+
+async function collectUsedEnvVars(files) {
+  const envVars = new Set()
+
+  for (const file of files) {
+    if (!file.path.startsWith('agent/')) {
+      continue
+    }
+
+    const content = await fs.readFile(file.sourcePath, 'utf8')
+    addEnvMatches(content, PROCESS_ENV_DOT_PATTERN, envVars)
+    addEnvMatches(content, PROCESS_ENV_BRACKET_PATTERN, envVars)
+  }
+
+  return envVars
+}
+
+async function readEnvExampleVars(filePath) {
+  const content = await fs.readFile(filePath, 'utf8')
+  const envVars = new Set()
+
+  ENV_ASSIGNMENT_PATTERN.lastIndex = 0
+  for (const match of content.matchAll(ENV_ASSIGNMENT_PATTERN)) {
+    const envVar = match[1]
+    if (envVar) {
+      envVars.add(envVar)
+    }
+  }
+
+  return envVars
+}
+
+async function validateEnvironmentExample(files, registryPath) {
+  const usedEnvVars = await collectUsedEnvVars(files)
+  if (usedEnvVars.size === 0) {
+    return
+  }
+
+  const envExampleFile = files.find((file) => file.path === ENV_EXAMPLE_FILE)
+  const sortedUsedEnvVars = [...usedEnvVars].toSorted((left, right) =>
+    left.localeCompare(right),
+  )
+
+  if (!envExampleFile) {
+    throw new Error(
+      `${registryPath} uses environment variables (${sortedUsedEnvVars.join(', ')}) and must include .env.example in files.`,
+    )
+  }
+
+  const declaredEnvVars = await readEnvExampleVars(envExampleFile.sourcePath)
+  const missingEnvVars = sortedUsedEnvVars.filter(
+    (envVar) => !declaredEnvVars.has(envVar),
+  )
+
+  if (missingEnvVars.length > 0) {
+    throw new Error(
+      `${envExampleFile.sourcePath} must define ${missingEnvVars.join(', ')}.`,
+    )
+  }
+}
+
 function toCatalogFile(file) {
   const { content: _content, sourcePath: _sourcePath, ...descriptor } = file
   return {
@@ -165,6 +245,7 @@ async function buildAgentEntry(agentSlug) {
   validateDependencies(item, registryPath)
 
   const files = await readRegistryFiles(item, agentRoot, registryPath)
+  await validateEnvironmentExample(files, registryPath)
   const { files: _files, ...metadata } = item
 
   return {

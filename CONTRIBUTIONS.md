@@ -10,6 +10,7 @@ Create each agent under:
 
 ```text
 packages/agent-registry/agents/<slug>/
+  .env.example       # required when the agent reads environment variables
   package.json
   README.md
   agent/
@@ -19,7 +20,9 @@ packages/agent-registry/agents/<slug>/
 ```
 
 The `agent/` directory contains the Eve source that will be installed into a
-consumer Eve app. `README.md` is installed as the agent readme. Do not include
+consumer Eve app. `README.md` is installed as the agent readme. If the agent
+reads required environment variables, include `.env.example` with placeholder
+values for each variable and publish it in the registry item. Do not include
 app-level project files such as `package.json`, `tsconfig.json`, or lockfiles in
 the public registry item.
 
@@ -138,7 +141,9 @@ Rules:
 - `author` is a GitHub username.
 - `dependencies` is the public install dependency list.
 - `files` declares every installed file.
-- declared file paths must be `README.md` or stay inside `agent/`.
+- declared file paths must be `README.md`, `.env.example`, or stay inside
+  `agent/`.
+- `.env.example` is required when installed files read environment variables.
 - `meta.author` is not used.
 
 The generator enriches item endpoints with file `content` by reading the
@@ -170,7 +175,10 @@ Before merging a PR:
 
 - `registry.json.author` is present and is the author's GitHub username.
 - `registry.json.dependencies` contains the public runtime dependencies.
+- `.env.example` is present and declares every required env var when the agent
+  reads credentials or configuration from `process.env`.
 - `package.json.dependencies` supports local agent development.
-- declared files are readable and stay under `agent/` or `README.md`.
+- declared files are readable and stay under `agent/`, `README.md`, or
+  `.env.example`.
 - generated `packages/agent-registry/src/generated/registry.ts` is up to date.
 - the web build still passes if the change affects public rendering.

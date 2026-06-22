@@ -35,6 +35,11 @@
           "path": "README.md",
           "type": "registry:file",
           "target": "~/agent/README.md"
+        },
+        {
+          "path": ".env.example",
+          "type": "registry:file",
+          "target": "~/.env.example"
         }
       ],
       "meta": {

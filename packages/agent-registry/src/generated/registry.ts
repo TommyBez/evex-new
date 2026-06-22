@@ -152,6 +152,11 @@ export const generatedRegistry = {
           "path": "README.md",
           "type": "registry:file",
           "target": "~/agent/README.md"
+        },
+        {
+          "path": ".env.example",
+          "type": "registry:file",
+          "target": "~/.env.example"
         }
       ]
     },
@@ -303,6 +308,11 @@ export const generatedRegistry = {
           "path": "README.md",
           "type": "registry:file",
           "target": "~/agent/README.md"
+        },
+        {
+          "path": ".env.example",
+          "type": "registry:file",
+          "target": "~/.env.example"
         }
       ]
     },
@@ -346,6 +356,11 @@ export const generatedRegistry = {
           "path": "README.md",
           "type": "registry:file",
           "target": "~/agent/README.md"
+        },
+        {
+          "path": ".env.example",
+          "type": "registry:file",
+          "target": "~/.env.example"
         }
       ]
     }
@@ -523,6 +538,12 @@ export const generatedRegistryItems = {
         "type": "registry:file",
         "target": "~/agent/README.md",
         "content": "# GitHub Release Scout\n\nConnects to GitHub, gathers recently merged pull requests, and prepares release notes that preserve traceability to PR numbers, labels, and rollout risk.\n\n## Development\n\n```bash\npnpm install\npnpm dev\n```\n\nRun `pnpm info` to inspect the Eve surface and `pnpm build` before opening a PR.\n"
+      },
+      {
+        "path": ".env.example",
+        "type": "registry:file",
+        "target": "~/.env.example",
+        "content": "GITHUB_TOKEN=\n"
       }
     ]
   },
@@ -697,6 +718,12 @@ export const generatedRegistryItems = {
         "type": "registry:file",
         "target": "~/agent/README.md",
         "content": "# Linear Sprint Triage\n\nFetches Linear team issues, highlights unassigned or high-priority work, and separates delivery risk from simple backlog hygiene.\n\n## Development\n\n```bash\npnpm install\npnpm dev\n```\n\nRun `pnpm info` to inspect the Eve surface and `pnpm build` before opening a PR.\n"
+      },
+      {
+        "path": ".env.example",
+        "type": "registry:file",
+        "target": "~/.env.example",
+        "content": "LINEAR_API_KEY=\n"
       }
     ]
   },
@@ -745,6 +772,12 @@ export const generatedRegistryItems = {
         "type": "registry:file",
         "target": "~/agent/README.md",
         "content": "# Resend Lifecycle Mailer\n\nBuilds event-driven lifecycle emails, previews exact recipients and HTML, and only sends through Resend when dry-run mode is disabled.\n\n## Development\n\n```bash\npnpm install\npnpm dev\n```\n\nRun `pnpm info` to inspect the Eve surface and `pnpm build` before opening a PR.\n"
+      },
+      {
+        "path": ".env.example",
+        "type": "registry:file",
+        "target": "~/.env.example",
+        "content": "RESEND_API_KEY=\n"
       }
     ]
   }
