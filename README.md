@@ -12,7 +12,6 @@
 <p align="center">
   <a href="https://evex.sh"><img alt="Live at evex.sh" src="https://shieldcn.dev/badge/live-evex.sh-22c55e.png?statusDot=true" /></a>
   <a href="https://github.com/TommyBez/evex"><img alt="GitHub stars" src="https://shieldcn.dev/github/stars/TommyBez/evex.png?logo=github" /></a>
-  <a href="#agents"><img alt="Agents in the catalog" src="https://shieldcn.dev/badge/agents-5-006bff.png" /></a>
   <a href="#install-an-agent"><img alt="Install with shadcn" src="https://shieldcn.dev/badge/install-shadcn-000000.png?logo=shadcnui&logoColor=white" /></a>
   <a href="./CONTRIBUTIONS.md"><img alt="Pull requests welcome" src="https://shieldcn.dev/badge/PRs-welcome-006bff.png" /></a>
 </p>
@@ -21,8 +20,6 @@
   <a href="https://evex.sh"><strong>Live -> evex.sh</strong></a>
   &nbsp;·&nbsp;
   <a href="https://eve.dev/docs/introduction">eve docs</a>
-  &nbsp;·&nbsp;
-  <a href="#agents">agents</a>
   &nbsp;·&nbsp;
   <a href="./CONTRIBUTIONS.md">contributing agents</a>
 </p>
@@ -50,18 +47,6 @@ Direct URL installs work too:
 ```bash
 npx shadcn@latest add https://evex.sh/r/code-reviewer.json
 ```
-
-## Agents
-
-| Agent | What it does | Category |
-| --- | --- | --- |
-| **[Code Reviewer](https://evex.sh/agents/code-reviewer)** | GitHub PR reviewer — mention it on a pull request for a native review with inline comments, suggestion blocks, and rate limiting on public repos. | `coding` |
-| **[GitHub Release Scout](https://evex.sh/agents/github-release-scout)** | Gathers recently merged PRs and drafts release notes that trace back to PR numbers, labels, and rollout risk. | `devops` |
-| **[Incident Commander](https://evex.sh/agents/incident-commander)** | Runs the first thirty minutes of an outage — builds a factual timeline, tracks action items, and drafts stakeholder updates. | `devops` |
-| **[Linear Sprint Triage](https://evex.sh/agents/linear-sprint-triage)** | Pulls Linear issues, surfaces unassigned or high-priority work, and separates delivery risk from backlog hygiene. | `productivity` |
-| **[Resend Lifecycle Mailer](https://evex.sh/agents/resend-lifecycle-mailer)** | Builds event-driven lifecycle emails, previews recipients and HTML, and only sends through Resend when dry-run is off. | `support` |
-
-Browse the full catalog at [evex.sh](https://evex.sh).
 
 ## Registry
 
