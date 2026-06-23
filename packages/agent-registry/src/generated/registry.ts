@@ -299,6 +299,76 @@ export const generatedRegistry = {
       ]
     },
     {
+      "name": "postgres-data-analyst",
+      "type": "registry:item",
+      "title": "Postgres Data Analyst",
+      "description": "A Slack-native Eve agent that inspects a configured Postgres database and answers analytics questions with bounded read-only SQL.",
+      "author": "TommyBez",
+      "categories": [
+        "data"
+      ],
+      "dependencies": [
+        "@vercel/connect@^0.2.6",
+        "eve@^0.11.10",
+        "pg@^8.21.0",
+        "pgsql-ast-parser@^12.0.1",
+        "zod@4.3.6"
+      ],
+      "meta": {
+        "slug": "postgres-data-analyst",
+        "category": "data",
+        "createdAt": "2026-06-23T00:00:00.000Z",
+        "updatedAt": "2026-06-23T00:00:00.000Z"
+      },
+      "files": [
+        {
+          "path": "agent/agent.ts",
+          "type": "registry:file",
+          "target": "~/agent/agent.ts"
+        },
+        {
+          "path": "agent/channels/slack.ts",
+          "type": "registry:file",
+          "target": "~/agent/channels/slack.ts"
+        },
+        {
+          "path": "agent/instructions.md",
+          "type": "registry:file",
+          "target": "~/agent/instructions.md"
+        },
+        {
+          "path": "agent/lib/postgres.ts",
+          "type": "registry:file",
+          "target": "~/agent/lib/postgres.ts"
+        },
+        {
+          "path": "agent/lib/sql-policy.ts",
+          "type": "registry:file",
+          "target": "~/agent/lib/sql-policy.ts"
+        },
+        {
+          "path": "agent/tools/describe_schema.ts",
+          "type": "registry:file",
+          "target": "~/agent/tools/describe_schema.ts"
+        },
+        {
+          "path": "agent/tools/run_sql.ts",
+          "type": "registry:file",
+          "target": "~/agent/tools/run_sql.ts"
+        },
+        {
+          "path": "README.md",
+          "type": "registry:file",
+          "target": "~/agent/README.md"
+        },
+        {
+          "path": ".env.example",
+          "type": "registry:file",
+          "target": "~/.env.example"
+        }
+      ]
+    },
+    {
       "name": "resend-lifecycle-mailer",
       "type": "registry:item",
       "title": "Resend Lifecycle Mailer",
@@ -684,6 +754,86 @@ export const generatedRegistryItems = {
         "type": "registry:file",
         "target": "~/.env.example",
         "content": "LINEAR_API_KEY=\n"
+      }
+    ]
+  },
+  "postgres-data-analyst": {
+    "$schema": "https://ui.shadcn.com/schema/registry.json",
+    "name": "postgres-data-analyst",
+    "type": "registry:item",
+    "title": "Postgres Data Analyst",
+    "description": "A Slack-native Eve agent that inspects a configured Postgres database and answers analytics questions with bounded read-only SQL.",
+    "author": "TommyBez",
+    "categories": [
+      "data"
+    ],
+    "dependencies": [
+      "@vercel/connect@^0.2.6",
+      "eve@^0.11.10",
+      "pg@^8.21.0",
+      "pgsql-ast-parser@^12.0.1",
+      "zod@4.3.6"
+    ],
+    "meta": {
+      "slug": "postgres-data-analyst",
+      "category": "data",
+      "createdAt": "2026-06-23T00:00:00.000Z",
+      "updatedAt": "2026-06-23T00:00:00.000Z"
+    },
+    "files": [
+      {
+        "path": "agent/agent.ts",
+        "type": "registry:file",
+        "target": "~/agent/agent.ts",
+        "content": "import { defineAgent } from \"eve\";\n\nexport default defineAgent({\n  model: \"openai/gpt-5.4-mini\",\n});\n"
+      },
+      {
+        "path": "agent/channels/slack.ts",
+        "type": "registry:file",
+        "target": "~/agent/channels/slack.ts",
+        "content": "import { connectSlackCredentials } from \"@vercel/connect/eve\";\nimport { slackChannel } from \"eve/channels/slack\";\n\nconst SLACK_CONNECT_UID =\n  process.env.DATA_ANALYST_SLACK_CONNECT_UID || \"slack/postgres-data-analyst\";\n\nexport default slackChannel({\n  credentials: connectSlackCredentials(SLACK_CONNECT_UID),\n});\n"
+      },
+      {
+        "path": "agent/instructions.md",
+        "type": "registry:file",
+        "target": "~/agent/instructions.md",
+        "content": "# Mission\nYou are a careful Postgres data analyst in Slack. You help people understand a\nsingle configured Postgres database through schema inspection and read-only\nanalytical SQL.\n\n# Operating rules\n- Treat the database as read-only. Never claim write access and never attempt to\n  mutate data.\n- Inspect schema metadata before querying unfamiliar tables.\n- Ask a clarifying question when the metric definition, time range, table\n  choice, or grain is ambiguous.\n- Prefer aggregate answers and concise explanations over raw row dumps.\n- Explain assumptions, filters, units, date windows, and caveats in the final\n  answer.\n- Return only the rows needed to answer the question. Do not expose credentials,\n  hidden configuration, or unnecessary sensitive row-level data.\n- If a query is rejected by policy, revise it into a simpler read-only SELECT\n  query over allowed schemas and tables.\n\n# Workflow\n1. Use describe_schema when you need table or column context.\n2. Write one read-only SQL query that answers the question directly.\n3. Use run_sql to execute the query.\n4. Interpret the result in plain language for Slack.\n5. If the result is incomplete or truncated, say so and narrow the question\n   before issuing broader SQL.\n"
+      },
+      {
+        "path": "agent/lib/postgres.ts",
+        "type": "registry:file",
+        "target": "~/agent/lib/postgres.ts",
+        "content": "import pg from \"pg\";\n\nconst DEFAULT_ALLOWED_SCHEMAS = \"public\";\nconst DEFAULT_MAX_ROWS = 200;\nconst DEFAULT_STATEMENT_TIMEOUT_MS = 10_000;\nconst MIN_MAX_ROWS = 1;\nconst MAX_MAX_ROWS = 1_000;\nconst MIN_TIMEOUT_MS = 1_000;\nconst MAX_TIMEOUT_MS = 60_000;\nconst IDENTIFIER_PATTERN = /^[A-Za-z_][A-Za-z0-9_]*$/;\n\nexport type DataAnalystConfig = {\n  allowedSchemas: readonly string[];\n  blockedTables: ReadonlySet<string>;\n  databaseUrl: string | null;\n  maxRows: number;\n  statementTimeoutMs: number;\n};\n\nlet pool: pg.Pool | null = null;\nlet poolDatabaseUrl: string | null = null;\n\nexport function getDataAnalystConfig(): DataAnalystConfig {\n  const allowedSchemas = parseIdentifierList(\n    process.env.DATA_ANALYST_ALLOWED_SCHEMAS || DEFAULT_ALLOWED_SCHEMAS,\n    \"DATA_ANALYST_ALLOWED_SCHEMAS\",\n  );\n\n  return {\n    allowedSchemas,\n    blockedTables: new Set(\n      parseTableList(process.env.DATA_ANALYST_BLOCKED_TABLES || \"\"),\n    ),\n    databaseUrl: process.env.DATA_ANALYST_DATABASE_URL?.trim() || null,\n    maxRows: readIntegerEnv(\n      \"DATA_ANALYST_MAX_ROWS\",\n      DEFAULT_MAX_ROWS,\n      MIN_MAX_ROWS,\n      MAX_MAX_ROWS,\n    ),\n    statementTimeoutMs: readIntegerEnv(\n      \"DATA_ANALYST_STATEMENT_TIMEOUT_MS\",\n      DEFAULT_STATEMENT_TIMEOUT_MS,\n      MIN_TIMEOUT_MS,\n      MAX_TIMEOUT_MS,\n    ),\n  };\n}\n\nexport function getRequiredDatabaseUrl(config: DataAnalystConfig): string {\n  if (!config.databaseUrl) {\n    throw new Error(\n      \"DATA_ANALYST_DATABASE_URL is required. Set it to a read-only Postgres connection string.\",\n    );\n  }\n\n  return config.databaseUrl;\n}\n\nexport function getPool(config: DataAnalystConfig): pg.Pool {\n  const databaseUrl = getRequiredDatabaseUrl(config);\n  if (pool && poolDatabaseUrl === databaseUrl) {\n    return pool;\n  }\n\n  pool = new pg.Pool({\n    application_name: \"postgres-data-analyst\",\n    connectionString: databaseUrl,\n    max: 3,\n  });\n  poolDatabaseUrl = databaseUrl;\n  return pool;\n}\n\nexport function quoteIdentifier(identifier: string): string {\n  if (!IDENTIFIER_PATTERN.test(identifier)) {\n    throw new Error(`Invalid Postgres identifier: ${identifier}`);\n  }\n\n  return `\"${identifier.replaceAll('\"', '\"\"')}\"`;\n}\n\nfunction parseIdentifierList(value: string, envName: string): readonly string[] {\n  const identifiers = value\n    .split(\",\")\n    .map((part) => part.trim())\n    .filter((part) => part.length > 0);\n\n  if (identifiers.length === 0) {\n    throw new Error(`${envName} must include at least one schema.`);\n  }\n\n  for (const identifier of identifiers) {\n    if (!IDENTIFIER_PATTERN.test(identifier)) {\n      throw new Error(`${envName} contains invalid identifier \"${identifier}\".`);\n    }\n  }\n\n  return identifiers;\n}\n\nfunction parseTableList(value: string): readonly string[] {\n  return value\n    .split(\",\")\n    .map((part) => part.trim())\n    .filter((part) => part.length > 0)\n    .map((entry) => {\n      const pieces = entry.split(\".\");\n      if (pieces.length > 2) {\n        throw new Error(`Invalid DATA_ANALYST_BLOCKED_TABLES entry \"${entry}\".`);\n      }\n\n      for (const piece of pieces) {\n        if (!IDENTIFIER_PATTERN.test(piece)) {\n          throw new Error(\n            `DATA_ANALYST_BLOCKED_TABLES contains invalid identifier \"${entry}\".`,\n          );\n        }\n      }\n\n      return entry.toLowerCase();\n    });\n}\n\nfunction readIntegerEnv(\n  envName: string,\n  defaultValue: number,\n  min: number,\n  max: number,\n): number {\n  const raw = process.env[envName]?.trim();\n  if (!raw) {\n    return defaultValue;\n  }\n\n  const value = Number.parseInt(raw, 10);\n  if (!Number.isInteger(value) || value < min || value > max) {\n    throw new Error(`${envName} must be an integer from ${min} to ${max}.`);\n  }\n\n  return value;\n}\n"
+      },
+      {
+        "path": "agent/lib/sql-policy.ts",
+        "type": "registry:file",
+        "target": "~/agent/lib/sql-policy.ts",
+        "content": "import { parse, type Statement } from \"pgsql-ast-parser\";\nimport type { DataAnalystConfig } from \"./postgres\";\n\nconst ALLOWED_STATEMENT_TYPES = new Set([\n  \"select\",\n  \"union\",\n  \"union all\",\n  \"with\",\n  \"with recursive\",\n]);\n\nconst DISALLOWED_STATEMENT_TYPES = new Set([\n  \"alter index\",\n  \"alter sequence\",\n  \"alter table\",\n  \"begin\",\n  \"comment\",\n  \"commit\",\n  \"create composite type\",\n  \"create enum\",\n  \"create extension\",\n  \"create function\",\n  \"create index\",\n  \"create materialized view\",\n  \"create schema\",\n  \"create sequence\",\n  \"create table\",\n  \"create view\",\n  \"deallocate\",\n  \"delete\",\n  \"do\",\n  \"drop function\",\n  \"drop index\",\n  \"drop sequence\",\n  \"drop table\",\n  \"drop trigger\",\n  \"drop type\",\n  \"insert\",\n  \"prepare\",\n  \"raise\",\n  \"refresh materialized view\",\n  \"rollback\",\n  \"set\",\n  \"set names\",\n  \"set timezone\",\n  \"show\",\n  \"start transaction\",\n  \"tablespace\",\n  \"truncate table\",\n  \"update\",\n  \"values\",\n]);\n\ntype TableReference = {\n  name: string;\n  schema: string | null;\n};\n\nexport type ValidatedSql = {\n  tables: readonly TableReference[];\n};\n\nexport function validateReadOnlySql(\n  sql: string,\n  config: DataAnalystConfig,\n): ValidatedSql {\n  const trimmedSql = trimSql(sql);\n  let statements: Statement[];\n\n  try {\n    statements = parse(trimmedSql);\n  } catch (error) {\n    throw new Error(\n      `SQL could not be parsed. Use a single read-only SELECT query with standard Postgres syntax. ${formatUnknownError(error)}`,\n    );\n  }\n\n  if (statements.length !== 1) {\n    throw new Error(\"Only one SQL statement is allowed.\");\n  }\n\n  const [statement] = statements;\n  if (!statement) {\n    throw new Error(\"SQL query is empty.\");\n  }\n\n  const cteAliases = collectCteAliases(statement);\n  assertReadOnlyStatementTree(statement);\n\n  const tables = collectTableReferences(statement).filter(\n    (table) => !cteAliases.has(table.name.toLowerCase()),\n  );\n\n  assertTablePolicy(tables, config);\n  return { tables };\n}\n\nexport function trimSql(sql: string): string {\n  return sql.trim().replace(/;+$/u, \"\").trim();\n}\n\nfunction assertReadOnlyStatementTree(statement: Statement): void {\n  const statementType = statement.type;\n  if (!ALLOWED_STATEMENT_TYPES.has(statementType)) {\n    throw new Error(`Only SELECT and WITH queries are allowed. Received ${statementType}.`);\n  }\n\n  walkAst(statement, (node) => {\n    const type = readNodeType(node);\n    if (type && DISALLOWED_STATEMENT_TYPES.has(type)) {\n      throw new Error(`SQL statement type \"${type}\" is not allowed.`);\n    }\n  });\n}\n\nfunction collectCteAliases(statement: Statement): ReadonlySet<string> {\n  const aliases = new Set<string>();\n\n  walkAst(statement, (node) => {\n    const type = readNodeType(node);\n    if (type === \"with\") {\n      const bindings = readArrayProperty(node, \"bind\");\n      for (const binding of bindings) {\n        const alias = readNameProperty(binding, \"alias\");\n        if (alias) {\n          aliases.add(alias.toLowerCase());\n        }\n      }\n    }\n\n    if (type === \"with recursive\") {\n      const alias = readNameProperty(node, \"alias\");\n      if (alias) {\n        aliases.add(alias.toLowerCase());\n      }\n    }\n  });\n\n  return aliases;\n}\n\nfunction collectTableReferences(statement: Statement): readonly TableReference[] {\n  const tables: TableReference[] = [];\n\n  walkAst(statement, (node) => {\n    if (readNodeType(node) !== \"table\") {\n      return;\n    }\n\n    const tableName = readObjectProperty(node, \"name\");\n    const name = readStringProperty(tableName, \"name\");\n    if (!name) {\n      return;\n    }\n\n    tables.push({\n      name,\n      schema: readStringProperty(tableName, \"schema\"),\n    });\n  });\n\n  return tables;\n}\n\nfunction assertTablePolicy(\n  tables: readonly TableReference[],\n  config: DataAnalystConfig,\n): void {\n  const allowedSchemas = new Set(\n    config.allowedSchemas.map((schema) => schema.toLowerCase()),\n  );\n\n  for (const table of tables) {\n    const schema = table.schema?.toLowerCase() ?? null;\n    const name = table.name.toLowerCase();\n\n    if (schema && !allowedSchemas.has(schema)) {\n      throw new Error(`Schema \"${table.schema}\" is not allowed.`);\n    }\n\n    if (!schema && name.startsWith(\"pg_\")) {\n      throw new Error(`Unqualified Postgres catalog table \"${table.name}\" is not allowed.`);\n    }\n\n    const qualifiedName = schema ? `${schema}.${name}` : name;\n    if (config.blockedTables.has(name) || config.blockedTables.has(qualifiedName)) {\n      throw new Error(`Table \"${qualifiedName}\" is blocked for this agent.`);\n    }\n  }\n}\n\nfunction walkAst(value: unknown, visit: (node: Record<string, unknown>) => void): void {\n  if (Array.isArray(value)) {\n    for (const item of value) {\n      walkAst(item, visit);\n    }\n    return;\n  }\n\n  if (!value || typeof value !== \"object\") {\n    return;\n  }\n\n  const node = value as Record<string, unknown>;\n  visit(node);\n\n  for (const child of Object.values(node)) {\n    walkAst(child, visit);\n  }\n}\n\nfunction readNodeType(node: Record<string, unknown>): string | null {\n  return readStringProperty(node, \"type\");\n}\n\nfunction readArrayProperty(\n  node: Record<string, unknown>,\n  property: string,\n): readonly unknown[] {\n  const value = node[property];\n  return Array.isArray(value) ? value : [];\n}\n\nfunction readNameProperty(\n  node: unknown,\n  property: string,\n): string | null {\n  const value = readObjectProperty(node, property);\n  return readStringProperty(value, \"name\");\n}\n\nfunction readObjectProperty(\n  node: unknown,\n  property: string,\n): Record<string, unknown> | null {\n  if (!node || typeof node !== \"object\") {\n    return null;\n  }\n\n  const value = (node as Record<string, unknown>)[property];\n  if (!value || typeof value !== \"object\" || Array.isArray(value)) {\n    return null;\n  }\n\n  return value as Record<string, unknown>;\n}\n\nfunction readStringProperty(\n  node: Record<string, unknown> | null,\n  property: string,\n): string | null {\n  const value = node?.[property];\n  return typeof value === \"string\" && value.length > 0 ? value : null;\n}\n\nfunction formatUnknownError(error: unknown): string {\n  if (error instanceof Error && error.message) {\n    return error.message;\n  }\n\n  return \"Unknown parser error.\";\n}\n"
+      },
+      {
+        "path": "agent/tools/describe_schema.ts",
+        "type": "registry:file",
+        "target": "~/agent/tools/describe_schema.ts",
+        "content": "import { defineTool } from \"eve/tools\";\nimport { z } from \"zod\";\nimport { getDataAnalystConfig, getPool } from \"../lib/postgres\";\n\nconst SCHEMA_COLUMN_LIMIT = 1_000;\n\ntype TableKind =\n  | \"foreign_table\"\n  | \"materialized_view\"\n  | \"partitioned_table\"\n  | \"table\"\n  | \"unknown\"\n  | \"view\";\n\ntype SchemaColumn = {\n  column: string;\n  dataType: string;\n  nullable: boolean;\n  ordinalPosition: number;\n  primaryKey: boolean;\n};\n\ntype SchemaTable = {\n  columns: SchemaColumn[];\n  kind: TableKind;\n  schema: string;\n  table: string;\n};\n\ntype DescribeSchemaOutput =\n  | {\n      ok: true;\n      tables: SchemaTable[];\n      truncated: boolean;\n    }\n  | {\n      error: string;\n      missingEnv?: string;\n      ok: false;\n    };\n\nexport default defineTool({\n  description:\n    \"Describe allowed Postgres schemas, tables, columns, types, nullability, and primary-key columns.\",\n  inputSchema: z.object({\n    schema: z.string().min(1).optional(),\n    table: z.string().min(1).optional(),\n  }),\n  async execute({ schema, table }): Promise<DescribeSchemaOutput> {\n    try {\n      const config = getDataAnalystConfig();\n      if (!config.databaseUrl) {\n        return {\n          ok: false,\n          error:\n            \"DATA_ANALYST_DATABASE_URL is required. Set it to a read-only Postgres connection string.\",\n          missingEnv: \"DATA_ANALYST_DATABASE_URL\",\n        };\n      }\n\n      if (schema && !config.allowedSchemas.includes(schema)) {\n        return { ok: true, tables: [], truncated: false };\n      }\n\n      const pool = getPool(config);\n      const schemas = schema ? [schema] : config.allowedSchemas;\n      const result = await pool.query(\n        `\n          select\n            c.table_schema,\n            c.table_name,\n            c.column_name,\n            c.ordinal_position,\n            c.data_type,\n            c.udt_name,\n            c.is_nullable,\n            case cls.relkind\n              when 'r' then 'table'\n              when 'p' then 'partitioned_table'\n              when 'v' then 'view'\n              when 'm' then 'materialized_view'\n              when 'f' then 'foreign_table'\n              else 'unknown'\n            end as relation_kind,\n            tc.constraint_type = 'PRIMARY KEY' as is_primary_key\n          from information_schema.columns c\n          join pg_catalog.pg_namespace n\n            on n.nspname = c.table_schema\n          join pg_catalog.pg_class cls\n            on cls.relnamespace = n.oid\n            and cls.relname = c.table_name\n            and cls.relkind in ('r', 'p', 'v', 'm', 'f')\n          left join information_schema.key_column_usage kcu\n            on kcu.table_schema = c.table_schema\n            and kcu.table_name = c.table_name\n            and kcu.column_name = c.column_name\n          left join information_schema.table_constraints tc\n            on tc.constraint_schema = kcu.constraint_schema\n            and tc.constraint_name = kcu.constraint_name\n            and tc.table_schema = c.table_schema\n            and tc.table_name = c.table_name\n            and tc.constraint_type = 'PRIMARY KEY'\n          where c.table_schema = any($1)\n            and ($2::text is null or c.table_name = $2)\n          order by c.table_schema, c.table_name, c.ordinal_position\n          limit ${SCHEMA_COLUMN_LIMIT + 1}\n        `,\n        [schemas, table ?? null],\n      );\n\n      return {\n        ok: true,\n        tables: groupColumns(\n          result.rows.filter(\n            (row) =>\n              !isBlockedTable(\n                String(row.table_schema),\n                String(row.table_name),\n                config.blockedTables,\n              ),\n          ),\n        ),\n        truncated: result.rows.length > SCHEMA_COLUMN_LIMIT,\n      };\n    } catch (error) {\n      return { ok: false, error: formatUnknownError(error) };\n    }\n  },\n  toModelOutput(output) {\n    if (!output.ok) {\n      return { type: \"json\", value: output };\n    }\n\n    return {\n      type: \"json\",\n      value: {\n        ok: true,\n        tableCount: output.tables.length,\n        tables: output.tables,\n        truncated: output.truncated,\n      },\n    };\n  },\n});\n\nfunction groupColumns(rows: readonly Record<string, unknown>[]): SchemaTable[] {\n  const tables = new Map<string, SchemaTable>();\n\n  for (const row of rows.slice(0, SCHEMA_COLUMN_LIMIT)) {\n    const schema = String(row.table_schema);\n    const table = String(row.table_name);\n    const key = `${schema}.${table}`;\n    const existing = tables.get(key) ?? {\n      schema,\n      table,\n      columns: [],\n      kind: readRelationKind(row.relation_kind),\n    };\n\n    existing.columns.push({\n      column: String(row.column_name),\n      dataType: String(row.data_type ?? row.udt_name),\n      nullable: row.is_nullable === \"YES\",\n      ordinalPosition: Number(row.ordinal_position),\n      primaryKey: row.is_primary_key === true,\n    });\n    tables.set(key, existing);\n  }\n\n  return [...tables.values()];\n}\n\nfunction readRelationKind(value: unknown): TableKind {\n  if (\n    value === \"foreign_table\" ||\n    value === \"materialized_view\" ||\n    value === \"partitioned_table\" ||\n    value === \"table\" ||\n    value === \"view\"\n  ) {\n    return value;\n  }\n\n  return \"unknown\";\n}\n\nfunction isBlockedTable(\n  schema: string,\n  table: string,\n  blockedTables: ReadonlySet<string>,\n): boolean {\n  const tableName = table.toLowerCase();\n  const qualifiedName = `${schema.toLowerCase()}.${tableName}`;\n  return blockedTables.has(tableName) || blockedTables.has(qualifiedName);\n}\n\nfunction formatUnknownError(error: unknown): string {\n  if (error instanceof Error && error.message) {\n    return error.message;\n  }\n\n  return \"Unknown schema inspection error.\";\n}\n"
+      },
+      {
+        "path": "agent/tools/run_sql.ts",
+        "type": "registry:file",
+        "target": "~/agent/tools/run_sql.ts",
+        "content": "import { defineTool } from \"eve/tools\";\nimport { z } from \"zod\";\nimport {\n  getDataAnalystConfig,\n  getPool,\n  quoteIdentifier,\n} from \"../lib/postgres\";\nimport { trimSql, validateReadOnlySql } from \"../lib/sql-policy\";\n\ntype QueryColumn = {\n  dataTypeId: number;\n  name: string;\n};\n\ntype RunSqlOutput =\n  | {\n      columns: QueryColumn[];\n      durationMs: number;\n      ok: true;\n      rowCount: number;\n      rows: Record<string, unknown>[];\n      truncated: boolean;\n    }\n  | {\n      error: string;\n      missingEnv?: string;\n      ok: false;\n    };\n\nexport default defineTool({\n  description:\n    \"Run one bounded read-only Postgres SELECT or WITH query against the configured analytics database.\",\n  inputSchema: z.object({\n    sql: z.string().min(1).describe(\"A single read-only SELECT or WITH query.\"),\n  }),\n  async execute({ sql }): Promise<RunSqlOutput> {\n    const startedAt = Date.now();\n\n    try {\n      const config = getDataAnalystConfig();\n      if (!config.databaseUrl) {\n        return {\n          ok: false,\n          error:\n            \"DATA_ANALYST_DATABASE_URL is required. Set it to a read-only Postgres connection string.\",\n          missingEnv: \"DATA_ANALYST_DATABASE_URL\",\n        };\n      }\n\n      validateReadOnlySql(sql, config);\n\n      const pool = getPool(config);\n      const client = await pool.connect();\n      try {\n        await client.query(\"BEGIN\");\n        await client.query(\"SET TRANSACTION READ ONLY\");\n        await client.query(`SET LOCAL statement_timeout = ${config.statementTimeoutMs}`);\n        await client.query(\n          `SET LOCAL search_path TO ${config.allowedSchemas.map(quoteIdentifier).join(\", \")}`,\n        );\n\n        const result = await client.query(\n          `select * from (${trimSql(sql)}) as data_analyst_result limit ${config.maxRows + 1}`,\n        );\n        await client.query(\"COMMIT\");\n\n        const rows = result.rows.slice(0, config.maxRows);\n        return {\n          ok: true,\n          columns: result.fields.map((field) => ({\n            dataTypeId: field.dataTypeID,\n            name: field.name,\n          })),\n          durationMs: Date.now() - startedAt,\n          rowCount: rows.length,\n          rows,\n          truncated: result.rows.length > config.maxRows,\n        };\n      } catch (error) {\n        await client.query(\"ROLLBACK\").catch(() => undefined);\n        throw error;\n      } finally {\n        client.release();\n      }\n    } catch (error) {\n      return { ok: false, error: formatUnknownError(error) };\n    }\n  },\n  toModelOutput(output) {\n    if (!output.ok) {\n      return { type: \"json\", value: output };\n    }\n\n    return {\n      type: \"json\",\n      value: {\n        ok: true,\n        columns: output.columns.map((column) => column.name),\n        durationMs: output.durationMs,\n        rowCount: output.rowCount,\n        rows: output.rows,\n        truncated: output.truncated,\n      },\n    };\n  },\n});\n\nfunction formatUnknownError(error: unknown): string {\n  if (error instanceof Error && error.message) {\n    return error.message;\n  }\n\n  return \"Unknown SQL execution error.\";\n}\n"
+      },
+      {
+        "path": "README.md",
+        "type": "registry:file",
+        "target": "~/agent/README.md",
+        "content": "# Postgres Data Analyst\n\nAn Eve-native Slack analyst for a single Postgres database. It answers Slack\nmentions and DMs, inspects schema metadata, and runs bounded read-only SQL\nthrough authored tools.\n\n## Install\n\nInstall this registry item into an existing Eve app:\n\n```bash\nnpx shadcn@latest add @evex/postgres-data-analyst\n```\n\nThen install the public runtime dependencies listed by the registry item.\n\n## Slack setup\n\nThis agent uses Eve's documented Slack channel path through Vercel Connect.\nCreate a Slack Connect client, attach it to Eve's Slack route, and set the UID\nin the app environment.\n\n```bash\nnpm install -g vercel@latest\nexport FF_CONNECT_ENABLED=1\nvercel connect create slack --triggers\nvercel connect detach <uid> --yes\nvercel connect attach <uid> --triggers --trigger-path /eve/v1/slack --yes\n```\n\nSet:\n\n```env\nDATA_ANALYST_SLACK_CONNECT_UID=<uid>\n```\n\nThe default UID used by the agent is `slack/postgres-data-analyst`.\n\n## Database setup\n\nCreate a read-only Postgres role and use it for `DATA_ANALYST_DATABASE_URL`.\nThe role must not have write privileges. SQL validation in the agent is defense\nin depth; the database role is the enforcement boundary.\n\n```sql\ncreate role data_analyst_reader login password 'replace-me';\ngrant usage on schema public to data_analyst_reader;\ngrant select on all tables in schema public to data_analyst_reader;\nalter default privileges in schema public\n  grant select on tables to data_analyst_reader;\n```\n\nSet the runtime environment:\n\n```env\nDATA_ANALYST_DATABASE_URL=postgres://data_analyst_reader:replace-me@host/db\nDATA_ANALYST_ALLOWED_SCHEMAS=public\nDATA_ANALYST_BLOCKED_TABLES=\nDATA_ANALYST_MAX_ROWS=200\nDATA_ANALYST_STATEMENT_TIMEOUT_MS=10000\nDATA_ANALYST_SLACK_CONNECT_UID=slack/postgres-data-analyst\n```\n\n`DATA_ANALYST_BLOCKED_TABLES` accepts comma-separated table names such as\n`users,public.accounts`.\n\n## Neon\n\nUse a read-only role on the target branch, or point the agent at a reporting\nbranch/replica. Keep `DATA_ANALYST_ALLOWED_SCHEMAS` limited to the reporting\nschemas the Slack audience is allowed to inspect.\n\n## Supabase\n\nUse a dedicated read-only Postgres role instead of the service role. Grant\n`SELECT` only on the schemas/tables the agent should analyze, then use that\nconnection string as `DATA_ANALYST_DATABASE_URL`.\n\n## Runtime contract\n\nThe v1 agent intentionally uses authored Eve tools instead of provider MCP\ntools. The public capability is narrow: describe allowed Postgres schema\nmetadata and run one bounded read-only analytical query.\n\nRead-only access can still expose sensitive data. Do not grant this agent\naccess to PII tables unless the Slack workspace and channel audience are allowed\nto see that data.\n"
+      },
+      {
+        "path": ".env.example",
+        "type": "registry:file",
+        "target": "~/.env.example",
+        "content": "DATA_ANALYST_DATABASE_URL=\nDATA_ANALYST_ALLOWED_SCHEMAS=public\nDATA_ANALYST_BLOCKED_TABLES=\nDATA_ANALYST_MAX_ROWS=200\nDATA_ANALYST_STATEMENT_TIMEOUT_MS=10000\nDATA_ANALYST_SLACK_CONNECT_UID=slack/postgres-data-analyst\n"
       }
     ]
   },
