@@ -12,20 +12,30 @@ export default slackChannel({
   credentials: connectSlackCredentials(process.env.SLACK_CONNECT_UID ?? "slack/linear-operations-agent"),
   async onAppMention(ctx, message) {
     const auth = defaultSlackAuth(message, ctx);
-    const priorMessages = await loadThreadContextMessages(ctx.thread, message, {
-      since: "last-agent-reply",
-    });
+    try {
+      const priorMessages = await loadThreadContextMessages(ctx.thread, message, {
+        since: "last-agent-reply",
+      });
 
-    const transcript = priorMessages
-      .map((threadMessage) => `${threadMessage.isMe ? "agent" : (threadMessage.user ?? "user")}: ${threadMessage.markdown}`)
-      .join("\n");
+      const transcript = priorMessages
+        .map(
+          (threadMessage) =>
+            `${threadMessage.isMe ? "agent" : (threadMessage.user ?? "user")}: ${threadMessage.markdown}`,
+        )
+        .join("\n");
 
-    return {
-      auth,
-      context: transcript
-        ? [SLACK_OPERATING_CONTEXT, `Recent Slack thread context since the last agent reply:\n\n${transcript}`]
-        : [SLACK_OPERATING_CONTEXT],
-    };
+      return {
+        auth,
+        context: transcript
+          ? [SLACK_OPERATING_CONTEXT, `Recent Slack thread context since the last agent reply:\n\n${transcript}`]
+          : [SLACK_OPERATING_CONTEXT],
+      };
+    } catch {
+      return {
+        auth,
+        context: [SLACK_OPERATING_CONTEXT],
+      };
+    }
   },
   onDirectMessage: (ctx, message) => ({
     auth: defaultSlackAuth(message, ctx),

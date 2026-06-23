@@ -2,7 +2,7 @@ import { connect } from "@vercel/connect/eve";
 import { defineMcpClientConnection } from "eve/connections";
 
 import {
-  isExplicitlyCoveredInitiative,
+  getCoveredInitiative,
   linearOperationsConfig,
 } from "../lib/linear-operations-config.js";
 
@@ -55,11 +55,12 @@ const needsStatusUpdateApproval = (toolInput: unknown): boolean => {
     getStringField(input, "initiativeName") ??
     getStringField(input, "initiative") ??
     getStringField(input, "projectMilestoneId");
+  const coveredInitiative = getCoveredInitiative(initiativeIdOrName ?? "");
 
   if (
     type === "initiative" &&
     linearOperationsConfig.policy.autoInitiativeUpdates &&
-    isExplicitlyCoveredInitiative(initiativeIdOrName)
+    coveredInitiative?.weeklyUpdateEnabled === true
   ) {
     return false;
   }
