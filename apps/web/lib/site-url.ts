@@ -1,4 +1,3 @@
-import { EVEX_REGISTRY_NAMESPACE } from '@evex/agent-registry'
 import { headers } from 'next/headers'
 
 // Resolve the public base URL of this deployment so we can build absolute
@@ -28,13 +27,4 @@ export function buildInstallCommand(baseUrl: string, slug: string): string {
 
 export function buildRegistryCatalogUrl(baseUrl: string): string {
   return `${baseUrl}/r/registry.json`
-}
-
-export function buildNamespaceSetupCommand(baseUrl: string): string {
-  const registryUrl = `${baseUrl}/r/{name}.json`
-  return `npx shadcn@latest registry add ${EVEX_REGISTRY_NAMESPACE}=${registryUrl}`
-}
-
-export function buildNamespacedInstallCommand(slug: string): string {
-  return `npx shadcn@latest add ${EVEX_REGISTRY_NAMESPACE}/${slug}`
 }

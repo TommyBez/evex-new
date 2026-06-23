@@ -1,4 +1,5 @@
 import { PackageSearch } from 'lucide-react'
+import Link from 'next/link'
 import { Suspense } from 'react'
 import { AgentCard } from '@/components/agent-card'
 import { BrowseFilters } from '@/components/browse-filters'
@@ -10,13 +11,14 @@ import {
   getAgentRuntimeState,
   sumInstallCounts,
 } from '@/lib/agent-runtime'
+import { parseSort, sortAgents } from '@/lib/agents'
 import { getInstallCountMap } from '@/lib/queries'
 import { getStaticRegistryStats, listStaticAgents } from '@/lib/static-agents'
 
 export default function HomePage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; category?: string }>
+  searchParams: Promise<{ q?: string; category?: string; sort?: string }>
 }) {
   return (
     <>
@@ -163,22 +165,11 @@ function HeroDemo() {
         <code>
           <span className="text-brand">$</span>{' '}
           <span className="text-graphite-foreground">
-            {
-              'npx shadcn@latest registry add @evex=https://evex.sh/r/{name}.json'
-            }
+            {'npx shadcn@latest add https://evex.sh/r/code-reviewer.json'}
           </span>
           {'\n'}
           <span className="text-graphite-foreground/50">
-            {'> added @evex registry'}
-          </span>
-          {'\n'}
-          <span className="text-brand">$</span>{' '}
-          <span className="text-graphite-foreground">
-            npx shadcn@latest add @evex/code-reviewer
-          </span>
-          {'\n'}
-          <span className="text-graphite-foreground/50">
-            {'> resolving @evex/code-reviewer...'}
+            {'> resolving code-reviewer...'}
           </span>
           {'\n'}
           <span className="text-brand">✓</span>{' '}
@@ -218,14 +209,17 @@ function getResultContext({
 async function AgentResults({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; category?: string }>
+  searchParams: Promise<{ q?: string; category?: string; sort?: string }>
 }) {
-  const { q, category } = await searchParams
+  const { q, category, sort } = await searchParams
   const staticAgents = listStaticAgents({ search: q, category })
   const runtimeState = await getAgentRuntimeState(
     staticAgents.map((agent) => agent.id),
   )
-  const agents = applyInstallCounts(staticAgents, runtimeState.installCounts)
+  const agents = sortAgents(
+    applyInstallCounts(staticAgents, runtimeState.installCounts),
+    parseSort(sort),
+  )
   const hasActiveFilter = Boolean(q || (category && category !== 'all'))
   const resultCountLabel =
     agents.length === 1 ? '1 agent' : `${agents.length} agents`
@@ -235,24 +229,28 @@ async function AgentResults({
     return (
       <RegistryEmptyState
         description={
-          q || (category && category !== 'all')
+          hasActiveFilter
             ? 'Try adjusting your search or filters.'
             : 'Open a pull request to add the first agent to the registry.'
         }
         icon={PackageSearch}
         title="No Agents Found"
       >
-        <Button
-          render={
-            <a
-              href="https://github.com/TommyBez/evex"
-              rel="noreferrer noopener"
-              target="_blank"
-            >
-              Open Repository
-            </a>
-          }
-        />
+        {hasActiveFilter ? (
+          <Button render={<Link href="/">Clear filters</Link>} />
+        ) : (
+          <Button
+            render={
+              <a
+                href="https://github.com/TommyBez/evex"
+                rel="noreferrer noopener"
+                target="_blank"
+              >
+                Open Repository
+              </a>
+            }
+          />
+        )}
       </RegistryEmptyState>
     )
   }

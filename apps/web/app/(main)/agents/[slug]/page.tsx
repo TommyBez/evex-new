@@ -16,11 +16,7 @@ import { applyInstallCounts, getAgentRuntimeState } from '@/lib/agent-runtime'
 import type { AgentRegistryFile, AgentWithAuthor } from '@/lib/agent-types'
 import { parseDependencies } from '@/lib/agents'
 import { createPageMetadata, getSiteUrl, siteConfig } from '@/lib/metadata'
-import {
-  buildInstallCommand,
-  buildNamespacedInstallCommand,
-  buildNamespaceSetupCommand,
-} from '@/lib/site-url'
+import { buildInstallCommand } from '@/lib/site-url'
 import {
   getStaticAgentBySlug,
   getStaticAgentFiles,
@@ -221,10 +217,9 @@ function AgentDetailContent({ slug }: { slug: string }) {
     ? getStaticAgentsByAuthorUsername(agent.authorUsername)
     : []
   const relatedCandidates = listStaticAgents().filter((a) => a.id !== agent.id)
-  const directCommand = buildInstallCommand(baseUrl, agent.slug)
-  const namespaceSetupCommand = buildNamespaceSetupCommand(baseUrl)
-  const namespacedInstallCommand = buildNamespacedInstallCommand(agent.slug)
+  const installCommand = buildInstallCommand(baseUrl, agent.slug)
   const deps = parseDependencies(agent.dependencies)
+  const fileKinds = countFilesByKind(files)
   const moreFromAuthorCount = authorAgents.filter(
     (a) => a.id !== agent.id,
   ).length
@@ -290,55 +285,41 @@ function AgentDetailContent({ slug }: { slug: string }) {
       </div>
 
       <Card className="mt-8 w-full min-w-0 rounded-md border border-border p-5 shadow-[var(--shadow-card)] ring-0">
-        <h2 className="font-medium text-foreground text-sm">
-          Install with @evex
-        </h2>
+        <h2 className="font-medium text-foreground text-sm">Install</h2>
         <p className="mt-1 text-muted-foreground text-sm">
-          Set up the namespace once, then add this agent by name. Run the
-          command from the existing Eve app where you want the agent installed.
+          Run this command in your eve app to add the agent.
         </p>
-        <AgentInstallSummary agent={agent} deps={deps} files={files} />
-        <div className="mt-4 grid gap-3">
-          <div className="grid gap-1.5 rounded-md border border-border bg-muted/30 p-3">
-            <span className="mono-label text-muted-foreground">
-              1. Setup namespace once
-            </span>
-            <InstallCommand
-              command={namespaceSetupCommand}
-              label="@evex namespace setup command"
-            />
-          </div>
-          <div className="grid gap-1.5 rounded-md border border-primary/30 bg-primary/5 p-3">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="mono-label text-muted-foreground">
-                2. Install agent
-              </span>
-              <Badge variant="secondary">Recommended</Badge>
-            </div>
-            <InstallCommand
-              command={namespacedInstallCommand}
-              label={`${agent.name} install command`}
-            />
-          </div>
-          <details className="group grid rounded-md border border-border bg-background p-3">
-            <summary className="mono-label cursor-pointer select-none text-muted-foreground transition-colors hover:text-foreground">
-              Direct install
-            </summary>
-            <div className="mt-2">
-              <InstallCommand
-                command={directCommand}
-                label={`${agent.name} direct install command`}
-              />
-            </div>
-          </details>
+        <div className="mt-4">
+          <InstallCommand
+            command={installCommand}
+            label={`${agent.name} install command`}
+          />
         </div>
+        <AgentInstallSummary agent={agent} deps={deps} files={files} />
       </Card>
 
       <section className="mt-8">
-        <h2 className="font-semibold text-foreground text-lg">About</h2>
-        <p className="mt-2 whitespace-pre-wrap text-pretty text-muted-foreground leading-relaxed">
-          {agent.description}
-        </p>
+        <h2 className="font-semibold text-foreground text-lg">
+          What&apos;s included
+        </h2>
+        <div className="mt-3 flex flex-wrap gap-2">
+          <Badge variant="outline">{pluralize(files.length, 'file')}</Badge>
+          {fileKinds.subagents > 0 ? (
+            <Badge variant="outline">
+              {pluralize(fileKinds.subagents, 'subagent')}
+            </Badge>
+          ) : null}
+          {fileKinds.skills > 0 ? (
+            <Badge variant="outline">
+              {pluralize(fileKinds.skills, 'skill file')}
+            </Badge>
+          ) : null}
+          {fileKinds.tools > 0 ? (
+            <Badge variant="outline">
+              {pluralize(fileKinds.tools, 'tool')}
+            </Badge>
+          ) : null}
+        </div>
         {deps.length > 0 && (
           <div className="mt-4 flex flex-wrap items-center gap-2">
             <span className="text-muted-foreground text-sm">Dependencies:</span>
@@ -354,7 +335,12 @@ function AgentDetailContent({ slug }: { slug: string }) {
       <Separator className="my-8" />
 
       <section>
-        <h2 className="mb-4 font-semibold text-foreground text-lg">Files</h2>
+        <div className="mb-4 flex items-center gap-2">
+          <h2 className="font-semibold text-foreground text-lg">Files</h2>
+          <span className="mono-label text-muted-foreground/70 tabular-nums">
+            {files.length}
+          </span>
+        </div>
         <AgentFileViewer files={files} />
       </section>
 
