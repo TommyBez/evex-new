@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation'
 import { type FormEvent, useState } from 'react'
 import { BrandMark } from '@/components/brand-mark'
 import { GitHubIcon } from '@/components/social-icons'
+import { TextSwap } from '@/components/transitions/text-swap'
+import { useShake } from '@/components/transitions/use-shake'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import {
@@ -81,6 +83,7 @@ export function AuthForm({
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [githubLoading, setGithubLoading] = useState(false)
+  const { ref: otpShakeRef, trigger: shakeOtp } = useShake<HTMLDivElement>()
 
   const isSignUp = mode === 'sign-up'
   const switchPath = isSignUp ? '/sign-in' : '/sign-up'
@@ -147,6 +150,7 @@ export function AuthForm({
 
       if (otp.length !== OTP_LENGTH) {
         setError(`Enter the ${OTP_LENGTH}-digit code from your email`)
+        shakeOtp()
         return
       }
 
@@ -158,6 +162,7 @@ export function AuthForm({
 
       if (error) {
         setError(error.message ?? 'Something went wrong')
+        shakeOtp()
         return
       }
 
@@ -165,6 +170,9 @@ export function AuthForm({
       router.refresh()
     } catch (error) {
       setError(getErrorMessage(error))
+      if (isOtpSent) {
+        shakeOtp()
+      }
     } finally {
       setLoading(false)
     }
@@ -239,24 +247,28 @@ export function AuthForm({
                 {isOtpSent ? (
                   <Field>
                     <FieldLabel htmlFor="otp">Code</FieldLabel>
-                    <InputOTP
-                      autoFocus
-                      containerClassName="justify-center"
-                      id="otp"
-                      maxLength={OTP_LENGTH}
-                      onChange={setOtp}
-                      value={otp}
-                    >
-                      <InputOTPGroup>
-                        {OTP_SLOT_IDS.map((slotId, index) => (
-                          <InputOTPSlot
-                            className="size-10 text-base"
-                            index={index}
-                            key={slotId}
-                          />
-                        ))}
-                      </InputOTPGroup>
-                    </InputOTP>
+                    {/* t-input owns the shake transform; the slots ride along
+                        as one unit on an invalid code. */}
+                    <div className="t-input" ref={otpShakeRef}>
+                      <InputOTP
+                        autoFocus
+                        containerClassName="justify-center"
+                        id="otp"
+                        maxLength={OTP_LENGTH}
+                        onChange={setOtp}
+                        value={otp}
+                      >
+                        <InputOTPGroup>
+                          {OTP_SLOT_IDS.map((slotId, index) => (
+                            <InputOTPSlot
+                              className="size-10 text-base"
+                              index={index}
+                              key={slotId}
+                            />
+                          ))}
+                        </InputOTPGroup>
+                      </InputOTP>
+                    </div>
                     <FieldDescription>
                       We sent a code to {email}.
                     </FieldDescription>
@@ -270,7 +282,9 @@ export function AuthForm({
                 ) : null}
 
                 <Button className="w-full" disabled={loading} type="submit">
-                  {getSubmitLabel({ isOtpSent, isSignUp, loading })}
+                  <TextSwap
+                    text={getSubmitLabel({ isOtpSent, isSignUp, loading })}
+                  />
                 </Button>
 
                 {isOtpSent ? (

@@ -4,6 +4,7 @@ import { Suspense } from 'react'
 import { AgentCard } from '@/components/agent-card'
 import { BrowseFilters } from '@/components/browse-filters'
 import { RegistryEmptyState } from '@/components/registry-empty-state'
+import { PopInNumber } from '@/components/transitions/pop-in-number'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
@@ -117,7 +118,7 @@ async function Stats() {
       {items.map((item) => (
         <div className="flex flex-col gap-1" key={item.label}>
           <dd className="font-semibold text-2xl text-foreground tabular-nums">
-            {item.value}
+            <PopInNumber value={item.value} />
           </dd>
           <dt className="mono-label text-muted-foreground">{item.label}</dt>
         </div>
