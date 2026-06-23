@@ -60,7 +60,7 @@ export default defineTool({
         );
 
         const result = await client.query(
-          `select * from (${trimSql(sql)}) as data_analyst_result limit ${config.maxRows + 1}`,
+          `select * from (\n${trimSql(sql)}\n) as data_analyst_result limit ${config.maxRows + 1}`,
         );
         await client.query("COMMIT");
 

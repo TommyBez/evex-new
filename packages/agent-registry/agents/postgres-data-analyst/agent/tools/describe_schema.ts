@@ -39,6 +39,15 @@ type DescribeSchemaOutput =
       ok: false;
     };
 
+const BLOCKED_TABLE_CONDITION = `
+  not exists (
+    select 1
+    from unnest($3::text[]) blocked_table(name)
+    where lower(c.table_name) = blocked_table.name
+      or lower(c.table_schema || '.' || c.table_name) = blocked_table.name
+  )
+`;
+
 export default defineTool({
   description:
     "Describe allowed Postgres schemas, tables, columns, types, nullability, and primary-key columns.",
@@ -102,25 +111,26 @@ export default defineTool({
             and tc.constraint_type = 'PRIMARY KEY'
           where c.table_schema = any($1)
             and ($2::text is null or c.table_name = $2)
+            and ${BLOCKED_TABLE_CONDITION}
           order by c.table_schema, c.table_name, c.ordinal_position
           limit ${SCHEMA_COLUMN_LIMIT + 1}
         `,
-        [schemas, table ?? null],
+        [schemas, table ?? null, [...config.blockedTables]],
+      );
+
+      const filteredRows = result.rows.filter(
+        (row) =>
+          !isBlockedTable(
+            String(row.table_schema),
+            String(row.table_name),
+            config.blockedTables,
+          ),
       );
 
       return {
         ok: true,
-        tables: groupColumns(
-          result.rows.filter(
-            (row) =>
-              !isBlockedTable(
-                String(row.table_schema),
-                String(row.table_name),
-                config.blockedTables,
-              ),
-          ),
-        ),
-        truncated: result.rows.length > SCHEMA_COLUMN_LIMIT,
+        tables: groupColumns(filteredRows),
+        truncated: filteredRows.length > SCHEMA_COLUMN_LIMIT,
       };
     } catch (error) {
       return { ok: false, error: formatUnknownError(error) };

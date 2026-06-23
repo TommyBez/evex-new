@@ -84,13 +84,9 @@ export function validateReadOnlySql(
     throw new Error("SQL query is empty.");
   }
 
-  const cteAliases = collectCteAliases(statement);
   assertReadOnlyStatementTree(statement);
 
-  const tables = collectTableReferences(statement).filter(
-    (table) => !cteAliases.has(table.name.toLowerCase()),
-  );
-
+  const tables = collectPolicyTableReferences(statement);
   assertTablePolicy(tables, config);
   return { tables };
 }
@@ -113,53 +109,125 @@ function assertReadOnlyStatementTree(statement: Statement): void {
   });
 }
 
-function collectCteAliases(statement: Statement): ReadonlySet<string> {
+function collectPolicyTableReferences(statement: Statement): readonly TableReference[] {
+  const tables: TableReference[] = [];
+  collectPolicyTableReferencesFromNode(statement, tables, new Set());
+  return tables;
+}
+
+function collectPolicyTableReferencesFromNode(
+  value: unknown,
+  tables: TableReference[],
+  cteAliases: ReadonlySet<string>,
+): void {
+  if (Array.isArray(value)) {
+    for (const item of value) {
+      collectPolicyTableReferencesFromNode(item, tables, cteAliases);
+    }
+    return;
+  }
+
+  if (!value || typeof value !== "object") {
+    return;
+  }
+
+  const node = value as Record<string, unknown>;
+  const type = readNodeType(node);
+  if (type === "with") {
+    collectWithTableReferences(node, tables, cteAliases);
+    return;
+  }
+
+  if (type === "with recursive") {
+    collectWithRecursiveTableReferences(node, tables, cteAliases);
+    return;
+  }
+
+  if (type === "table") {
+    const table = readTableReference(node);
+    if (table && !isCteReference(table, cteAliases)) {
+      tables.push(table);
+    }
+  }
+
+  for (const child of Object.values(node)) {
+    collectPolicyTableReferencesFromNode(child, tables, cteAliases);
+  }
+}
+
+function collectWithTableReferences(
+  node: Record<string, unknown>,
+  tables: TableReference[],
+  parentCteAliases: ReadonlySet<string>,
+): void {
+  const ownAliases = collectBindingAliases(readArrayProperty(node, "bind"));
+  for (const binding of readArrayProperty(node, "bind")) {
+    const statement = readObjectProperty(binding, "statement");
+    collectPolicyTableReferencesFromNode(statement, tables, parentCteAliases);
+  }
+
+  collectPolicyTableReferencesFromNode(
+    readObjectProperty(node, "in"),
+    tables,
+    mergeSets(parentCteAliases, ownAliases),
+  );
+}
+
+function collectWithRecursiveTableReferences(
+  node: Record<string, unknown>,
+  tables: TableReference[],
+  parentCteAliases: ReadonlySet<string>,
+): void {
+  const alias = readNameProperty(node, "alias");
+  const aliases = alias
+    ? mergeSets(parentCteAliases, new Set([alias.toLowerCase()]))
+    : parentCteAliases;
+
+  collectPolicyTableReferencesFromNode(
+    readObjectProperty(node, "statement"),
+    tables,
+    aliases,
+  );
+  collectPolicyTableReferencesFromNode(readObjectProperty(node, "in"), tables, aliases);
+}
+
+function collectBindingAliases(bindings: readonly unknown[]): ReadonlySet<string> {
   const aliases = new Set<string>();
-
-  walkAst(statement, (node) => {
-    const type = readNodeType(node);
-    if (type === "with") {
-      const bindings = readArrayProperty(node, "bind");
-      for (const binding of bindings) {
-        const alias = readNameProperty(binding, "alias");
-        if (alias) {
-          aliases.add(alias.toLowerCase());
-        }
-      }
+  for (const binding of bindings) {
+    const alias = readNameProperty(binding, "alias");
+    if (alias) {
+      aliases.add(alias.toLowerCase());
     }
-
-    if (type === "with recursive") {
-      const alias = readNameProperty(node, "alias");
-      if (alias) {
-        aliases.add(alias.toLowerCase());
-      }
-    }
-  });
+  }
 
   return aliases;
 }
 
-function collectTableReferences(statement: Statement): readonly TableReference[] {
-  const tables: TableReference[] = [];
+function readTableReference(node: Record<string, unknown>): TableReference | null {
+  const tableName = readObjectProperty(node, "name");
+  const name = readStringProperty(tableName, "name");
+  if (!name) {
+    return null;
+  }
 
-  walkAst(statement, (node) => {
-    if (readNodeType(node) !== "table") {
-      return;
-    }
+  return {
+    name,
+    schema: readStringProperty(tableName, "schema"),
+  };
+}
 
-    const tableName = readObjectProperty(node, "name");
-    const name = readStringProperty(tableName, "name");
-    if (!name) {
-      return;
-    }
+function isCteReference(
+  table: TableReference,
+  cteAliases: ReadonlySet<string>,
+): boolean {
+  return table.schema === null && cteAliases.has(table.name.toLowerCase());
+}
 
-    tables.push({
-      name,
-      schema: readStringProperty(tableName, "schema"),
-    });
-  });
-
-  return tables;
+function mergeSets(
+  first: ReadonlySet<string>,
+  second: ReadonlySet<string>,
+): ReadonlySet<string> {
+  return new Set([...first, ...second]);
 }
 
 function assertTablePolicy(
