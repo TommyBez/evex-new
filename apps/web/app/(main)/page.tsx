@@ -146,22 +146,11 @@ function HeroDemo() {
         <code>
           <span className="text-brand">$</span>{' '}
           <span className="text-graphite-foreground">
-            {
-              'npx shadcn@latest registry add @evex=https://evex.sh/r/{name}.json'
-            }
+            {'npx shadcn@latest add https://evex.sh/r/code-reviewer.json'}
           </span>
           {'\n'}
           <span className="text-graphite-foreground/50">
-            {'> added @evex registry'}
-          </span>
-          {'\n'}
-          <span className="text-brand">$</span>{' '}
-          <span className="text-graphite-foreground">
-            npx shadcn@latest add @evex/code-reviewer
-          </span>
-          {'\n'}
-          <span className="text-graphite-foreground/50">
-            {'> resolving @evex/code-reviewer...'}
+            {'> resolving code-reviewer...'}
           </span>
           {'\n'}
           <span className="text-brand">✓</span>{' '}
