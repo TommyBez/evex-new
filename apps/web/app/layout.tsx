@@ -78,8 +78,8 @@ export default function RootLayout({
         <ThemeProvider>
           {children}
           <Toaster />
-          {process.env.NODE_ENV === 'production' && <Analytics />}
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   )
