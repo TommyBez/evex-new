@@ -10,10 +10,10 @@
 </p>
 
 <p align="center">
-  <a href="https://evex.sh"><img alt="Live at evex.sh" src="https://shieldcn.dev/badge/live-evex.sh-22c55e.png?statusDot=true" /></a>
-  <a href="https://github.com/TommyBez/evex"><img alt="GitHub stars" src="https://shieldcn.dev/github/stars/TommyBez/evex.png?logo=github" /></a>
-  <a href="#install-an-agent"><img alt="Install with shadcn" src="https://shieldcn.dev/badge/install-shadcn-000000.png?logo=shadcnui&logoColor=white" /></a>
-  <a href="./CONTRIBUTIONS.md"><img alt="Pull requests welcome" src="https://shieldcn.dev/badge/PRs-welcome-006bff.png" /></a>
+  <a href="https://evex.sh"><img alt="Live at evex.sh" src="https://shieldcn.dev/badge/live-evex.sh-22c55e.svg?statusDot=true" /></a>
+  <a href="https://github.com/TommyBez/evex"><img alt="GitHub stars" src="https://shieldcn.dev/github/stars/TommyBez/evex.svg" /></a>
+  <a href="#install-an-agent"><img alt="Install with shadcn" src="https://shieldcn.dev/badge/install-shadcn-000000.svg?logo=shadcnui&logoColor=ffffff" /></a>
+  <a href="./CONTRIBUTIONS.md"><img alt="Pull requests welcome" src="https://shieldcn.dev/badge/PRs-welcome-006bff.svg" /></a>
 </p>
 
 <p align="center">
@@ -86,22 +86,22 @@ variables (database, auth) and other setup notes.
 ## Stack
 
 <p align="center">
-  <img alt="Turborepo" src="https://shieldcn.dev/badge/Turborepo-000000.png?logo=turborepo&variant=branded" />
-  <img alt="Next.js" src="https://shieldcn.dev/badge/Next.js-000000.png?logo=nextdotjs&variant=branded" />
-  <img alt="React" src="https://shieldcn.dev/badge/React-61DAFB.png?logo=react&variant=branded" />
-  <img alt="Tailwind CSS" src="https://shieldcn.dev/badge/Tailwind_CSS-06B6D4.png?logo=tailwindcss&variant=branded" />
-  <img alt="shadcn/ui" src="https://shieldcn.dev/badge/shadcn-000000.png?logo=shadcnui&variant=branded" />
-  <img alt="Eve" src="https://shieldcn.dev/badge/Eve-006bff.png?variant=branded" />
-  <img alt="Drizzle ORM" src="https://shieldcn.dev/badge/Drizzle-C5F74F.png?logo=drizzle&variant=branded" />
-  <img alt="Better Auth" src="https://shieldcn.dev/badge/Better_Auth-000000.png?logo=betterauth&variant=branded" />
-  <img alt="Vercel" src="https://shieldcn.dev/badge/Vercel-000000.png?logo=vercel&variant=branded" />
+  <img alt="Turborepo" src="https://shieldcn.dev/badge/-Turborepo-EF4444.svg?logo=turborepo&variant=branded" />
+  <img alt="Next.js" src="https://shieldcn.dev/badge/-Next.js-000000.svg?logo=nextdotjs&variant=branded" />
+  <img alt="React" src="https://shieldcn.dev/badge/-React-61DAFB.svg?logo=react&variant=branded" />
+  <img alt="Tailwind CSS" src="https://shieldcn.dev/badge/-Tailwind_CSS-06B6D4.svg?logo=tailwindcss&variant=branded" />
+  <img alt="shadcn/ui" src="https://shieldcn.dev/badge/-shadcn-000000.svg?logo=shadcnui&variant=branded" />
+  <img alt="Eve" src="https://shieldcn.dev/badge/-Eve-006bff.svg?variant=branded" />
+  <img alt="Drizzle ORM" src="https://shieldcn.dev/badge/-Drizzle-C5F74F.svg?logo=drizzle&variant=branded" />
+  <img alt="Better Auth" src="https://shieldcn.dev/badge/-Better_Auth-000000.svg?logo=betterauth&variant=branded" />
+  <img alt="Vercel" src="https://shieldcn.dev/badge/-Vercel-000000.svg?logo=vercel&variant=branded" />
 </p>
 
 ## Star history
 
 <p align="center">
   <a href="https://github.com/TommyBez/evex">
-    <img alt="evex star history" src="https://shieldcn.dev/chart/github/stars/TommyBez/evex.png?color=006bff" />
+    <img alt="evex star history" src="https://shieldcn.dev/chart/github/stars/TommyBez/evex.svg?color=006bff" />
   </a>
 </p>
 
