@@ -298,7 +298,6 @@ function AgentDetailContent({ slug }: { slug: string }) {
           Set up the namespace once, then add this agent by name. Run the
           command from the existing Eve app where you want the agent installed.
         </p>
-        <AgentInstallSummary agent={agent} deps={deps} files={files} />
         <div className="mt-4 grid gap-3">
           <div className="grid gap-1.5 rounded-md border border-border bg-muted/30 p-3">
             <span className="mono-label text-muted-foreground">
@@ -333,6 +332,7 @@ function AgentDetailContent({ slug }: { slug: string }) {
             </div>
           </details>
         </div>
+        <AgentInstallSummary agent={agent} deps={deps} files={files} />
       </Card>
 
       <section className="mt-8">

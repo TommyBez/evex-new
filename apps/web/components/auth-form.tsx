@@ -203,6 +203,7 @@ export function AuthForm({ mode }: { mode: 'sign-in' | 'sign-up' }) {
                     <FieldLabel htmlFor="name">Name</FieldLabel>
                     <Input
                       autoComplete="name"
+                      autoFocus
                       disabled={loading || isOtpSent}
                       id="name"
                       onChange={(e) => setName(e.target.value)}
@@ -215,6 +216,7 @@ export function AuthForm({ mode }: { mode: 'sign-in' | 'sign-up' }) {
                   <FieldLabel htmlFor="email">Email</FieldLabel>
                   <Input
                     autoComplete="email"
+                    autoFocus={!isSignUp}
                     disabled={loading || isOtpSent}
                     id="email"
                     onChange={(e) => setEmail(e.target.value)}
@@ -227,6 +229,7 @@ export function AuthForm({ mode }: { mode: 'sign-in' | 'sign-up' }) {
                   <Field>
                     <FieldLabel htmlFor="otp">Code</FieldLabel>
                     <InputOTP
+                      autoFocus
                       containerClassName="justify-center"
                       id="otp"
                       maxLength={OTP_LENGTH}
