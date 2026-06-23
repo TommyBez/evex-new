@@ -44,22 +44,16 @@ every agent stays code-owned and reviewed.
 
 ## Install an agent
 
-```bash
-# one-time: register the @evex namespace
-npx shadcn@latest registry add @evex=https://evex.sh/r/{name}.json
-
-# add an agent from an existing Eve app
-npx shadcn@latest add @evex/code-reviewer
-```
-
-Or install straight from a URL:
+Every agent has a one-line install. Add one to your project with the `shadcn`
+CLI — the same command shown on each agent's page:
 
 ```bash
 npx shadcn@latest add https://evex.sh/r/code-reviewer.json
 ```
 
-Agents span categories like **coding**, **devops**, **productivity**, and
-**support** — browse the full catalog at [evex.sh](https://evex.sh).
+Swap `code-reviewer` for any agent slug from the catalog. Agents span categories
+like **coding**, **devops**, **productivity**, and **support** — browse them all
+at [evex.sh](https://evex.sh).
 
 ## Publish an agent
 
