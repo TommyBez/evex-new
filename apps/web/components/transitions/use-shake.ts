@@ -13,6 +13,7 @@ const DEFAULT_SHAKE_DUR_B_MS = 60
 // with the CSS. See packages skill 12-error-state-shake.md.
 export function useShake<T extends HTMLElement>() {
   const ref = useRef<T>(null)
+  const cleanupTimerRef = useRef<number | null>(null)
 
   const trigger = useCallback(() => {
     const element = ref.current
@@ -33,8 +34,14 @@ export function useShake<T extends HTMLElement>() {
     const shakeMs =
       readMs('--shake-dur-a', DEFAULT_SHAKE_DUR_A_MS) * 2 +
       readMs('--shake-dur-b', DEFAULT_SHAKE_DUR_B_MS) * 2
-    window.setTimeout(() => {
+    // Cancel any pending cleanup so an earlier timer can't strip is-shaking
+    // midway through a freshly triggered shake.
+    if (cleanupTimerRef.current !== null) {
+      window.clearTimeout(cleanupTimerRef.current)
+    }
+    cleanupTimerRef.current = window.setTimeout(() => {
       element.classList.remove('is-shaking')
+      cleanupTimerRef.current = null
     }, shakeMs + SHAKE_CLEANUP_BUFFER_MS)
   }, [])
 

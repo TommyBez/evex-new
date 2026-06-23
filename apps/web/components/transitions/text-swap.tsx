@@ -27,6 +27,17 @@ export function TextSwap({
       return
     }
 
+    // Reduced motion: CSS transitions are disabled, so swap the label
+    // immediately instead of holding it for the (now invisible) exit timer.
+    const prefersReducedMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)',
+    ).matches
+    if (prefersReducedMotion) {
+      element.textContent = text
+      previous.current = text
+      return
+    }
+
     const duration =
       Number.parseFloat(
         getComputedStyle(document.documentElement).getPropertyValue(
