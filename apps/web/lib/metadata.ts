@@ -22,9 +22,19 @@ export const defaultTwitterImage = {
 }
 
 export function getSiteUrl(): string {
+  // On Vercel, VERCEL_PROJECT_PRODUCTION_URL is set to the production host on
+  // every deployment — including previews. Prefer it only in production so
+  // previews resolve to their own deployment URL. This matters for copied
+  // install commands (`<host>/r/<slug>.json`): they must point at a host that
+  // actually serves the agent being viewed, otherwise a not-yet-merged agent
+  // 404s when installed from a preview.
+  const productionUrl =
+    process.env.VERCEL_ENV === 'production'
+      ? process.env.VERCEL_PROJECT_PRODUCTION_URL
+      : undefined
   const envUrl =
     process.env.NEXT_PUBLIC_SITE_URL ??
-    process.env.VERCEL_PROJECT_PRODUCTION_URL ??
+    productionUrl ??
     process.env.VERCEL_URL ??
     process.env.V0_RUNTIME_URL ??
     DEFAULT_SITE_URL
