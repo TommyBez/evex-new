@@ -1,3 +1,5 @@
+import { readFile } from 'node:fs/promises'
+import { fileURLToPath } from 'node:url'
 import { ImageResponse } from 'next/og'
 
 export const ogImageSize = {
@@ -6,6 +8,23 @@ export const ogImageSize = {
 } as const
 
 export const ogImageContentType = 'image/png'
+
+const PIXEL_FONT_FAMILY = 'Geist Pixel Square'
+
+// Geist Pixel ships only as a woff2 with next/font, but Satori (next/og) can't
+// parse woff2 — so a TTF conversion is vendored alongside this module. It's
+// referenced via import.meta.url so the bundler emits it, then read from disk
+// (these routes run on the Node runtime, where fetch() can't load file: URLs).
+// Read once and reuse per process.
+let pixelFontData: Promise<Buffer> | null = null
+function loadPixelFont(): Promise<Buffer> {
+  if (!pixelFontData) {
+    pixelFontData = readFile(
+      fileURLToPath(new URL('./fonts/geist-pixel-square.ttf', import.meta.url)),
+    )
+  }
+  return pixelFontData
+}
 
 const colors = {
   background: '#000000',
@@ -94,13 +113,14 @@ export function initialsFromName(name: string): string {
   return initials || 'E'
 }
 
-export function createOgImage(
+export async function createOgImage(
   { eyebrow, title, description, footer, meta = [], initials }: OgImageProps,
   options: { status?: number } = {},
 ) {
   const safeTitle = truncate(title, 92)
   const safeDescription = description ? truncate(description, 180) : undefined
   const titleSize = getTitleSize(safeTitle.length)
+  const pixelFont = await loadPixelFont()
 
   return new ImageResponse(
     <div
@@ -154,7 +174,13 @@ export function createOgImage(
               gap: 4,
             }}
           >
-            <div style={{ fontSize: 30, fontWeight: 800, lineHeight: 1 }}>
+            <div
+              style={{
+                fontFamily: PIXEL_FONT_FAMILY,
+                fontSize: 30,
+                lineHeight: 1,
+              }}
+            >
               evex
             </div>
             <div
@@ -314,6 +340,14 @@ export function createOgImage(
     {
       ...ogImageSize,
       status: options.status,
+      fonts: [
+        {
+          name: PIXEL_FONT_FAMILY,
+          data: pixelFont,
+          weight: 500,
+          style: 'normal',
+        },
+      ],
     },
   )
 }

@@ -186,7 +186,7 @@ export function AuthForm({
           href="/"
         >
           <BrandMark className="size-8" />
-          <span className="font-semibold text-lg">evex</span>
+          <span className="brand-wordmark text-lg">evex</span>
         </Link>
         <Card className="w-full rounded-md border border-border shadow-[var(--shadow-card)] ring-0">
           <CardHeader>

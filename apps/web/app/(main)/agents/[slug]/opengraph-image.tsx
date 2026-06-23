@@ -4,7 +4,6 @@ import { getAgentBySlug } from '@/lib/queries'
 export const alt = 'Agent on evex'
 export const size = ogImageSize
 export const contentType = ogImageContentType
-export const runtime = 'nodejs'
 
 export default async function Image({
   params,
