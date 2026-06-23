@@ -112,6 +112,10 @@ async function fileExists(filePath) {
 
 async function buildFiles(agentRoot) {
   const sourceFiles = await collectFiles(path.join(agentRoot, 'agent'))
+  const evalsPath = path.join(agentRoot, 'evals')
+  if (await fileExists(evalsPath)) {
+    sourceFiles.push(...(await collectFiles(evalsPath)))
+  }
   sourceFiles.push(path.join(agentRoot, 'README.md'))
   const envExamplePath = path.join(agentRoot, ENV_EXAMPLE_FILE)
   if (await fileExists(envExamplePath)) {
