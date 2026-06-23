@@ -1,7 +1,7 @@
 'use client'
 
 import { Heart } from 'lucide-react'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState, useTransition } from 'react'
 import { toast } from 'sonner'
 import { toggleFavorite } from '@/app/actions/favorites'
@@ -22,6 +22,7 @@ export function FavoriteButton({
   showLabel?: boolean
 }) {
   const router = useRouter()
+  const pathname = usePathname()
   const [isFavorite, setIsFavorite] = useState(initialIsFavorite)
   const [isPending, startTransition] = useTransition()
 
@@ -34,7 +35,7 @@ export function FavoriteButton({
   const handleClick = () => {
     if (!isAuthenticated) {
       toast.info('Sign in to save favorites.')
-      router.push('/sign-in')
+      router.push(`/sign-in?redirect=${encodeURIComponent(pathname)}`)
       return
     }
 

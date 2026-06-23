@@ -5,6 +5,7 @@ import { AuthForm } from '@/components/auth-form'
 import { Skeleton } from '@/components/ui/skeleton'
 import { auth } from '@/lib/auth'
 import { createPageMetadata } from '@/lib/metadata'
+import { getSafeRedirectPath } from '@/lib/utils'
 
 export const metadata = createPageMetadata({
   title: 'Sign in',
@@ -13,20 +14,30 @@ export const metadata = createPageMetadata({
   noIndex: true,
 })
 
-export default function SignInPage() {
+export default function SignInPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ redirect?: string }>
+}) {
   return (
     <Suspense fallback={<AuthPageSkeleton />}>
-      <SignInContent />
+      <SignInContent searchParams={searchParams} />
     </Suspense>
   )
 }
 
-async function SignInContent() {
+async function SignInContent({
+  searchParams,
+}: {
+  searchParams: Promise<{ redirect?: string }>
+}) {
   const session = await auth.api.getSession({ headers: await headers() })
+  const { redirect: redirectParam } = await searchParams
+  const redirectTo = getSafeRedirectPath(redirectParam)
   if (session?.user) {
-    redirect('/')
+    redirect(redirectTo)
   }
-  return <AuthForm mode="sign-in" />
+  return <AuthForm mode="sign-in" redirectTo={redirectTo} />
 }
 
 function AuthPageSkeleton() {

@@ -66,7 +66,13 @@ function getErrorMessage(error: unknown): string {
   return 'Something went wrong'
 }
 
-export function AuthForm({ mode }: { mode: 'sign-in' | 'sign-up' }) {
+export function AuthForm({
+  mode,
+  redirectTo = '/',
+}: {
+  mode: 'sign-in' | 'sign-up'
+  redirectTo?: string
+}) {
   const router = useRouter()
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -77,6 +83,11 @@ export function AuthForm({ mode }: { mode: 'sign-in' | 'sign-up' }) {
   const [githubLoading, setGithubLoading] = useState(false)
 
   const isSignUp = mode === 'sign-up'
+  const switchPath = isSignUp ? '/sign-in' : '/sign-up'
+  const switchHref =
+    redirectTo === '/'
+      ? switchPath
+      : `${switchPath}?redirect=${encodeURIComponent(redirectTo)}`
 
   const handleGitHub = async (): Promise<void> => {
     setError(null)
@@ -84,7 +95,7 @@ export function AuthForm({ mode }: { mode: 'sign-in' | 'sign-up' }) {
     try {
       const { error } = await authClient.signIn.social({
         provider: 'github',
-        callbackURL: '/',
+        callbackURL: redirectTo,
       })
       if (error) {
         setError(error.message ?? 'Something went wrong')
@@ -150,7 +161,7 @@ export function AuthForm({ mode }: { mode: 'sign-in' | 'sign-up' }) {
         return
       }
 
-      router.push('/')
+      router.push(redirectTo)
       router.refresh()
     } catch (error) {
       setError(getErrorMessage(error))
@@ -305,7 +316,7 @@ export function AuthForm({ mode }: { mode: 'sign-in' | 'sign-up' }) {
                 : "Don't have an account? "}
               <Link
                 className="font-medium text-foreground underline-offset-4 hover:underline"
-                href={isSignUp ? '/sign-in' : '/sign-up'}
+                href={switchHref}
               >
                 {isSignUp ? 'Sign In' : 'Sign Up'}
               </Link>
