@@ -302,3 +302,178 @@
     letter-spacing: 0;
   }
 }
+
+/* transitions-dev — semantic tokens + snippets for the transitions wired into
+   this app (number pop-in, text states swap, icon swap, error state shake).
+   Tunable values live here so components only reference the names. Add more
+   tokens/snippets when adopting another transition. See https://transitions.dev. */
+:root {
+  /* Number pop-in */
+  --digit-dur: 500ms;
+  --digit-distance: 8px;
+  --digit-stagger: 70ms;
+  --digit-blur: 2px;
+  --digit-ease: cubic-bezier(0.34, 1.45, 0.64, 1);
+  --digit-dir-x: 0;
+  --digit-dir-y: 1;
+  /* Text states swap */
+  --text-swap-dur: 200ms;
+  --text-swap-translate-y: 8px;
+  --text-swap-blur: 2px;
+  --text-swap-ease: ease-out;
+  /* Icon swap */
+  --icon-swap-dur: 200ms;
+  --icon-swap-blur: 2px;
+  --icon-swap-start-scale: 0.25;
+  --icon-swap-ease: ease-in-out;
+  /* Error state shake */
+  --shake-distance: 6px;
+  --shake-overshoot: 4px;
+  --shake-dur-a: 80ms;
+  --shake-dur-b: 60ms;
+  --shake-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --revert-hold: 3000ms;
+  --revert-dur: 280ms;
+}
+
+/* Number pop-in */
+@keyframes t-digit-pop-in {
+  0% {
+    transform: translate(
+      calc(var(--digit-distance) * var(--digit-dir-x)),
+      calc(var(--digit-distance) * var(--digit-dir-y))
+    );
+    opacity: 0;
+    filter: blur(var(--digit-blur));
+  }
+  100% {
+    transform: translate(0, 0);
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+.t-digit-group {
+  display: inline-flex;
+  align-items: baseline;
+}
+.t-digit {
+  display: inline-block;
+  will-change: transform, opacity, filter;
+}
+.t-digit-group.is-animating .t-digit {
+  animation: t-digit-pop-in var(--digit-dur) var(--digit-ease) both;
+}
+.t-digit-group.is-animating .t-digit[data-stagger="1"] {
+  animation-delay: var(--digit-stagger);
+}
+.t-digit-group.is-animating .t-digit[data-stagger="2"] {
+  animation-delay: calc(var(--digit-stagger) * 2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .t-digit-group .t-digit {
+    animation: none !important;
+  }
+}
+
+/* Text states swap */
+.t-text-swap {
+  display: inline-block;
+  opacity: 1;
+  filter: blur(0);
+  transform: translateY(0);
+  transition:
+    transform var(--text-swap-dur) var(--text-swap-ease),
+    filter var(--text-swap-dur) var(--text-swap-ease),
+    opacity var(--text-swap-dur) var(--text-swap-ease);
+  will-change: transform, filter, opacity;
+}
+.t-text-swap.is-exit {
+  opacity: 0;
+  filter: blur(var(--text-swap-blur));
+  transform: translateY(calc(var(--text-swap-translate-y) * -1));
+}
+.t-text-swap.is-enter-start {
+  opacity: 0;
+  filter: blur(var(--text-swap-blur));
+  transform: translateY(var(--text-swap-translate-y));
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .t-text-swap {
+    transition: none !important;
+  }
+}
+
+/* Icon swap */
+.t-icon-swap {
+  position: relative;
+  display: inline-grid;
+}
+.t-icon-swap .t-icon {
+  grid-area: 1 / 1;
+  transition:
+    opacity var(--icon-swap-dur) var(--icon-swap-ease),
+    filter var(--icon-swap-dur) var(--icon-swap-ease),
+    transform var(--icon-swap-dur) var(--icon-swap-ease);
+  will-change: opacity, filter, transform;
+}
+.t-icon-swap[data-state="a"] .t-icon[data-icon="a"],
+.t-icon-swap[data-state="b"] .t-icon[data-icon="b"] {
+  opacity: 1;
+  filter: blur(0);
+  transform: scale(1);
+}
+.t-icon-swap[data-state="a"] .t-icon[data-icon="b"],
+.t-icon-swap[data-state="b"] .t-icon[data-icon="a"] {
+  opacity: 0;
+  filter: blur(var(--icon-swap-blur));
+  transform: scale(var(--icon-swap-start-scale));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .t-icon-swap .t-icon {
+    transition: none !important;
+  }
+}
+
+/* Error state shake — per-segment cubic-bezier shake. The %-stops are cumulative
+   leg durations (80, 60, 80, 60 = 280ms): 28.57%, 57.14%, 78.57%, 100%. */
+.t-input {
+  transition: border-color 150ms ease-out;
+  will-change: transform;
+}
+.t-input.is-shaking {
+  animation: t-input-shake calc(var(--shake-dur-a) * 2 + var(--shake-dur-b) * 2)
+    linear;
+}
+@keyframes t-input-shake {
+  0% {
+    transform: translateX(0);
+    animation-timing-function: var(--shake-ease);
+  }
+  28.57% {
+    transform: translateX(var(--shake-distance));
+    animation-timing-function: var(--shake-ease);
+  }
+  57.14% {
+    transform: translateX(calc(var(--shake-distance) * -1));
+    animation-timing-function: var(--shake-ease);
+  }
+  78.57% {
+    transform: translateX(var(--shake-overshoot));
+    animation-timing-function: var(--shake-ease);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .t-input {
+    transform: none !important;
+    animation: none !important;
+  }
+}
