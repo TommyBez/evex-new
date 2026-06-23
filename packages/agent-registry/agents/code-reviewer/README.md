@@ -35,7 +35,7 @@ Use these settings:
 
 - **GitHub App name**: `code-reviewer`, or another name that matches
   `GITHUB_APP_SLUG`.
-- **Homepage URL**: your deployed Eve app URL or repository URL.
+- **Homepage URL**: your deployed Eve app URL.
 - **Webhook**: active.
 - **Webhook URL**: `https://<your-eve-deployment>/eve/v1/github`.
 - **Webhook secret**: a long random value. Save the same value as
