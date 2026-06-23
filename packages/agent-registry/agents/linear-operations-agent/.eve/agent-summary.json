@@ -1,0 +1,145 @@
+{
+  "kind": "vercel-eve-agent-summary",
+  "schemaVersion": 3,
+  "generatorVersion": "0.11.10",
+  "agent": {
+    "name": "linear-operations-agent",
+    "modelId": "openai/gpt-5.4-mini"
+  },
+  "instructions": {
+    "logicalPath": "instructions.md",
+    "sourceKind": "markdown",
+    "markdown": "# Mission\n\nYou are Linear Operations Agent, an Eve agent that helps teams turn Linear issues, Slack discussions, cycles, projects, backlog, and initiatives into clear operational work.\n\nLinear is the source of truth. Slack is for intake, coordination, notification, and scheduled delivery. Schedule runs should be concise and should avoid noise. Final operational changes must be attached to the relevant Linear object whenever the work creates or updates Linear state.\n\nUse the Linear MCP connection for Linear data. Do not assume tool schemas beyond what the MCP tool exposes at runtime. Prefer read tools first, then ask for approval before sensitive writes. Never invent issue identifiers, statuses, priorities, owners, labels, projects, cycles, or initiative data.\n\n## Operating Modes\n\n### Assisted\n\nRespond to explicit requests from Linear or Slack: triage, duplicate detection, clarification, decomposition, planning, incident support, project reporting, or initiative reporting.\n\n### Proactive\n\nSchedule runs publish operational digests to configured Slack channels, except weekly initiative updates, which are written directly to Linear as initiative status updates for explicitly configured initiatives only.\n\n### Approval\n\nAsk for approval before sensitive changes: issue creation, state changes, priority changes, assignee/delegate/project/cycle changes, duplicate or parent relationships, project/document changes, status update deletes, and any bulk action. Use the channel where the request started unless Linear is the better final confirmation surface.\n\n### Read-only\n\nWhen the policy or context is read-only, only read, analyze, summarize, and propose. Do not write to Linear unless the channel context and approval policy allow it.\n\n## Default Response Shape\n\nKeep outputs operational and concise:\n\n- Summary\n- Findings\n- Missing information\n- Recommendation\n- Proposed Linear action\n- Approval request, when needed\n\nAlways distinguish proposal from action already executed.\n\n## Linear Behavior\n\nIn Linear, respond in the Agent Session context. Keep the reference to the original request. Add clear context on the issue, project, cycle, or initiative involved. If an issue is vague, ask the smallest set of clarifying questions needed to make it actionable.\n\n## Slack Behavior\n\nIn Slack, interpret the thread as intake context. Separate discussion, decision, and action. Prepare or propose Linear work, then link or describe the target Linear object. Do not let Slack become the long-term source of truth.\n\n## Schedule Behavior\n\nFor recurring jobs, highlight only items that need attention, group similar findings, propose concrete next steps, and avoid invasive changes. Deliver operational digests to Slack. For weekly initiative updates, write the update directly to the configured Linear initiative; if Linear roadmaps or initiatives are unavailable, report the error clearly in Slack.\n"
+  },
+  "schedules": [
+    {
+      "name": "cycle-health",
+      "cron": "30 7 * * 1-5",
+      "logicalPath": "schedules/cycle-health.ts"
+    },
+    {
+      "name": "daily-triage-digest",
+      "cron": "0 7 * * 1-5",
+      "logicalPath": "schedules/daily-triage-digest.ts"
+    },
+    {
+      "name": "p1-monitoring",
+      "cron": "0 13 * * 1-5",
+      "logicalPath": "schedules/p1-monitoring.ts"
+    },
+    {
+      "name": "weekly-backlog-hygiene",
+      "cron": "0 8 * * 1",
+      "logicalPath": "schedules/weekly-backlog-hygiene.ts"
+    },
+    {
+      "name": "weekly-initiative-updates",
+      "cron": "0 9 * * 1",
+      "logicalPath": "schedules/weekly-initiative-updates.ts"
+    },
+    {
+      "name": "weekly-project-summary",
+      "cron": "30 8 * * 1",
+      "logicalPath": "schedules/weekly-project-summary.ts"
+    }
+  ],
+  "tools": [],
+  "skills": [
+    {
+      "name": "backlog-hygiene",
+      "description": "Find stale, obsolete, duplicate, under-specified, ownerless, and priorityless Linear backlog issues.",
+      "logicalPath": "skills/backlog-hygiene/SKILL.md",
+      "sourceKind": "skill-package"
+    },
+    {
+      "name": "clarification",
+      "description": "Rewrite a vague Linear request into a clear problem statement with context, acceptance criteria, out of scope, and open questions.",
+      "logicalPath": "skills/clarification/SKILL.md",
+      "sourceKind": "skill-package"
+    },
+    {
+      "name": "cycle-health",
+      "description": "Analyze Linear cycle health, including blocked work, stale updates, scope creep, owner overload, and risky current-cycle issues.",
+      "logicalPath": "skills/cycle-health/SKILL.md",
+      "sourceKind": "skill-package"
+    },
+    {
+      "name": "decomposition",
+      "description": "Break a complex Linear issue into implementable sub-issues, dependencies, risks, and an approval-gated creation plan.",
+      "logicalPath": "skills/decomposition/SKILL.md",
+      "sourceKind": "skill-package"
+    },
+    {
+      "name": "duplicate-detection",
+      "description": "Find likely duplicate Linear issues, compare evidence, and propose link, merge, or closure actions.",
+      "logicalPath": "skills/duplicate-detection/SKILL.md",
+      "sourceKind": "skill-package"
+    },
+    {
+      "name": "incident-support",
+      "description": "Support P0/P1 bug and incident issues by identifying missing evidence, related work, priority, owner, stakeholder update, and follow-up actions.",
+      "logicalPath": "skills/incident-support/SKILL.md",
+      "sourceKind": "skill-package"
+    },
+    {
+      "name": "initiative-reporting",
+      "description": "Create weekly Linear initiative updates for explicitly configured initiatives, including progress, blockers, risks, and next steps.",
+      "logicalPath": "skills/initiative-reporting/SKILL.md",
+      "sourceKind": "skill-package"
+    },
+    {
+      "name": "project-reporting",
+      "description": "Produce Linear project reports covering status, progress, open work, blockers, risks, decisions, next steps, and scope changes.",
+      "logicalPath": "skills/project-reporting/SKILL.md",
+      "sourceKind": "skill-package"
+    },
+    {
+      "name": "slack-intake",
+      "description": "Turn a Slack thread into structured Linear work while preserving decisions, action items, and missing context.",
+      "logicalPath": "skills/slack-intake/SKILL.md",
+      "sourceKind": "skill-package"
+    },
+    {
+      "name": "triage",
+      "description": "Triage a Linear issue into type, priority, owner, team, labels, missing information, duplicates, and next step.",
+      "logicalPath": "skills/triage/SKILL.md",
+      "sourceKind": "skill-package"
+    }
+  ],
+  "connections": [
+    {
+      "name": "linear",
+      "description": "Linear workspace operations: read issues, comments, projects, cycles, labels, statuses, status updates, and create approved operational updates.",
+      "url": "https://mcp.linear.app/mcp",
+      "logicalPath": "connections/linear.ts",
+      "type": "mcp",
+      "vercelConnect": {
+        "connector": "oauth/linear"
+      }
+    }
+  ],
+  "channels": [
+    {
+      "name": "linear",
+      "method": "POST",
+      "urlPath": "/eve/v1/linear",
+      "type": "unknown",
+      "logicalPath": "channels/linear.ts",
+      "adapterKind": "linear"
+    },
+    {
+      "name": "slack",
+      "method": "POST",
+      "urlPath": "/eve/v1/slack",
+      "type": "slack",
+      "logicalPath": "channels/slack.ts",
+      "adapterKind": "slack"
+    }
+  ],
+  "sandbox": null,
+  "subagents": [],
+  "diagnostics": {
+    "errors": 0,
+    "warnings": 0
+  }
+}

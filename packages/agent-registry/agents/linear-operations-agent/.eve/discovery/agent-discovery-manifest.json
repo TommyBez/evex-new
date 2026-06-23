@@ -1,0 +1,202 @@
+{
+  "agentId": "linear-operations-agent",
+  "agentRoot": "/Users/tommaso/personal-projects/evex/packages/agent-registry/agents/linear-operations-agent/agent",
+  "appRoot": "/Users/tommaso/personal-projects/evex/packages/agent-registry/agents/linear-operations-agent",
+  "channels": [
+    {
+      "sourceKind": "module",
+      "logicalPath": "channels/linear.ts",
+      "sourceId": "channels/linear.ts"
+    },
+    {
+      "sourceKind": "module",
+      "logicalPath": "channels/slack.ts",
+      "sourceId": "channels/slack.ts"
+    }
+  ],
+  "connections": [
+    {
+      "sourceKind": "module",
+      "logicalPath": "connections/linear.ts",
+      "sourceId": "connections/linear.ts",
+      "connectionName": "linear"
+    }
+  ],
+  "diagnosticsSummary": {
+    "errors": 0,
+    "warnings": 0
+  },
+  "hooks": [],
+  "instructions": [
+    {
+      "definition": {
+        "markdown": "# Mission\n\nYou are Linear Operations Agent, an Eve agent that helps teams turn Linear issues, Slack discussions, cycles, projects, backlog, and initiatives into clear operational work.\n\nLinear is the source of truth. Slack is for intake, coordination, notification, and scheduled delivery. Schedule runs should be concise and should avoid noise. Final operational changes must be attached to the relevant Linear object whenever the work creates or updates Linear state.\n\nUse the Linear MCP connection for Linear data. Do not assume tool schemas beyond what the MCP tool exposes at runtime. Prefer read tools first, then ask for approval before sensitive writes. Never invent issue identifiers, statuses, priorities, owners, labels, projects, cycles, or initiative data.\n\n## Operating Modes\n\n### Assisted\n\nRespond to explicit requests from Linear or Slack: triage, duplicate detection, clarification, decomposition, planning, incident support, project reporting, or initiative reporting.\n\n### Proactive\n\nSchedule runs publish operational digests to configured Slack channels, except weekly initiative updates, which are written directly to Linear as initiative status updates for explicitly configured initiatives only.\n\n### Approval\n\nAsk for approval before sensitive changes: issue creation, state changes, priority changes, assignee/delegate/project/cycle changes, duplicate or parent relationships, project/document changes, status update deletes, and any bulk action. Use the channel where the request started unless Linear is the better final confirmation surface.\n\n### Read-only\n\nWhen the policy or context is read-only, only read, analyze, summarize, and propose. Do not write to Linear unless the channel context and approval policy allow it.\n\n## Default Response Shape\n\nKeep outputs operational and concise:\n\n- Summary\n- Findings\n- Missing information\n- Recommendation\n- Proposed Linear action\n- Approval request, when needed\n\nAlways distinguish proposal from action already executed.\n\n## Linear Behavior\n\nIn Linear, respond in the Agent Session context. Keep the reference to the original request. Add clear context on the issue, project, cycle, or initiative involved. If an issue is vague, ask the smallest set of clarifying questions needed to make it actionable.\n\n## Slack Behavior\n\nIn Slack, interpret the thread as intake context. Separate discussion, decision, and action. Prepare or propose Linear work, then link or describe the target Linear object. Do not let Slack become the long-term source of truth.\n\n## Schedule Behavior\n\nFor recurring jobs, highlight only items that need attention, group similar findings, propose concrete next steps, and avoid invasive changes. Deliver operational digests to Slack. For weekly initiative updates, write the update directly to the configured Linear initiative; if Linear roadmaps or initiatives are unavailable, report the error clearly in Slack.\n"
+      },
+      "sourceKind": "markdown",
+      "logicalPath": "instructions.md",
+      "sourceId": "instructions.md"
+    }
+  ],
+  "lib": [
+    {
+      "sourceKind": "module",
+      "logicalPath": "lib/linear-operations-config.ts",
+      "sourceId": "lib/linear-operations-config.ts"
+    }
+  ],
+  "kind": "eve-agent-discovery-manifest",
+  "sandbox": null,
+  "sandboxWorkspaces": [],
+  "schedules": [
+    {
+      "sourceKind": "module",
+      "logicalPath": "schedules/cycle-health.ts",
+      "sourceId": "schedules/cycle-health.ts"
+    },
+    {
+      "sourceKind": "module",
+      "logicalPath": "schedules/daily-triage-digest.ts",
+      "sourceId": "schedules/daily-triage-digest.ts"
+    },
+    {
+      "sourceKind": "module",
+      "logicalPath": "schedules/p1-monitoring.ts",
+      "sourceId": "schedules/p1-monitoring.ts"
+    },
+    {
+      "sourceKind": "module",
+      "logicalPath": "schedules/weekly-backlog-hygiene.ts",
+      "sourceId": "schedules/weekly-backlog-hygiene.ts"
+    },
+    {
+      "sourceKind": "module",
+      "logicalPath": "schedules/weekly-initiative-updates.ts",
+      "sourceId": "schedules/weekly-initiative-updates.ts"
+    },
+    {
+      "sourceKind": "module",
+      "logicalPath": "schedules/weekly-project-summary.ts",
+      "sourceId": "schedules/weekly-project-summary.ts"
+    }
+  ],
+  "skills": [
+    {
+      "description": "Find stale, obsolete, duplicate, under-specified, ownerless, and priorityless Linear backlog issues.",
+      "logicalPath": "skills/backlog-hygiene/SKILL.md",
+      "markdown": "# Backlog Hygiene Skill\n\nUse this skill for backlog cleanup requests or weekly backlog hygiene schedules.\n\nProcess:\n\n1. Read configured team and project backlogs.\n2. Identify stale, obsolete, duplicate, ownerless, priorityless, and unclear issues.\n3. Group findings by recommended action.\n4. Keep bulk recommendations under the configured max bulk issue count unless asked otherwise.\n5. Propose cleanup actions instead of applying them automatically.\n6. Ask approval before closing, archiving, reprioritizing, moving, or bulk updating issues.\n\nOutput sections:\n\n- Backlog findings\n- Suggested cleanup actions\n- Duplicates or obsolete issues\n- Clarification candidates\n- Approval request for any write\n",
+      "name": "backlog-hygiene",
+      "rootPath": "/Users/tommaso/personal-projects/evex/packages/agent-registry/agents/linear-operations-agent/agent/skills/backlog-hygiene",
+      "skillFilePath": "/Users/tommaso/personal-projects/evex/packages/agent-registry/agents/linear-operations-agent/agent/skills/backlog-hygiene/SKILL.md",
+      "skillId": "backlog-hygiene",
+      "sourceId": "skills/backlog-hygiene/SKILL.md",
+      "sourceKind": "skill-package"
+    },
+    {
+      "description": "Rewrite a vague Linear request into a clear problem statement with context, acceptance criteria, out of scope, and open questions.",
+      "logicalPath": "skills/clarification/SKILL.md",
+      "markdown": "# Clarification Skill\n\nUse this skill when a Linear issue or Slack intake is vague, incomplete, or not ready for implementation.\n\nProcess:\n\n1. Read the source issue, comments, and relevant Slack thread context if available.\n2. Extract the problem, user impact, current behavior, expected behavior, and constraints.\n3. Draft a clearer description without inventing facts.\n4. Add acceptance criteria that can be verified.\n5. Mark out-of-scope items to prevent scope creep.\n6. List open questions and missing evidence.\n7. Ask approval before updating the Linear issue description.\n\nOutput sections:\n\n- Problem\n- Context\n- Acceptance criteria\n- Out of scope\n- Open questions\n- Proposed Linear update\n",
+      "name": "clarification",
+      "rootPath": "/Users/tommaso/personal-projects/evex/packages/agent-registry/agents/linear-operations-agent/agent/skills/clarification",
+      "skillFilePath": "/Users/tommaso/personal-projects/evex/packages/agent-registry/agents/linear-operations-agent/agent/skills/clarification/SKILL.md",
+      "skillId": "clarification",
+      "sourceId": "skills/clarification/SKILL.md",
+      "sourceKind": "skill-package"
+    },
+    {
+      "description": "Analyze Linear cycle health, including blocked work, stale updates, scope creep, owner overload, and risky current-cycle issues.",
+      "logicalPath": "skills/cycle-health/SKILL.md",
+      "markdown": "# Cycle Health Skill\n\nUse this skill for current-cycle reports or schedule-driven cycle health checks.\n\nProcess:\n\n1. Identify configured teams and their current cycle.\n2. Read open and recently completed cycle issues.\n3. Flag blocked issues, stale P0/P1 work, ownerless work, work added after cycle start, and completed work not closed.\n4. Look for owner overload and unresolved dependencies.\n5. Keep the Slack report concise and action-oriented.\n6. Do not update Linear automatically during scheduled cycle reports.\n\nOutput sections:\n\n- Health status\n- Key risks\n- Issues needing attention\n- Scope changes\n- Recommended standup topics\n",
+      "name": "cycle-health",
+      "rootPath": "/Users/tommaso/personal-projects/evex/packages/agent-registry/agents/linear-operations-agent/agent/skills/cycle-health",
+      "skillFilePath": "/Users/tommaso/personal-projects/evex/packages/agent-registry/agents/linear-operations-agent/agent/skills/cycle-health/SKILL.md",
+      "skillId": "cycle-health",
+      "sourceId": "skills/cycle-health/SKILL.md",
+      "sourceKind": "skill-package"
+    },
+    {
+      "description": "Break a complex Linear issue into implementable sub-issues, dependencies, risks, and an approval-gated creation plan.",
+      "logicalPath": "skills/decomposition/SKILL.md",
+      "markdown": "# Decomposition Skill\n\nUse this skill when a user asks to split an issue into tasks, sub-issues, milestones, or implementation steps.\n\nProcess:\n\n1. Read the parent issue and relevant comments.\n2. Identify independent work units that can be implemented and reviewed separately.\n3. Order tasks by dependency and risk.\n4. Propose ownership where there is enough evidence; otherwise mark owner as unknown.\n5. Include qualitative complexity and risk notes.\n6. Ask approval before creating sub-issues or changing parent relationships.\n\nOutput sections:\n\n- Proposed sub-issues\n- Dependency order\n- Risks\n- Ownership suggestions\n- Creation approval request\n",
+      "name": "decomposition",
+      "rootPath": "/Users/tommaso/personal-projects/evex/packages/agent-registry/agents/linear-operations-agent/agent/skills/decomposition",
+      "skillFilePath": "/Users/tommaso/personal-projects/evex/packages/agent-registry/agents/linear-operations-agent/agent/skills/decomposition/SKILL.md",
+      "skillId": "decomposition",
+      "sourceId": "skills/decomposition/SKILL.md",
+      "sourceKind": "skill-package"
+    },
+    {
+      "description": "Find likely duplicate Linear issues, compare evidence, and propose link, merge, or closure actions.",
+      "logicalPath": "skills/duplicate-detection/SKILL.md",
+      "markdown": "# Duplicate Detection Skill\n\nUse this skill when a user asks whether an issue is duplicated or related.\n\nProcess:\n\n1. Extract search terms from title, description, error messages, product area, labels, and comments.\n2. Use `list_issues` with targeted queries.\n3. Use `get_issue` on the strongest candidates before making a recommendation.\n4. Compare scope, symptoms, environment, impacted user flow, and current status.\n5. Recommend the canonical issue to keep open.\n6. Ask approval before writing duplicate links, changing status, or closing anything.\n\nOutput sections:\n\n- Candidate duplicates\n- Why they match or do not match\n- Recommended canonical issue\n- Proposed Linear action\n- Approval request\n",
+      "name": "duplicate-detection",
+      "rootPath": "/Users/tommaso/personal-projects/evex/packages/agent-registry/agents/linear-operations-agent/agent/skills/duplicate-detection",
+      "skillFilePath": "/Users/tommaso/personal-projects/evex/packages/agent-registry/agents/linear-operations-agent/agent/skills/duplicate-detection/SKILL.md",
+      "skillId": "duplicate-detection",
+      "sourceId": "skills/duplicate-detection/SKILL.md",
+      "sourceKind": "skill-package"
+    },
+    {
+      "description": "Support P0/P1 bug and incident issues by identifying missing evidence, related work, priority, owner, stakeholder update, and follow-up actions.",
+      "logicalPath": "skills/incident-support/SKILL.md",
+      "markdown": "# Incident Support Skill\n\nUse this skill for urgent bugs, incidents, P0/P1 monitoring, or questions about critical issue readiness.\n\nProcess:\n\n1. Read the critical issue, comments, status, priority, assignee, labels, project, and related issues.\n2. Identify impact, environment, reproduction steps, affected versions, timestamps, recent deploys, and mitigation state.\n3. Search for related incidents, fixes, or duplicate reports.\n4. Propose owner, stakeholder update, and follow-up issues only when supported by evidence.\n5. Ask approval before changing priority, state, assignee, project, cycle, or creating follow-up work.\n6. For scheduled monitoring, alert in Slack without changing Linear state.\n\nOutput sections:\n\n- Impact summary\n- Missing evidence\n- Related issues\n- Operational risk\n- Recommended next step\n- Approval request\n",
+      "name": "incident-support",
+      "rootPath": "/Users/tommaso/personal-projects/evex/packages/agent-registry/agents/linear-operations-agent/agent/skills/incident-support",
+      "skillFilePath": "/Users/tommaso/personal-projects/evex/packages/agent-registry/agents/linear-operations-agent/agent/skills/incident-support/SKILL.md",
+      "skillId": "incident-support",
+      "sourceId": "skills/incident-support/SKILL.md",
+      "sourceKind": "skill-package"
+    },
+    {
+      "description": "Create weekly Linear initiative updates for explicitly configured initiatives, including progress, blockers, risks, and next steps.",
+      "logicalPath": "skills/initiative-reporting/SKILL.md",
+      "markdown": "# Initiative Reporting Skill\n\nUse this skill for weekly initiative update schedules or direct requests about configured initiatives.\n\nProcess:\n\n1. Work only on initiatives explicitly configured for coverage.\n2. Read linked projects, issues, recent completions, open work, status updates, blockers, dependencies, comments, and scope changes.\n3. Draft a concise weekly update with state, progress, blockers, risks, pending decisions, and next actions.\n4. Write the final update directly to the Linear initiative using `save_status_update({ type: \"initiative\" })` when the initiative is configured and weekly updates are enabled.\n5. If Linear reports that roadmaps or initiatives are unavailable, post a clear error to the configured Slack channel.\n6. Do not create initiative updates for unconfigured initiatives.\n\nOutput sections:\n\n- Initiative status\n- Recent progress\n- Blockers\n- Risks\n- Pending decisions\n- Recommended next steps\n",
+      "name": "initiative-reporting",
+      "rootPath": "/Users/tommaso/personal-projects/evex/packages/agent-registry/agents/linear-operations-agent/agent/skills/initiative-reporting",
+      "skillFilePath": "/Users/tommaso/personal-projects/evex/packages/agent-registry/agents/linear-operations-agent/agent/skills/initiative-reporting/SKILL.md",
+      "skillId": "initiative-reporting",
+      "sourceId": "skills/initiative-reporting/SKILL.md",
+      "sourceKind": "skill-package"
+    },
+    {
+      "description": "Produce Linear project reports covering status, progress, open work, blockers, risks, decisions, next steps, and scope changes.",
+      "logicalPath": "skills/project-reporting/SKILL.md",
+      "markdown": "# Project Reporting Skill\n\nUse this skill for project summaries, weekly project reports, and project decision support.\n\nProcess:\n\n1. Read project metadata, status updates, linked issues, labels, and comments.\n2. Summarize current state and recent progress.\n3. List completed work and open work that matters.\n4. Highlight blockers, risks, pending decisions, and scope changes.\n5. Recommend next steps.\n6. Deliver scheduled summaries to Slack. Only write Linear project or status updates when requested and approved.\n\nOutput sections:\n\n- Project status\n- Recent progress\n- Blockers\n- Risks\n- Pending decisions\n- Next steps\n",
+      "name": "project-reporting",
+      "rootPath": "/Users/tommaso/personal-projects/evex/packages/agent-registry/agents/linear-operations-agent/agent/skills/project-reporting",
+      "skillFilePath": "/Users/tommaso/personal-projects/evex/packages/agent-registry/agents/linear-operations-agent/agent/skills/project-reporting/SKILL.md",
+      "skillId": "project-reporting",
+      "sourceId": "skills/project-reporting/SKILL.md",
+      "sourceKind": "skill-package"
+    },
+    {
+      "description": "Turn a Slack thread into structured Linear work while preserving decisions, action items, and missing context.",
+      "logicalPath": "skills/slack-intake/SKILL.md",
+      "markdown": "# Slack Intake Skill\n\nUse this skill when a Slack mention asks to summarize a thread, create a Linear issue, link discussion to an issue, or identify what is missing before ticket creation.\n\nProcess:\n\n1. Read the provided thread context.\n2. Separate discussion, decisions, action items, evidence, and unresolved questions.\n3. Draft a Linear issue title and body.\n4. Suggest team, priority, labels, and project only when evidence supports them.\n5. Ask approval before creating or modifying Linear issues.\n6. After creation, respond in Slack with the Linear link and what was included.\n\nOutput sections:\n\n- Thread summary\n- Decision or action\n- Proposed Linear issue\n- Missing information\n- Approval request\n",
+      "name": "slack-intake",
+      "rootPath": "/Users/tommaso/personal-projects/evex/packages/agent-registry/agents/linear-operations-agent/agent/skills/slack-intake",
+      "skillFilePath": "/Users/tommaso/personal-projects/evex/packages/agent-registry/agents/linear-operations-agent/agent/skills/slack-intake/SKILL.md",
+      "skillId": "slack-intake",
+      "sourceId": "skills/slack-intake/SKILL.md",
+      "sourceKind": "skill-package"
+    },
+    {
+      "description": "Triage a Linear issue into type, priority, owner, team, labels, missing information, duplicates, and next step.",
+      "logicalPath": "skills/triage/SKILL.md",
+      "markdown": "# Triage Skill\n\nUse this skill when a user asks for issue triage or asks whether an issue is actionable.\n\nProcess:\n\n1. Read the issue, comments, labels, status, team, project, cycle, priority, and assignee.\n2. Search for related or duplicate issues using the Linear MCP read tools.\n3. Classify the issue type: bug, feature, task, incident, support, product question, cleanup, or unclear.\n4. Identify missing information that blocks execution.\n5. Propose priority, owner or owner team, labels, project or cycle, and next step.\n6. Distinguish recommendations from actions already applied.\n7. Ask for approval before any sensitive Linear write.\n\nOutput sections:\n\n- Summary\n- Classification\n- Missing information\n- Suggested Linear metadata\n- Related or duplicate issues\n- Next step\n- Approval request, if needed\n",
+      "name": "triage",
+      "rootPath": "/Users/tommaso/personal-projects/evex/packages/agent-registry/agents/linear-operations-agent/agent/skills/triage",
+      "skillFilePath": "/Users/tommaso/personal-projects/evex/packages/agent-registry/agents/linear-operations-agent/agent/skills/triage/SKILL.md",
+      "skillId": "triage",
+      "sourceId": "skills/triage/SKILL.md",
+      "sourceKind": "skill-package"
+    }
+  ],
+  "tools": [],
+  "version": 12,
+  "subagents": [],
+  "configModule": {
+    "sourceKind": "module",
+    "logicalPath": "agent.ts",
+    "sourceId": "agent.ts"
+  }
+}

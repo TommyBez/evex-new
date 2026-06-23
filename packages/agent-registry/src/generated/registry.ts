@@ -251,24 +251,23 @@ export const generatedRegistry = {
       ]
     },
     {
-      "name": "linear-sprint-triage",
+      "name": "linear-operations-agent",
       "type": "registry:item",
-      "title": "Linear Sprint Triage",
-      "description": "Fetches Linear team issues, highlights unassigned or high-priority work, and separates delivery risk from simple backlog hygiene.",
+      "title": "Linear Operations Agent",
+      "description": "A multi-channel Eve agent for Linear operations: issue triage, Slack intake, cycle health, backlog hygiene, project reporting, and weekly initiative updates.",
       "author": "TommyBez",
       "categories": [
         "productivity"
       ],
       "dependencies": [
-        "eve@^0.11.4",
-        "@linear/sdk@^86.0.0",
-        "zod@4.3.6"
+        "@vercel/connect@^0.2.6",
+        "eve@^0.11.10"
       ],
       "meta": {
-        "slug": "linear-sprint-triage",
+        "slug": "linear-operations-agent",
         "category": "productivity",
         "createdAt": "2026-06-20T00:00:00.000Z",
-        "updatedAt": "2026-06-20T00:00:00.000Z"
+        "updatedAt": "2026-06-23T00:00:00.000Z"
       },
       "files": [
         {
@@ -277,14 +276,109 @@ export const generatedRegistry = {
           "target": "~/agent/agent.ts"
         },
         {
+          "path": "agent/channels/linear.ts",
+          "type": "registry:file",
+          "target": "~/agent/channels/linear.ts"
+        },
+        {
+          "path": "agent/channels/slack.ts",
+          "type": "registry:file",
+          "target": "~/agent/channels/slack.ts"
+        },
+        {
+          "path": "agent/lib/linear-operations-config.ts",
+          "type": "registry:file",
+          "target": "~/agent/lib/linear-operations-config.ts"
+        },
+        {
+          "path": "agent/connections/linear.ts",
+          "type": "registry:file",
+          "target": "~/agent/connections/linear.ts"
+        },
+        {
           "path": "agent/instructions.md",
           "type": "registry:file",
           "target": "~/agent/instructions.md"
         },
         {
-          "path": "agent/tools/fetch_team_issues.ts",
+          "path": "agent/schedules/cycle-health.ts",
           "type": "registry:file",
-          "target": "~/agent/tools/fetch_team_issues.ts"
+          "target": "~/agent/schedules/cycle-health.ts"
+        },
+        {
+          "path": "agent/schedules/daily-triage-digest.ts",
+          "type": "registry:file",
+          "target": "~/agent/schedules/daily-triage-digest.ts"
+        },
+        {
+          "path": "agent/schedules/p1-monitoring.ts",
+          "type": "registry:file",
+          "target": "~/agent/schedules/p1-monitoring.ts"
+        },
+        {
+          "path": "agent/schedules/weekly-backlog-hygiene.ts",
+          "type": "registry:file",
+          "target": "~/agent/schedules/weekly-backlog-hygiene.ts"
+        },
+        {
+          "path": "agent/schedules/weekly-initiative-updates.ts",
+          "type": "registry:file",
+          "target": "~/agent/schedules/weekly-initiative-updates.ts"
+        },
+        {
+          "path": "agent/schedules/weekly-project-summary.ts",
+          "type": "registry:file",
+          "target": "~/agent/schedules/weekly-project-summary.ts"
+        },
+        {
+          "path": "agent/skills/backlog-hygiene/SKILL.md",
+          "type": "registry:file",
+          "target": "~/agent/skills/backlog-hygiene/SKILL.md"
+        },
+        {
+          "path": "agent/skills/clarification/SKILL.md",
+          "type": "registry:file",
+          "target": "~/agent/skills/clarification/SKILL.md"
+        },
+        {
+          "path": "agent/skills/cycle-health/SKILL.md",
+          "type": "registry:file",
+          "target": "~/agent/skills/cycle-health/SKILL.md"
+        },
+        {
+          "path": "agent/skills/decomposition/SKILL.md",
+          "type": "registry:file",
+          "target": "~/agent/skills/decomposition/SKILL.md"
+        },
+        {
+          "path": "agent/skills/duplicate-detection/SKILL.md",
+          "type": "registry:file",
+          "target": "~/agent/skills/duplicate-detection/SKILL.md"
+        },
+        {
+          "path": "agent/skills/incident-support/SKILL.md",
+          "type": "registry:file",
+          "target": "~/agent/skills/incident-support/SKILL.md"
+        },
+        {
+          "path": "agent/skills/initiative-reporting/SKILL.md",
+          "type": "registry:file",
+          "target": "~/agent/skills/initiative-reporting/SKILL.md"
+        },
+        {
+          "path": "agent/skills/project-reporting/SKILL.md",
+          "type": "registry:file",
+          "target": "~/agent/skills/project-reporting/SKILL.md"
+        },
+        {
+          "path": "agent/skills/slack-intake/SKILL.md",
+          "type": "registry:file",
+          "target": "~/agent/skills/slack-intake/SKILL.md"
+        },
+        {
+          "path": "agent/skills/triage/SKILL.md",
+          "type": "registry:file",
+          "target": "~/agent/skills/triage/SKILL.md"
         },
         {
           "path": "README.md",
@@ -633,26 +727,25 @@ export const generatedRegistryItems = {
       }
     ]
   },
-  "linear-sprint-triage": {
+  "linear-operations-agent": {
     "$schema": "https://ui.shadcn.com/schema/registry.json",
-    "name": "linear-sprint-triage",
+    "name": "linear-operations-agent",
     "type": "registry:item",
-    "title": "Linear Sprint Triage",
-    "description": "Fetches Linear team issues, highlights unassigned or high-priority work, and separates delivery risk from simple backlog hygiene.",
+    "title": "Linear Operations Agent",
+    "description": "A multi-channel Eve agent for Linear operations: issue triage, Slack intake, cycle health, backlog hygiene, project reporting, and weekly initiative updates.",
     "author": "TommyBez",
     "categories": [
       "productivity"
     ],
     "dependencies": [
-      "eve@^0.11.4",
-      "@linear/sdk@^86.0.0",
-      "zod@4.3.6"
+      "@vercel/connect@^0.2.6",
+      "eve@^0.11.10"
     ],
     "meta": {
-      "slug": "linear-sprint-triage",
+      "slug": "linear-operations-agent",
       "category": "productivity",
       "createdAt": "2026-06-20T00:00:00.000Z",
-      "updatedAt": "2026-06-20T00:00:00.000Z"
+      "updatedAt": "2026-06-23T00:00:00.000Z"
     },
     "files": [
       {
@@ -662,28 +755,142 @@ export const generatedRegistryItems = {
         "content": "import { defineAgent } from \"eve\";\n\nexport default defineAgent({\n  model: \"openai/gpt-5.4-mini\",\n});\n"
       },
       {
+        "path": "agent/channels/linear.ts",
+        "type": "registry:file",
+        "target": "~/agent/channels/linear.ts",
+        "content": "import { defaultLinearAuth, linearChannel } from \"eve/channels/linear\";\n\nimport { formatPolicySummary, linearOperationsConfig } from \"../lib/linear-operations-config.js\";\n\nconst isString = (value: string | undefined): value is string => value !== undefined;\n\ntype LinearIssueContext = {\n  readonly identifier?: string;\n  readonly id?: string;\n  readonly team?: {\n    readonly id?: string;\n    readonly key?: string;\n    readonly name?: string;\n  } | null;\n  readonly project?: {\n    readonly id?: string;\n    readonly name?: string;\n    readonly slug?: string;\n  } | null;\n};\n\ntype LinearAgentSessionEventLike = {\n  readonly action?: string;\n  readonly agentSession?: {\n    readonly issue?: LinearIssueContext | null;\n  } | null;\n};\n\nconst issueMatchesScope = (issue: LinearIssueContext | null | undefined): boolean => {\n  if (!issue) return true;\n\n  const teamCandidates = [issue.team?.id, issue.team?.key, issue.team?.name].filter(isString);\n  const projectCandidates = [issue.project?.id, issue.project?.slug, issue.project?.name].filter(isString);\n\n  const teamAllowed =\n    linearOperationsConfig.coveredTeams.length === 0 ||\n    teamCandidates.some((team) => linearOperationsConfig.coveredTeams.includes(team));\n  const projectAllowed =\n    linearOperationsConfig.coveredProjects.length === 0 ||\n    projectCandidates.some((project) => linearOperationsConfig.coveredProjects.includes(project));\n\n  return teamAllowed && projectAllowed;\n};\n\nconst formatLinearContext = (event: LinearAgentSessionEventLike): string => {\n  const issue = event.agentSession?.issue;\n  const issueLabel = issue?.identifier ?? issue?.id ?? \"unknown issue\";\n  const teamLabel = issue?.team?.key ?? issue?.team?.name ?? issue?.team?.id ?? \"unknown team\";\n  const projectLabel = issue?.project?.name ?? issue?.project?.slug ?? issue?.project?.id ?? \"no project\";\n\n  return [\n    \"Surface: Linear Agent Session.\",\n    `Issue: ${issueLabel}`,\n    `Team: ${teamLabel}`,\n    `Project: ${projectLabel}`,\n    \"Linear is the source of truth. Keep proposals and executed actions attached to the relevant Linear object.\",\n    \"Policy summary:\",\n    formatPolicySummary(),\n  ].join(\"\\n\");\n};\n\nexport default linearChannel({\n  credentials: {\n    accessToken: process.env.LINEAR_AGENT_ACCESS_TOKEN,\n    webhookSecret: process.env.LINEAR_WEBHOOK_SECRET,\n  },\n  onAgentSession: (_ctx, event) => {\n    const eventLike = event as LinearAgentSessionEventLike;\n    if (event.action !== \"created\" && event.action !== \"prompted\") return null;\n    if (!issueMatchesScope(eventLike.agentSession?.issue)) return null;\n\n    return {\n      auth: defaultLinearAuth(event),\n      context: [formatLinearContext(eventLike)],\n    };\n  },\n});\n"
+      },
+      {
+        "path": "agent/channels/slack.ts",
+        "type": "registry:file",
+        "target": "~/agent/channels/slack.ts",
+        "content": "import { connectSlackCredentials } from \"@vercel/connect/eve\";\nimport { defaultSlackAuth, loadThreadContextMessages, slackChannel } from \"eve/channels/slack\";\n\nconst SLACK_OPERATING_CONTEXT = [\n  \"Surface: Slack.\",\n  \"Slack is intake, coordination, notification, and scheduled delivery.\",\n  \"The final operational source of truth must live in Linear whenever work is created or changed.\",\n  \"Before sensitive Linear changes, ask for approval in the originating Slack thread or move the final confirmation to Linear.\",\n].join(\"\\n\");\n\nexport default slackChannel({\n  credentials: connectSlackCredentials(process.env.SLACK_CONNECT_UID ?? \"slack/linear-operations-agent\"),\n  async onAppMention(ctx, message) {\n    const auth = defaultSlackAuth(message, ctx);\n    const priorMessages = await loadThreadContextMessages(ctx.thread, message, {\n      since: \"last-agent-reply\",\n    });\n\n    const transcript = priorMessages\n      .map((threadMessage) => `${threadMessage.isMe ? \"agent\" : (threadMessage.user ?? \"user\")}: ${threadMessage.markdown}`)\n      .join(\"\\n\");\n\n    return {\n      auth,\n      context: transcript\n        ? [SLACK_OPERATING_CONTEXT, `Recent Slack thread context since the last agent reply:\\n\\n${transcript}`]\n        : [SLACK_OPERATING_CONTEXT],\n    };\n  },\n  onDirectMessage: (ctx, message) => ({\n    auth: defaultSlackAuth(message, ctx),\n    context: [SLACK_OPERATING_CONTEXT],\n  }),\n});\n"
+      },
+      {
+        "path": "agent/lib/linear-operations-config.ts",
+        "type": "registry:file",
+        "target": "~/agent/lib/linear-operations-config.ts",
+        "content": "export type CoveredInitiative = {\n  readonly idOrName: string;\n  readonly slackChannelId?: string;\n  readonly weeklyUpdateEnabled: boolean;\n};\n\nexport type SlackChannelKind = \"default\" | \"triage\" | \"cycle\" | \"backlog\" | \"p1Monitoring\";\n\nexport type LinearOperationsConfig = {\n  readonly coveredTeams: readonly string[];\n  readonly coveredProjects: readonly string[];\n  readonly coveredInitiatives: readonly CoveredInitiative[];\n  readonly slack: {\n    readonly defaultChannelId?: string;\n    readonly triageChannelId?: string;\n    readonly cycleChannelId?: string;\n    readonly backlogChannelId?: string;\n    readonly p1MonitoringChannelId?: string;\n    readonly projectChannels: Readonly<Record<string, string>>;\n  };\n  readonly policy: {\n    readonly readOnlyTeams: readonly string[];\n    readonly maxBulkIssueCount: number;\n    readonly highPriorityValues: readonly number[];\n    readonly autoInitiativeUpdates: boolean;\n  };\n  readonly schedules: {\n    readonly dailyTriageDigest: string;\n    readonly cycleHealth: string;\n    readonly weeklyBacklogHygiene: string;\n    readonly weeklyProjectSummary: string;\n    readonly weeklyInitiativeUpdates: string;\n    readonly p1Monitoring: string;\n  };\n};\n\nconst DEFAULT_MAX_BULK_ISSUE_COUNT = 10;\nconst HIGH_PRIORITY_VALUES = [1, 2] as const;\n\nconst compactCsv = (value: string | undefined): string[] =>\n  (value ?? \"\")\n    .split(\",\")\n    .map((item) => item.trim())\n    .filter(Boolean);\n\nconst optional = (value: string | undefined): string | undefined => {\n  const trimmed = value?.trim();\n  return trimmed ? trimmed : undefined;\n};\n\nconst parseBoolean = (value: string | undefined, fallback: boolean): boolean => {\n  if (value === undefined) return fallback;\n  return value.trim().toLowerCase() !== \"false\";\n};\n\nconst parsePositiveInteger = (value: string | undefined, fallback: number): number => {\n  const parsed = Number.parseInt(value ?? \"\", 10);\n  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;\n};\n\nconst parseProjectChannels = (value: string | undefined): Record<string, string> => {\n  const entries: Record<string, string> = {};\n  for (const pair of compactCsv(value)) {\n    const [project, channelId] = pair.split(\":\").map((part) => part.trim());\n    if (project && channelId) entries[project] = channelId;\n  }\n  return entries;\n};\n\nconst parseCoveredInitiatives = (value: string | undefined): CoveredInitiative[] => {\n  return compactCsv(value).map((rawItem) => {\n    const [idOrName = \"\", slackChannelId, enabledFlag] = rawItem\n      .split(\"|\")\n      .map((part) => part.trim());\n\n    return {\n      idOrName,\n      slackChannelId: optional(slackChannelId),\n      weeklyUpdateEnabled: enabledFlag === undefined || enabledFlag.toLowerCase() !== \"false\",\n    };\n  });\n};\n\nexport const linearOperationsConfig = {\n  coveredTeams: compactCsv(process.env.LINEAR_OPS_COVERED_TEAMS),\n  coveredProjects: compactCsv(process.env.LINEAR_OPS_COVERED_PROJECTS),\n  coveredInitiatives: parseCoveredInitiatives(process.env.LINEAR_OPS_COVERED_INITIATIVES),\n  slack: {\n    defaultChannelId: optional(process.env.LINEAR_OPS_DEFAULT_SLACK_CHANNEL_ID),\n    triageChannelId: optional(process.env.LINEAR_OPS_TRIAGE_SLACK_CHANNEL_ID),\n    cycleChannelId: optional(process.env.LINEAR_OPS_CYCLE_SLACK_CHANNEL_ID),\n    backlogChannelId: optional(process.env.LINEAR_OPS_BACKLOG_SLACK_CHANNEL_ID),\n    p1MonitoringChannelId: optional(process.env.LINEAR_OPS_P1_SLACK_CHANNEL_ID),\n    projectChannels: parseProjectChannels(process.env.LINEAR_OPS_PROJECT_CHANNELS),\n  },\n  policy: {\n    readOnlyTeams: compactCsv(process.env.LINEAR_OPS_READ_ONLY_TEAMS),\n    maxBulkIssueCount: parsePositiveInteger(\n      process.env.LINEAR_OPS_MAX_BULK_ISSUE_COUNT,\n      DEFAULT_MAX_BULK_ISSUE_COUNT,\n    ),\n    highPriorityValues: HIGH_PRIORITY_VALUES,\n    autoInitiativeUpdates: parseBoolean(process.env.LINEAR_OPS_AUTO_INITIATIVE_UPDATES, true),\n  },\n  schedules: {\n    dailyTriageDigest: process.env.LINEAR_OPS_DAILY_TRIAGE_CRON ?? \"0 7 * * 1-5\",\n    cycleHealth: process.env.LINEAR_OPS_CYCLE_HEALTH_CRON ?? \"30 7 * * 1-5\",\n    weeklyBacklogHygiene: process.env.LINEAR_OPS_WEEKLY_BACKLOG_CRON ?? \"0 8 * * 1\",\n    weeklyProjectSummary: process.env.LINEAR_OPS_WEEKLY_PROJECT_CRON ?? \"30 8 * * 1\",\n    weeklyInitiativeUpdates: process.env.LINEAR_OPS_WEEKLY_INITIATIVE_CRON ?? \"0 9 * * 1\",\n    p1Monitoring: process.env.LINEAR_OPS_P1_MONITORING_CRON ?? \"0 13 * * 1-5\",\n  },\n} satisfies LinearOperationsConfig;\n\nexport const getSlackChannelId = (kind: SlackChannelKind): string | undefined => {\n  switch (kind) {\n    case \"triage\":\n      return linearOperationsConfig.slack.triageChannelId ?? linearOperationsConfig.slack.defaultChannelId;\n    case \"cycle\":\n      return linearOperationsConfig.slack.cycleChannelId ?? linearOperationsConfig.slack.defaultChannelId;\n    case \"backlog\":\n      return linearOperationsConfig.slack.backlogChannelId ?? linearOperationsConfig.slack.defaultChannelId;\n    case \"p1Monitoring\":\n      return (\n        linearOperationsConfig.slack.p1MonitoringChannelId ?? linearOperationsConfig.slack.defaultChannelId\n      );\n    case \"default\":\n      return linearOperationsConfig.slack.defaultChannelId;\n  }\n};\n\nexport const getProjectSlackChannelId = (projectNameOrId: string): string | undefined =>\n  linearOperationsConfig.slack.projectChannels[projectNameOrId] ?? linearOperationsConfig.slack.defaultChannelId;\n\nexport const getCoveredInitiative = (idOrName: string): CoveredInitiative | undefined =>\n  linearOperationsConfig.coveredInitiatives.find((initiative) => initiative.idOrName === idOrName);\n\nexport const isExplicitlyCoveredInitiative = (idOrName: string | undefined): boolean =>\n  idOrName !== undefined && getCoveredInitiative(idOrName) !== undefined;\n\nexport const formatPolicySummary = (): string => {\n  const readOnlyTeams = linearOperationsConfig.policy.readOnlyTeams.join(\", \") || \"none configured\";\n  const coveredTeams = linearOperationsConfig.coveredTeams.join(\", \") || \"all teams\";\n  const coveredProjects = linearOperationsConfig.coveredProjects.join(\", \") || \"all projects\";\n  const initiatives =\n    linearOperationsConfig.coveredInitiatives.map((initiative) => initiative.idOrName).join(\", \") ||\n    \"none configured\";\n\n  return [\n    `Covered teams: ${coveredTeams}`,\n    `Covered projects: ${coveredProjects}`,\n    `Read-only teams: ${readOnlyTeams}`,\n    `Explicit initiatives for weekly updates: ${initiatives}`,\n    `Max bulk issue count: ${linearOperationsConfig.policy.maxBulkIssueCount}`,\n  ].join(\"\\n\");\n};\n"
+      },
+      {
+        "path": "agent/connections/linear.ts",
+        "type": "registry:file",
+        "target": "~/agent/connections/linear.ts",
+        "content": "import { connect } from \"@vercel/connect/eve\";\nimport { defineMcpClientConnection } from \"eve/connections\";\n\nimport {\n  isExplicitlyCoveredInitiative,\n  linearOperationsConfig,\n} from \"../lib/linear-operations-config.js\";\n\nconst READ_TOOLS = [\n  \"list_issues\",\n  \"get_issue\",\n  \"list_comments\",\n  \"list_projects\",\n  \"get_status_updates\",\n  \"list_cycles\",\n  \"list_issue_labels\",\n  \"list_issue_statuses\",\n  \"get_issue_status\",\n  \"extract_images\",\n  \"search_documentation\",\n] as const;\n\nconst WRITE_TOOLS = [\n  \"save_issue\",\n  \"save_comment\",\n  \"save_project\",\n  \"save_document\",\n  \"save_status_update\",\n  \"delete_status_update\",\n] as const;\n\nconst normalizeToolName = (toolName: string): string => toolName.split(\"__\").at(-1) ?? toolName;\n\nconst asRecord = (value: unknown): Record<string, unknown> =>\n  typeof value === \"object\" && value !== null && !Array.isArray(value) ? (value as Record<string, unknown>) : {};\n\nconst getStringField = (input: Record<string, unknown>, field: string): string | undefined => {\n  const value = input[field];\n  return typeof value === \"string\" && value.trim() ? value : undefined;\n};\n\nconst needsSaveIssueApproval = (toolInput: unknown): boolean => {\n  const input = asRecord(toolInput);\n  if (!getStringField(input, \"id\")) return true;\n\n  const changedFields = Object.keys(input).filter((field) => field !== \"id\");\n  return changedFields.length > 0;\n};\n\nconst needsStatusUpdateApproval = (toolInput: unknown): boolean => {\n  const input = asRecord(toolInput);\n  const type = getStringField(input, \"type\");\n  const initiativeIdOrName =\n    getStringField(input, \"initiativeId\") ??\n    getStringField(input, \"initiativeName\") ??\n    getStringField(input, \"initiative\") ??\n    getStringField(input, \"projectMilestoneId\");\n\n  if (\n    type === \"initiative\" &&\n    linearOperationsConfig.policy.autoInitiativeUpdates &&\n    isExplicitlyCoveredInitiative(initiativeIdOrName)\n  ) {\n    return false;\n  }\n\n  return true;\n};\n\nexport default defineMcpClientConnection({\n  url: \"https://mcp.linear.app/mcp\",\n  description:\n    \"Linear workspace operations: read issues, comments, projects, cycles, labels, statuses, status updates, and create approved operational updates.\",\n  auth: connect(process.env.LINEAR_CONNECT_UID ?? \"oauth/linear\"),\n  tools: {\n    allow: [...READ_TOOLS, ...WRITE_TOOLS],\n  },\n  approval: ({ toolName, toolInput }) => {\n    const normalizedToolName = normalizeToolName(toolName);\n\n    if (READ_TOOLS.includes(normalizedToolName as (typeof READ_TOOLS)[number])) return false;\n    if (normalizedToolName === \"save_comment\") return false;\n    if (normalizedToolName === \"save_status_update\") return needsStatusUpdateApproval(toolInput);\n    if (normalizedToolName === \"save_issue\") return needsSaveIssueApproval(toolInput);\n    if (\n      normalizedToolName === \"save_project\" ||\n      normalizedToolName === \"save_document\" ||\n      normalizedToolName === \"delete_status_update\"\n    ) {\n      return true;\n    }\n\n    return true;\n  },\n});\n"
+      },
+      {
         "path": "agent/instructions.md",
         "type": "registry:file",
         "target": "~/agent/instructions.md",
-        "content": "# Mission\nInspect Linear issues and turn sprint risk into a focused engineering triage.\n\n# Workflow\n1. Use fetch_team_issues to pull active work for a Linear team.\n2. Highlight blocked, overdue, unassigned, and high-priority issues.\n3. Separate delivery risk from scope ambiguity.\n4. Recommend which issues need owner clarification or scope cuts.\n\n# Output contract\nReturn sprint risks, owner gaps, and a short standup-ready update.\n"
+        "content": "# Mission\n\nYou are Linear Operations Agent, an Eve agent that helps teams turn Linear issues, Slack discussions, cycles, projects, backlog, and initiatives into clear operational work.\n\nLinear is the source of truth. Slack is for intake, coordination, notification, and scheduled delivery. Schedule runs should be concise and should avoid noise. Final operational changes must be attached to the relevant Linear object whenever the work creates or updates Linear state.\n\nUse the Linear MCP connection for Linear data. Do not assume tool schemas beyond what the MCP tool exposes at runtime. Prefer read tools first, then ask for approval before sensitive writes. Never invent issue identifiers, statuses, priorities, owners, labels, projects, cycles, or initiative data.\n\n## Operating Modes\n\n### Assisted\n\nRespond to explicit requests from Linear or Slack: triage, duplicate detection, clarification, decomposition, planning, incident support, project reporting, or initiative reporting.\n\n### Proactive\n\nSchedule runs publish operational digests to configured Slack channels, except weekly initiative updates, which are written directly to Linear as initiative status updates for explicitly configured initiatives only.\n\n### Approval\n\nAsk for approval before sensitive changes: issue creation, state changes, priority changes, assignee/delegate/project/cycle changes, duplicate or parent relationships, project/document changes, status update deletes, and any bulk action. Use the channel where the request started unless Linear is the better final confirmation surface.\n\n### Read-only\n\nWhen the policy or context is read-only, only read, analyze, summarize, and propose. Do not write to Linear unless the channel context and approval policy allow it.\n\n## Default Response Shape\n\nKeep outputs operational and concise:\n\n- Summary\n- Findings\n- Missing information\n- Recommendation\n- Proposed Linear action\n- Approval request, when needed\n\nAlways distinguish proposal from action already executed.\n\n## Linear Behavior\n\nIn Linear, respond in the Agent Session context. Keep the reference to the original request. Add clear context on the issue, project, cycle, or initiative involved. If an issue is vague, ask the smallest set of clarifying questions needed to make it actionable.\n\n## Slack Behavior\n\nIn Slack, interpret the thread as intake context. Separate discussion, decision, and action. Prepare or propose Linear work, then link or describe the target Linear object. Do not let Slack become the long-term source of truth.\n\n## Schedule Behavior\n\nFor recurring jobs, highlight only items that need attention, group similar findings, propose concrete next steps, and avoid invasive changes. Deliver operational digests to Slack. For weekly initiative updates, write the update directly to the configured Linear initiative; if Linear roadmaps or initiatives are unavailable, report the error clearly in Slack.\n"
       },
       {
-        "path": "agent/tools/fetch_team_issues.ts",
+        "path": "agent/schedules/cycle-health.ts",
         "type": "registry:file",
-        "target": "~/agent/tools/fetch_team_issues.ts",
-        "content": "import { LinearClient } from \"@linear/sdk\";\nimport { defineTool } from \"eve/tools\";\nimport { z } from \"zod\";\n\nexport default defineTool({\n  description: \"Fetch Linear issues for a team and identify delivery-risk signals.\",\n  inputSchema: z.object({\n    teamKey: z.string().min(1),\n    limit: z.number().int().min(1).max(100).default(40),\n  }),\n  async execute({ teamKey, limit }) {\n    const apiKey = process.env.LINEAR_API_KEY;\n    if (!apiKey) {\n      return { authRequired: true, missingEnv: \"LINEAR_API_KEY\", teamKey };\n    }\n\n    const linear = new LinearClient({ apiKey });\n    const issues = await linear.issues({\n      first: limit,\n      filter: { team: { key: { eq: teamKey } } },\n    });\n\n    const nodes = await Promise.all(\n      issues.nodes.map(async (issue) => {\n        const [assignee, state] = await Promise.all([\n          issue.assignee,\n          issue.state,\n        ]);\n\n        return {\n          identifier: issue.identifier,\n          title: issue.title,\n          priority: issue.priority,\n          estimate: issue.estimate,\n          assignee: assignee ? assignee.name : null,\n          state: state ? state.name : null,\n          url: issue.url,\n        };\n      }),\n    );\n\n    return {\n      teamKey,\n      issueCount: nodes.length,\n      unassigned: nodes.filter((issue) => !issue.assignee),\n      highPriority: nodes.filter(\n        (issue) => issue.priority > 0 && issue.priority <= 2,\n      ),\n      issues: nodes,\n    };\n  },\n});\n"
+        "target": "~/agent/schedules/cycle-health.ts",
+        "content": "import { defineSchedule } from \"eve/schedules\";\n\nimport slack from \"../channels/slack.js\";\nimport { getSlackChannelId, linearOperationsConfig } from \"../lib/linear-operations-config.js\";\n\nexport default defineSchedule({\n  cron: linearOperationsConfig.schedules.cycleHealth,\n  async run({ receive, waitUntil, appAuth }) {\n    const channelId = getSlackChannelId(\"cycle\");\n    if (!channelId) return;\n\n    waitUntil(\n      receive(slack, {\n        auth: appAuth,\n        target: { channelId },\n        message:\n          \"Run the Linear cycle health report for configured teams and current cycles. Check blocked issues, stale P0/P1 issues, owner overload, work added after the cycle started, scope creep, and completed work not closed. Deliver the operational report to Slack. Do not apply Linear updates automatically.\",\n      }),\n    );\n  },\n});\n"
+      },
+      {
+        "path": "agent/schedules/daily-triage-digest.ts",
+        "type": "registry:file",
+        "target": "~/agent/schedules/daily-triage-digest.ts",
+        "content": "import { defineSchedule } from \"eve/schedules\";\n\nimport slack from \"../channels/slack.js\";\nimport { getSlackChannelId, linearOperationsConfig } from \"../lib/linear-operations-config.js\";\n\nexport default defineSchedule({\n  cron: linearOperationsConfig.schedules.dailyTriageDigest,\n  async run({ receive, waitUntil, appAuth }) {\n    const channelId = getSlackChannelId(\"triage\");\n    if (!channelId) return;\n\n    waitUntil(\n      receive(slack, {\n        auth: appAuth,\n        target: { channelId },\n        message:\n          \"Run the daily Linear triage digest in read-only mode. Highlight only issues that need attention: in triage too long, missing owner, missing priority, stale updates, likely duplicates, or blocked work. Deliver a concise Slack digest with concrete next steps. Do not modify Linear objects.\",\n      }),\n    );\n  },\n});\n"
+      },
+      {
+        "path": "agent/schedules/p1-monitoring.ts",
+        "type": "registry:file",
+        "target": "~/agent/schedules/p1-monitoring.ts",
+        "content": "import { defineSchedule } from \"eve/schedules\";\n\nimport slack from \"../channels/slack.js\";\nimport { getSlackChannelId, linearOperationsConfig } from \"../lib/linear-operations-config.js\";\n\nexport default defineSchedule({\n  cron: linearOperationsConfig.schedules.p1Monitoring,\n  async run({ receive, waitUntil, appAuth }) {\n    const channelId = getSlackChannelId(\"p1Monitoring\");\n    if (!channelId) return;\n\n    waitUntil(\n      receive(slack, {\n        auth: appAuth,\n        target: { channelId },\n        message:\n          \"Monitor Linear P0/P1 issues in read-only mode. Alert only on critical issues without recent updates, missing owner, unresolved blockers, or unclear next action. Do not change state or priority.\",\n      }),\n    );\n  },\n});\n"
+      },
+      {
+        "path": "agent/schedules/weekly-backlog-hygiene.ts",
+        "type": "registry:file",
+        "target": "~/agent/schedules/weekly-backlog-hygiene.ts",
+        "content": "import { defineSchedule } from \"eve/schedules\";\n\nimport slack from \"../channels/slack.js\";\nimport { getSlackChannelId, linearOperationsConfig } from \"../lib/linear-operations-config.js\";\n\nexport default defineSchedule({\n  cron: linearOperationsConfig.schedules.weeklyBacklogHygiene,\n  async run({ receive, waitUntil, appAuth }) {\n    const channelId = getSlackChannelId(\"backlog\");\n    if (!channelId) return;\n\n    waitUntil(\n      receive(slack, {\n        auth: appAuth,\n        target: { channelId },\n        message:\n          \"Run weekly Linear backlog hygiene in proposal-only mode. Find stale, probably obsolete, duplicate, ownerless, priorityless, and under-specified issues. Group findings and propose concrete cleanup actions. Do not close, archive, reprioritize, or bulk update issues without approval.\",\n      }),\n    );\n  },\n});\n"
+      },
+      {
+        "path": "agent/schedules/weekly-initiative-updates.ts",
+        "type": "registry:file",
+        "target": "~/agent/schedules/weekly-initiative-updates.ts",
+        "content": "import { defineSchedule } from \"eve/schedules\";\n\nimport slack from \"../channels/slack.js\";\nimport {\n  getSlackChannelId,\n  linearOperationsConfig,\n} from \"../lib/linear-operations-config.js\";\n\nconst formatInitiatives = (): string =>\n  linearOperationsConfig.coveredInitiatives\n    .filter((initiative) => initiative.weeklyUpdateEnabled)\n    .map((initiative) => initiative.idOrName)\n    .join(\", \");\n\nexport default defineSchedule({\n  cron: linearOperationsConfig.schedules.weeklyInitiativeUpdates,\n  async run({ receive, waitUntil, appAuth }) {\n    const initiativeList = formatInitiatives();\n    const channelId = getSlackChannelId(\"default\");\n    if (!initiativeList || !channelId) return;\n\n    waitUntil(\n      receive(slack, {\n        auth: appAuth,\n        target: { channelId },\n        message: [\n          \"Create weekly Linear initiative updates for the explicitly configured initiatives only.\",\n          `Configured initiatives: ${initiativeList}.`,\n          \"For each initiative, analyze related issues, projects, recent completions, open work, blockers, risks, dependencies, pending decisions, scope changes, and recommended next steps.\",\n          'Write the final update directly to Linear with save_status_update({ type: \"initiative\" }).',\n          \"If Linear reports that roadmaps or initiatives are not enabled in this workspace, post a clear Slack error to this configured channel instead of producing a generic digest.\",\n        ].join(\"\\n\"),\n      }),\n    );\n  },\n});\n"
+      },
+      {
+        "path": "agent/schedules/weekly-project-summary.ts",
+        "type": "registry:file",
+        "target": "~/agent/schedules/weekly-project-summary.ts",
+        "content": "import { defineSchedule } from \"eve/schedules\";\n\nimport slack from \"../channels/slack.js\";\nimport { getSlackChannelId, linearOperationsConfig } from \"../lib/linear-operations-config.js\";\n\nexport default defineSchedule({\n  cron: linearOperationsConfig.schedules.weeklyProjectSummary,\n  async run({ receive, waitUntil, appAuth }) {\n    const channelId = getSlackChannelId(\"default\");\n    if (!channelId) return;\n\n    waitUntil(\n      receive(slack, {\n        auth: appAuth,\n        target: { channelId },\n        message:\n          \"Run the weekly Linear project summary for configured projects. Summarize state, recent progress, completed issues, open work, blockers, risks, pending decisions, next steps, and scope changes. Deliver the report to Slack. Use Linear project/status update writes only when explicitly requested and approved.\",\n      }),\n    );\n  },\n});\n"
+      },
+      {
+        "path": "agent/skills/backlog-hygiene/SKILL.md",
+        "type": "registry:file",
+        "target": "~/agent/skills/backlog-hygiene/SKILL.md",
+        "content": "---\ndescription: Find stale, obsolete, duplicate, under-specified, ownerless, and priorityless Linear backlog issues.\n---\n\n# Backlog Hygiene Skill\n\nUse this skill for backlog cleanup requests or weekly backlog hygiene schedules.\n\nProcess:\n\n1. Read configured team and project backlogs.\n2. Identify stale, obsolete, duplicate, ownerless, priorityless, and unclear issues.\n3. Group findings by recommended action.\n4. Keep bulk recommendations under the configured max bulk issue count unless asked otherwise.\n5. Propose cleanup actions instead of applying them automatically.\n6. Ask approval before closing, archiving, reprioritizing, moving, or bulk updating issues.\n\nOutput sections:\n\n- Backlog findings\n- Suggested cleanup actions\n- Duplicates or obsolete issues\n- Clarification candidates\n- Approval request for any write\n"
+      },
+      {
+        "path": "agent/skills/clarification/SKILL.md",
+        "type": "registry:file",
+        "target": "~/agent/skills/clarification/SKILL.md",
+        "content": "---\ndescription: Rewrite a vague Linear request into a clear problem statement with context, acceptance criteria, out of scope, and open questions.\n---\n\n# Clarification Skill\n\nUse this skill when a Linear issue or Slack intake is vague, incomplete, or not ready for implementation.\n\nProcess:\n\n1. Read the source issue, comments, and relevant Slack thread context if available.\n2. Extract the problem, user impact, current behavior, expected behavior, and constraints.\n3. Draft a clearer description without inventing facts.\n4. Add acceptance criteria that can be verified.\n5. Mark out-of-scope items to prevent scope creep.\n6. List open questions and missing evidence.\n7. Ask approval before updating the Linear issue description.\n\nOutput sections:\n\n- Problem\n- Context\n- Acceptance criteria\n- Out of scope\n- Open questions\n- Proposed Linear update\n"
+      },
+      {
+        "path": "agent/skills/cycle-health/SKILL.md",
+        "type": "registry:file",
+        "target": "~/agent/skills/cycle-health/SKILL.md",
+        "content": "---\ndescription: Analyze Linear cycle health, including blocked work, stale updates, scope creep, owner overload, and risky current-cycle issues.\n---\n\n# Cycle Health Skill\n\nUse this skill for current-cycle reports or schedule-driven cycle health checks.\n\nProcess:\n\n1. Identify configured teams and their current cycle.\n2. Read open and recently completed cycle issues.\n3. Flag blocked issues, stale P0/P1 work, ownerless work, work added after cycle start, and completed work not closed.\n4. Look for owner overload and unresolved dependencies.\n5. Keep the Slack report concise and action-oriented.\n6. Do not update Linear automatically during scheduled cycle reports.\n\nOutput sections:\n\n- Health status\n- Key risks\n- Issues needing attention\n- Scope changes\n- Recommended standup topics\n"
+      },
+      {
+        "path": "agent/skills/decomposition/SKILL.md",
+        "type": "registry:file",
+        "target": "~/agent/skills/decomposition/SKILL.md",
+        "content": "---\ndescription: Break a complex Linear issue into implementable sub-issues, dependencies, risks, and an approval-gated creation plan.\n---\n\n# Decomposition Skill\n\nUse this skill when a user asks to split an issue into tasks, sub-issues, milestones, or implementation steps.\n\nProcess:\n\n1. Read the parent issue and relevant comments.\n2. Identify independent work units that can be implemented and reviewed separately.\n3. Order tasks by dependency and risk.\n4. Propose ownership where there is enough evidence; otherwise mark owner as unknown.\n5. Include qualitative complexity and risk notes.\n6. Ask approval before creating sub-issues or changing parent relationships.\n\nOutput sections:\n\n- Proposed sub-issues\n- Dependency order\n- Risks\n- Ownership suggestions\n- Creation approval request\n"
+      },
+      {
+        "path": "agent/skills/duplicate-detection/SKILL.md",
+        "type": "registry:file",
+        "target": "~/agent/skills/duplicate-detection/SKILL.md",
+        "content": "---\ndescription: Find likely duplicate Linear issues, compare evidence, and propose link, merge, or closure actions.\n---\n\n# Duplicate Detection Skill\n\nUse this skill when a user asks whether an issue is duplicated or related.\n\nProcess:\n\n1. Extract search terms from title, description, error messages, product area, labels, and comments.\n2. Use `list_issues` with targeted queries.\n3. Use `get_issue` on the strongest candidates before making a recommendation.\n4. Compare scope, symptoms, environment, impacted user flow, and current status.\n5. Recommend the canonical issue to keep open.\n6. Ask approval before writing duplicate links, changing status, or closing anything.\n\nOutput sections:\n\n- Candidate duplicates\n- Why they match or do not match\n- Recommended canonical issue\n- Proposed Linear action\n- Approval request\n"
+      },
+      {
+        "path": "agent/skills/incident-support/SKILL.md",
+        "type": "registry:file",
+        "target": "~/agent/skills/incident-support/SKILL.md",
+        "content": "---\ndescription: Support P0/P1 bug and incident issues by identifying missing evidence, related work, priority, owner, stakeholder update, and follow-up actions.\n---\n\n# Incident Support Skill\n\nUse this skill for urgent bugs, incidents, P0/P1 monitoring, or questions about critical issue readiness.\n\nProcess:\n\n1. Read the critical issue, comments, status, priority, assignee, labels, project, and related issues.\n2. Identify impact, environment, reproduction steps, affected versions, timestamps, recent deploys, and mitigation state.\n3. Search for related incidents, fixes, or duplicate reports.\n4. Propose owner, stakeholder update, and follow-up issues only when supported by evidence.\n5. Ask approval before changing priority, state, assignee, project, cycle, or creating follow-up work.\n6. For scheduled monitoring, alert in Slack without changing Linear state.\n\nOutput sections:\n\n- Impact summary\n- Missing evidence\n- Related issues\n- Operational risk\n- Recommended next step\n- Approval request\n"
+      },
+      {
+        "path": "agent/skills/initiative-reporting/SKILL.md",
+        "type": "registry:file",
+        "target": "~/agent/skills/initiative-reporting/SKILL.md",
+        "content": "---\ndescription: Create weekly Linear initiative updates for explicitly configured initiatives, including progress, blockers, risks, and next steps.\n---\n\n# Initiative Reporting Skill\n\nUse this skill for weekly initiative update schedules or direct requests about configured initiatives.\n\nProcess:\n\n1. Work only on initiatives explicitly configured for coverage.\n2. Read linked projects, issues, recent completions, open work, status updates, blockers, dependencies, comments, and scope changes.\n3. Draft a concise weekly update with state, progress, blockers, risks, pending decisions, and next actions.\n4. Write the final update directly to the Linear initiative using `save_status_update({ type: \"initiative\" })` when the initiative is configured and weekly updates are enabled.\n5. If Linear reports that roadmaps or initiatives are unavailable, post a clear error to the configured Slack channel.\n6. Do not create initiative updates for unconfigured initiatives.\n\nOutput sections:\n\n- Initiative status\n- Recent progress\n- Blockers\n- Risks\n- Pending decisions\n- Recommended next steps\n"
+      },
+      {
+        "path": "agent/skills/project-reporting/SKILL.md",
+        "type": "registry:file",
+        "target": "~/agent/skills/project-reporting/SKILL.md",
+        "content": "---\ndescription: Produce Linear project reports covering status, progress, open work, blockers, risks, decisions, next steps, and scope changes.\n---\n\n# Project Reporting Skill\n\nUse this skill for project summaries, weekly project reports, and project decision support.\n\nProcess:\n\n1. Read project metadata, status updates, linked issues, labels, and comments.\n2. Summarize current state and recent progress.\n3. List completed work and open work that matters.\n4. Highlight blockers, risks, pending decisions, and scope changes.\n5. Recommend next steps.\n6. Deliver scheduled summaries to Slack. Only write Linear project or status updates when requested and approved.\n\nOutput sections:\n\n- Project status\n- Recent progress\n- Blockers\n- Risks\n- Pending decisions\n- Next steps\n"
+      },
+      {
+        "path": "agent/skills/slack-intake/SKILL.md",
+        "type": "registry:file",
+        "target": "~/agent/skills/slack-intake/SKILL.md",
+        "content": "---\ndescription: Turn a Slack thread into structured Linear work while preserving decisions, action items, and missing context.\n---\n\n# Slack Intake Skill\n\nUse this skill when a Slack mention asks to summarize a thread, create a Linear issue, link discussion to an issue, or identify what is missing before ticket creation.\n\nProcess:\n\n1. Read the provided thread context.\n2. Separate discussion, decisions, action items, evidence, and unresolved questions.\n3. Draft a Linear issue title and body.\n4. Suggest team, priority, labels, and project only when evidence supports them.\n5. Ask approval before creating or modifying Linear issues.\n6. After creation, respond in Slack with the Linear link and what was included.\n\nOutput sections:\n\n- Thread summary\n- Decision or action\n- Proposed Linear issue\n- Missing information\n- Approval request\n"
+      },
+      {
+        "path": "agent/skills/triage/SKILL.md",
+        "type": "registry:file",
+        "target": "~/agent/skills/triage/SKILL.md",
+        "content": "---\ndescription: Triage a Linear issue into type, priority, owner, team, labels, missing information, duplicates, and next step.\n---\n\n# Triage Skill\n\nUse this skill when a user asks for issue triage or asks whether an issue is actionable.\n\nProcess:\n\n1. Read the issue, comments, labels, status, team, project, cycle, priority, and assignee.\n2. Search for related or duplicate issues using the Linear MCP read tools.\n3. Classify the issue type: bug, feature, task, incident, support, product question, cleanup, or unclear.\n4. Identify missing information that blocks execution.\n5. Propose priority, owner or owner team, labels, project or cycle, and next step.\n6. Distinguish recommendations from actions already applied.\n7. Ask for approval before any sensitive Linear write.\n\nOutput sections:\n\n- Summary\n- Classification\n- Missing information\n- Suggested Linear metadata\n- Related or duplicate issues\n- Next step\n- Approval request, if needed\n"
       },
       {
         "path": "README.md",
         "type": "registry:file",
         "target": "~/agent/README.md",
-        "content": "# Linear Sprint Triage\n\nFetches Linear team issues, highlights unassigned or high-priority work, and separates delivery risk from simple backlog hygiene.\n\n## Development\n\n```bash\npnpm install\npnpm dev\n```\n\nRun `pnpm info` to inspect the Eve surface and `pnpm build` before opening a PR.\n"
+        "content": "# Linear Operations Agent\n\nAn Eve agent for Linear operations across Linear, Slack, and scheduled runs.\n\nLinear is the source of truth. Slack is used for intake, coordination, notification, and scheduled report delivery. Scheduled initiative updates are written directly to Linear for explicitly configured initiatives.\n\n## Capabilities\n\n- Linear issue triage, clarification, decomposition, duplicate detection, and incident support.\n- Slack thread intake that prepares or creates structured Linear work after approval.\n- Scheduled daily triage, cycle health, backlog hygiene, project summaries, P0/P1 monitoring, and weekly initiative updates.\n- One Linear MCP connection with dynamic approval policy. No custom Linear SDK tools are included.\n\n## Linear Agent App Setup\n\nCreate a Linear OAuth app for the agent surface:\n\n- Use the authorize URL with `actor=app`.\n- Grant app scopes including `app:assignable` and `app:mentionable`.\n- Subscribe to `AgentSessionEvent`.\n- Configure the webhook URL as `/eve/v1/linear`.\n- Set `LINEAR_AGENT_ACCESS_TOKEN` for Agent Activities and proactive sessions.\n- Set `LINEAR_WEBHOOK_SECRET` for webhook verification.\n\nThe Linear channel accepts only `created` and `prompted` Agent Session events.\n\n## Linear MCP OAuth Setup\n\nThe agent uses one MCP client connection:\n\n- URL: `https://mcp.linear.app/mcp`\n- Auth: Vercel Connect via `connect(process.env.LINEAR_CONNECT_UID ?? \"oauth/linear\")`\n- Default Connect UID: `oauth/linear`\n\nConfigure a Vercel Connect client for Linear and ensure the authenticated user has access to the workspace data the agent should read or update.\n\n## Slack Setup\n\nThe Slack channel uses Vercel Connect:\n\n- Default Connect UID: `slack/linear-operations-agent`\n- Trigger path: `/eve/v1/slack`\n- Configure `SLACK_CONNECT_UID` if you use a different Connect UID.\n\nSlack is not the final system of record. For operational work, the agent should create or update Linear after approval, then reply in Slack with the result.\n\n## Configuration\n\nUse `.env.example` as the configuration contract.\n\n`LINEAR_OPS_COVERED_TEAMS` and `LINEAR_OPS_COVERED_PROJECTS` are comma-separated allow-lists. Empty values mean all teams or all projects.\n\n`LINEAR_OPS_COVERED_INITIATIVES` is comma-separated and supports:\n\n```text\ninitiative-id-or-name|optional-slack-channel-id|optional-enabled-flag\n```\n\nExample:\n\n```text\nPayments Revamp|C0123ABC|true,Mobile Foundations||false\n```\n\nWeekly initiative updates are automatic only when the initiative is explicitly configured and `weeklyUpdateEnabled` is not `false`. If the Linear workspace does not have roadmaps or initiatives enabled, the schedule should publish a clear Slack error instead of a generic digest.\n\nProject-to-channel mappings use:\n\n```text\nLINEAR_OPS_PROJECT_CHANNELS=Payments Revamp:C0123ABC,Mobile:C0456DEF\n```\n\n## Approval Policy\n\nRead tools do not require approval. Non-destructive comments do not require approval. Initiative status updates do not require approval only when `type === \"initiative\"` and the initiative is explicitly configured.\n\nApproval is required for:\n\n- Creating issues.\n- Changing issue state, priority, assignee, delegate, project, cycle, duplicate, parent, blocker, or related relationships.\n- High-priority issue writes where priority is `1` or `2`.\n- Project writes.\n- Document writes.\n- Status update deletes.\n- Bulk or irreversible actions.\n\nThe approval predicate is synchronous and input-based. If deciding safely requires reading current Linear state, the agent must read with MCP first, then ask for approval before the sensitive write.\n\n## Commands\n\n```bash\npnpm install\npnpm info\npnpm build\n```\n\nDuring development, trigger a schedule with:\n\n```bash\ncurl -X POST http://localhost:3000/eve/v1/dev/schedules/daily-triage-digest\n```\n\nOther schedule ids are `cycle-health`, `weekly-backlog-hygiene`, `weekly-project-summary`, `weekly-initiative-updates`, and `p1-monitoring`.\n"
       },
       {
         "path": ".env.example",
         "type": "registry:file",
         "target": "~/.env.example",
-        "content": "LINEAR_API_KEY=\n"
+        "content": "LINEAR_AGENT_ACCESS_TOKEN=\nLINEAR_WEBHOOK_SECRET=\nLINEAR_CONNECT_UID=oauth/linear\nSLACK_CONNECT_UID=slack/linear-operations-agent\n\nLINEAR_OPS_COVERED_TEAMS=\nLINEAR_OPS_COVERED_PROJECTS=\nLINEAR_OPS_COVERED_INITIATIVES=\nLINEAR_OPS_READ_ONLY_TEAMS=\nLINEAR_OPS_MAX_BULK_ISSUE_COUNT=10\nLINEAR_OPS_AUTO_INITIATIVE_UPDATES=true\n\nLINEAR_OPS_DEFAULT_SLACK_CHANNEL_ID=\nLINEAR_OPS_TRIAGE_SLACK_CHANNEL_ID=\nLINEAR_OPS_CYCLE_SLACK_CHANNEL_ID=\nLINEAR_OPS_BACKLOG_SLACK_CHANNEL_ID=\nLINEAR_OPS_P1_SLACK_CHANNEL_ID=\nLINEAR_OPS_PROJECT_CHANNELS=\n\nLINEAR_OPS_DAILY_TRIAGE_CRON=0 7 * * 1-5\nLINEAR_OPS_CYCLE_HEALTH_CRON=30 7 * * 1-5\nLINEAR_OPS_WEEKLY_BACKLOG_CRON=0 8 * * 1\nLINEAR_OPS_WEEKLY_PROJECT_CRON=30 8 * * 1\nLINEAR_OPS_WEEKLY_INITIATIVE_CRON=0 9 * * 1\nLINEAR_OPS_P1_MONITORING_CRON=0 13 * * 1-5\n"
       }
     ]
   },
