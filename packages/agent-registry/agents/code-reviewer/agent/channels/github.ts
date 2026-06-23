@@ -19,8 +19,11 @@ import submitPrReviewTool, {
   type SubmitPrReviewOutput,
 } from "../tools/submit_pr_review";
 
-const BOT_NAME = "code-reviewer";
-const BOT_MENTION_PATTERN = /@code-reviewer(?=$|[^A-Za-z0-9_-])/i;
+const BOT_NAME = process.env.GITHUB_APP_SLUG || "code-reviewer";
+const BOT_MENTION_PATTERN = new RegExp(
+  `@${escapeRegExp(BOT_NAME)}(?=$|[^A-Za-z0-9_-])`,
+  "i",
+);
 const GITHUB_COMMENT_CHUNK_SIZE = 60_000;
 
 type CodeReviewerGitHubState = GitHubChannelState & {
@@ -153,11 +156,11 @@ async function maybePostCooldownReply(
 
 function formatCooldownReply(decision: Extract<RateLimitDecision, { allowed: false }>) {
   if (decision.reason === "rate_limit_unavailable") {
-    return "`code-reviewer` cannot run because rate limiting is unavailable for this repository.";
+    return `\`${BOT_NAME}\` cannot run because rate limiting is unavailable for this repository.`;
   }
 
   const retryAfter = formatRetryAfter(decision.retryAfterSeconds);
-  return `\`code-reviewer\` is cooling down for this pull request. Try again ${retryAfter}.`;
+  return `\`${BOT_NAME}\` is cooling down for this pull request. Try again ${retryAfter}.`;
 }
 
 function formatRetryAfter(retryAfterSeconds: number | undefined) {
@@ -313,6 +316,10 @@ function splitCommentBody(message: string) {
   }
 
   return chunks;
+}
+
+function escapeRegExp(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 function githubPullRequestReviewPath(
