@@ -247,9 +247,15 @@ function getRedis() {
 }
 
 function hasUpstashEnvironment() {
-  return Boolean(
-    process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN,
-  );
+  return Boolean(readUpstashRestUrl() && readUpstashRestToken());
+}
+
+function readUpstashRestUrl() {
+  return process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL;
+}
+
+function readUpstashRestToken() {
+  return process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN;
 }
 
 function unavailableDecision(
