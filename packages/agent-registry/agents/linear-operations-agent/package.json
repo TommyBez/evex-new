@@ -1,5 +1,5 @@
 {
-  "name": "linear-sprint-triage",
+  "name": "linear-operations-agent",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -15,9 +15,9 @@
     "typecheck": "tsc --noEmit --pretty false"
   },
   "dependencies": {
-    "eve": "^0.11.4",
-    "@linear/sdk": "^86.0.0",
-    "zod": "4.3.6"
+    "@vercel/connect": "^0.2.6",
+    "ai": "7.0.0-beta.178",
+    "eve": "^0.11.10"
   },
   "devDependencies": {
     "@types/node": "^24",
