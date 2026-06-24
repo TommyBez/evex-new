@@ -18,9 +18,8 @@ const themeOptions = [
 ] as const
 
 export function ThemeToggle() {
-  const { resolvedTheme, setTheme, theme } = useTheme()
+  const { setTheme, theme } = useTheme()
 
-  const ActiveIcon = resolvedTheme === 'dark' ? Moon : Sun
   const currentTheme = theme ?? 'system'
 
   return (
@@ -31,10 +30,10 @@ export function ThemeToggle() {
             aria-label="Change Theme"
             className="rounded-md"
             size="icon-sm"
-            suppressHydrationWarning
             variant="ghost"
           >
-            <ActiveIcon aria-hidden="true" className="size-4" />
+            <Sun aria-hidden="true" className="size-4 dark:hidden" />
+            <Moon aria-hidden="true" className="hidden size-4 dark:block" />
           </Button>
         }
       />

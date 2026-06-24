@@ -2,7 +2,7 @@
 
 import { Search, X } from 'lucide-react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useCallback, useRef, useTransition } from 'react'
+import { useCallback, useEffect, useRef, useTransition } from 'react'
 import {
   InputGroup,
   InputGroupAddon,
@@ -101,6 +101,21 @@ export function BrowseFilters() {
     searchTimeoutRef.current = null
   }, [])
 
+  useEffect(
+    () => () => {
+      clearPendingSearchSync()
+    },
+    [clearPendingSearchSync],
+  )
+
+  useEffect(() => {
+    const input = searchInputRef.current
+    if (!input || document.activeElement === input) {
+      return
+    }
+    input.value = activeSearch
+  }, [activeSearch])
+
   const scheduleSearchSync = useCallback(
     (nextSearch: string) => {
       clearPendingSearchSync()
@@ -122,16 +137,18 @@ export function BrowseFilters() {
 
   const changeCategory = useCallback(
     (nextCategory: string) => {
+      clearPendingSearchSync()
       replaceFilters(getSearchValue(), nextCategory, selectedSort)
     },
-    [getSearchValue, replaceFilters, selectedSort],
+    [clearPendingSearchSync, getSearchValue, replaceFilters, selectedSort],
   )
 
   const changeSort = useCallback(
     (nextSort: AgentSort) => {
+      clearPendingSearchSync()
       replaceFilters(getSearchValue(), selectedCategory, nextSort)
     },
-    [getSearchValue, replaceFilters, selectedCategory],
+    [clearPendingSearchSync, getSearchValue, replaceFilters, selectedCategory],
   )
 
   const clearAll = useCallback(() => {
@@ -158,7 +175,6 @@ export function BrowseFilters() {
           <InputGroupInput
             aria-label="Search agents"
             defaultValue={activeSearch}
-            key={activeSearch}
             onChange={(e) => scheduleSearchSync(e.target.value)}
             placeholder="Search agents..."
             ref={searchInputRef}

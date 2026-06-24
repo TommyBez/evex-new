@@ -2,7 +2,7 @@
 
 import { Globe, Upload } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { useReducer, useRef, useTransition } from 'react'
+import { useEffect, useReducer, useRef, useTransition } from 'react'
 import { toast } from 'sonner'
 import { type ProfileData, saveProfile } from '@/app/actions/profile'
 import { AuthorAvatar } from '@/components/author-avatar'
@@ -82,6 +82,7 @@ export function ProfileForm({
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const previewObjectUrlRef = useRef<string | null>(null)
 
   const [formState, dispatch] = useReducer(
     profileFormReducer,
@@ -91,6 +92,15 @@ export function ProfileForm({
   const hasVerifiedGithub = Boolean(profile.githubUsername)
   const { bio, githubUrl, linkedinUrl, preview, twitterUrl, websiteUrl } =
     formState
+
+  useEffect(
+    () => () => {
+      if (previewObjectUrlRef.current) {
+        URL.revokeObjectURL(previewObjectUrlRef.current)
+      }
+    },
+    [],
+  )
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -102,7 +112,12 @@ export function ProfileForm({
       e.target.value = ''
       return
     }
-    dispatch({ type: 'previewChanged', value: URL.createObjectURL(file) })
+    if (previewObjectUrlRef.current) {
+      URL.revokeObjectURL(previewObjectUrlRef.current)
+    }
+    const objectUrl = URL.createObjectURL(file)
+    previewObjectUrlRef.current = objectUrl
+    dispatch({ type: 'previewChanged', value: objectUrl })
   }
 
   const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {

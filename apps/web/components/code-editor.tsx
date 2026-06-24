@@ -1,7 +1,12 @@
 'use client'
 
 import { useTheme } from 'next-themes'
-import { type CSSProperties, useMemo, useState } from 'react'
+import {
+  type CSSProperties,
+  useMemo,
+  useState,
+  useSyncExternalStore,
+} from 'react'
 import { Textarea } from '@/components/ui/textarea'
 import {
   languageFromPath,
@@ -29,6 +34,11 @@ const codeFontStyle: CSSProperties = {
 
 const lineNumberGutterWidth = '4rem'
 
+const unsubscribeFromClientHydration = () => undefined
+const subscribeToClientHydration = () => unsubscribeFromClientHydration
+const getClientHydrationSnapshot = () => true
+const getServerHydrationSnapshot = () => false
+
 const lineNumberStyle: CSSProperties = {
   boxSizing: 'border-box',
   minWidth: lineNumberGutterWidth,
@@ -51,7 +61,12 @@ export function CodeEditor({
 }: CodeEditorProps) {
   const { resolvedTheme } = useTheme()
   const [scrollPosition, setScrollPosition] = useState({ left: 0, top: 0 })
-  const isDark = resolvedTheme === 'dark'
+  const hasMounted = useSyncExternalStore(
+    subscribeToClientHydration,
+    getClientHydrationSnapshot,
+    getServerHydrationSnapshot,
+  )
+  const isDark = hasMounted && resolvedTheme === 'dark'
 
   const language = useMemo(() => languageFromPath(path), [path])
   const theme = isDark
