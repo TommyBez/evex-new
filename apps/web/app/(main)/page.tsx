@@ -14,6 +14,7 @@ import {
 } from '@/lib/agent-runtime'
 import { parseSort, sortAgents } from '@/lib/agents'
 import { getInstallCountMap } from '@/lib/queries'
+import { buildInstallCommand } from '@/lib/site-url'
 import { getStaticRegistryStats, listStaticAgents } from '@/lib/static-agents'
 
 export default function HomePage({
@@ -166,7 +167,7 @@ function HeroDemo() {
         <code>
           <span className="text-brand">$</span>{' '}
           <span className="text-graphite-foreground">
-            {'npx shadcn@latest add https://evex.sh/r/code-reviewer.json'}
+            {buildInstallCommand('https://evex.sh', 'code-reviewer')}
           </span>
           {'\n'}
           <span className="text-graphite-foreground/50">
