@@ -125,8 +125,8 @@ The channel accepts only Linear Agent Session events with action `created` or `p
 
 Use this surface for:
 
-- `@agent fai triage di questa issue`;
-- `@agent trova duplicati`;
+- `@agent triage this issue`;
+- `@agent find duplicates`;
 - delegating a Linear issue to the agent;
 - continuing a Linear Agent Session after the agent asks a question.
 
@@ -156,9 +156,9 @@ The `--triggers` flag is required because Slack must deliver `app_mention` and d
 
 Use this surface for:
 
-- `@agent crea una issue Linear da questo thread`;
-- `@agent collega questa discussione a ENG-123`;
-- `@agent mostrami le issue P1 senza update`;
+- `@agent create a Linear issue from this thread`;
+- `@agent link this discussion to ENG-123`;
+- `@agent show me P1 issues without updates`;
 - scheduled digest delivery into configured Slack channels.
 
 ## 3. Configure The Linear MCP Connection
@@ -280,7 +280,7 @@ After deployment and env setup:
 1. In Linear, mention or delegate an issue:
 
 ```text
-@agent fai triage di questa issue
+@agent triage this issue
 ```
 
 Expected: the agent replies in the Linear Agent Session and attaches proposals to the Linear context.
@@ -288,7 +288,7 @@ Expected: the agent replies in the Linear Agent Session and attaches proposals t
 2. In Slack, mention the agent in a thread:
 
 ```text
-@agent riassumi il thread e proponi una issue Linear
+@agent summarize the thread and propose a Linear issue
 ```
 
 Expected: the agent reads recent thread context, proposes Linear work, and asks for approval before sensitive changes.
@@ -296,7 +296,7 @@ Expected: the agent reads recent thread context, proposes Linear work, and asks 
 3. From Slack or Linear, ask for a read-only Linear query:
 
 ```text
-@agent mostrami le issue P1 senza update
+@agent show me P1 issues without updates
 ```
 
 Expected: if the caller has not authorized the Linear MCP connection yet, Eve surfaces a Linear Connect authorization challenge. After authorization, the agent can call the allowed Linear MCP read tools.
