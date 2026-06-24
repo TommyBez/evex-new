@@ -35,8 +35,14 @@ export FF_CONNECT_ENABLED=1
 vercel connect create slack --triggers
 ```
 
-Copy the UID printed by the command. Then attach that Slack client to Eve's Slack
-route:
+This command is the Slack installation step. It creates the Vercel Connect
+connector and opens the Slack authorization flow. Choose the Slack workspace
+where the agent should live and approve the app installation there. If the CLI
+prints an authorization URL instead of opening a browser, open that URL and
+complete the Slack install.
+
+After authorization succeeds, copy the UID printed by the command. Then attach
+that Slack client to Eve's Slack route:
 
 ```bash
 vercel connect detach <uid> --yes
@@ -53,10 +59,17 @@ The default UID used by the agent is `slack/postgres-data-analyst`.
 
 After the app is deployed:
 
-1. Open Slack and find the installed Slack app created by Vercel Connect.
-2. Add the app to every channel where it should answer.
-3. In a channel, mention the app and ask a database question.
-4. In a DM, message the app directly.
+1. Open the same Slack workspace that you authorized during
+   `vercel connect create slack --triggers`.
+2. Find the Slack app that was installed during that authorization flow.
+3. Add the app to every channel where it should answer.
+4. In a channel, mention the app and ask a database question.
+5. In a DM, message the app directly.
+
+If you cannot find the app in Slack, the Slack authorization step was not
+completed for that workspace. Run `vercel connect create slack --triggers`
+again from the Vercel project, authorize the correct workspace, attach the new
+UID to `/eve/v1/slack`, update `DATA_ANALYST_SLACK_CONNECT_UID`, and redeploy.
 
 Good first prompts:
 
