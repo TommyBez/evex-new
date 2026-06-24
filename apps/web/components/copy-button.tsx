@@ -76,11 +76,16 @@ export function CopyButton({
       type="button"
       variant={variant}
     >
-      {copied ? (
-        <Check aria-hidden="true" className="size-4 text-brand" />
-      ) : (
-        <Copy aria-hidden="true" className="size-4" />
-      )}
+      {/* Icon swap: both icons stay stacked in one grid cell and cross-fade
+          with blur + scale as data-state flips. See transitions-dev skill. */}
+      <span className="t-icon-swap" data-state={copied ? 'b' : 'a'}>
+        <Copy aria-hidden="true" className="t-icon size-4" data-icon="a" />
+        <Check
+          aria-hidden="true"
+          className="t-icon size-4 text-brand"
+          data-icon="b"
+        />
+      </span>
     </Button>
   )
 }

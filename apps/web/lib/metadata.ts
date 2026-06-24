@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 
 const DEFAULT_SITE_URL = 'https://evex.sh'
 const TRAILING_SLASHES = /\/+$/
+const URL_PROTOCOL = /^https?:\/\//
 
 export const siteConfig = {
   name: 'evex',
@@ -25,7 +26,7 @@ export function getSiteUrl(): string {
   // On Vercel, VERCEL_PROJECT_PRODUCTION_URL is set to the production host on
   // every deployment — including previews. Prefer it only in production so
   // previews resolve to their own deployment URL. This matters for copied
-  // install commands (`<host>/r/<slug>.json`): they must point at a host that
+  // install commands (`<host>/r/<slug>`): they must point at a host that
   // actually serves the agent being viewed, otherwise a not-yet-merged agent
   // 404s when installed from a preview.
   const productionUrl =
@@ -55,6 +56,11 @@ export function getSiteUrl(): string {
 
 export function getMetadataBase(): URL {
   return new URL(getSiteUrl())
+}
+
+// Bare host (no protocol) for compact display, e.g. OG install hints.
+export function getSiteHost(): string {
+  return getSiteUrl().replace(URL_PROTOCOL, '')
 }
 
 export function createPageMetadata({
