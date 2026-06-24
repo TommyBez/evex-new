@@ -26,7 +26,7 @@ export function getSiteUrl(): string {
   // On Vercel, VERCEL_PROJECT_PRODUCTION_URL is set to the production host on
   // every deployment — including previews. Prefer it only in production so
   // previews resolve to their own deployment URL. This matters for copied
-  // install commands (`<host>/r/<slug>.json`): they must point at a host that
+  // install commands (`<host>/r/<slug>`): they must point at a host that
   // actually serves the agent being viewed, otherwise a not-yet-merged agent
   // 404s when installed from a preview.
   const productionUrl =
