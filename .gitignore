@@ -21,6 +21,9 @@ apps/*/.next/
 apps/agents/*/.eve/
 apps/agents/*/.output/
 apps/agents/*/.vercel/
+packages/agent-registry/agents/*/.eve/
+packages/agent-registry/agents/*/.output/
+packages/agent-registry/agents/*/.vercel/
 .DS_Store
 .vercel
 next-env.d.ts
