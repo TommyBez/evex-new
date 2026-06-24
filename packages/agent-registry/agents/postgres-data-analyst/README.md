@@ -14,27 +14,67 @@ npx shadcn@latest add @evex/postgres-data-analyst
 
 Then install the public runtime dependencies listed by the registry item.
 
-## Slack setup
+## Start using it in Slack
 
-This agent uses Eve's documented Slack channel path through Vercel Connect.
-Create a Slack Connect client, attach it to Eve's Slack route, and set the UID
-in the app environment.
+This agent uses Eve's documented Slack channel path through Vercel Connect. Do
+not create or manage `SLACK_BOT_TOKEN` or `SLACK_SIGNING_SECRET` variables.
+
+Before connecting Slack, make sure the Eve app that installed this registry item
+is deployed on Vercel or otherwise reachable through HTTPS. Slack events must be
+able to reach the Eve Slack route:
+
+```text
+/eve/v1/slack
+```
+
+Create the Slack Connect client from the Vercel project used by the Eve app:
 
 ```bash
 npm install -g vercel@latest
 export FF_CONNECT_ENABLED=1
 vercel connect create slack --triggers
+```
+
+Copy the UID printed by the command. Then attach that Slack client to Eve's Slack
+route:
+
+```bash
 vercel connect detach <uid> --yes
 vercel connect attach <uid> --triggers --trigger-path /eve/v1/slack --yes
 ```
 
-Set:
+Set the same UID in the Eve app environment and redeploy the app:
 
 ```env
 DATA_ANALYST_SLACK_CONNECT_UID=<uid>
 ```
 
 The default UID used by the agent is `slack/postgres-data-analyst`.
+
+After the app is deployed:
+
+1. Open Slack and find the installed Slack app created by Vercel Connect.
+2. Add the app to every channel where it should answer.
+3. In a channel, mention the app and ask a database question.
+4. In a DM, message the app directly.
+
+Good first prompts:
+
+```text
+What schemas and tables can you see?
+```
+
+```text
+Show total signups by month for the last 6 months.
+```
+
+If the agent does not answer, verify:
+
+- `eve info --json` lists a Slack channel with `urlPath: "/eve/v1/slack"`;
+- `DATA_ANALYST_SLACK_CONNECT_UID` exactly matches the Vercel Connect UID;
+- the Connect trigger is attached with `--trigger-path /eve/v1/slack`;
+- the app was redeployed after setting env vars;
+- `DATA_ANALYST_DATABASE_URL` points to a working read-only Postgres role.
 
 ## Database setup
 
