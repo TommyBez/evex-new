@@ -12,7 +12,12 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { XIcon } from '@/components/x-icon'
 import { applyInstallCounts, getAgentRuntimeState } from '@/lib/agent-runtime'
 import type { AgentWithAuthor, StaticAuthorProfile } from '@/lib/agent-types'
-import { createPageMetadata, siteConfig } from '@/lib/metadata'
+import {
+  createPageMetadata,
+  defaultOpenGraphImage,
+  defaultTwitterImage,
+  siteConfig,
+} from '@/lib/metadata'
 import { getAuthorProfile } from '@/lib/queries'
 import {
   getStaticAgentsByAuthorUsername,
@@ -64,11 +69,13 @@ export async function generateMetadata({
       siteName: siteConfig.name,
       locale: 'en_US',
       type: 'website',
+      images: [defaultOpenGraphImage],
     },
     twitter: {
       card: 'summary_large_image',
       title: author.name,
       description,
+      images: [defaultTwitterImage],
     },
   }
 }
