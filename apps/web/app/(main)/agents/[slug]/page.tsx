@@ -32,17 +32,20 @@ export function generateStaticParams() {
 const MAX_RELATED_AGENTS = 3
 const METADATA_TITLE_MAX_LENGTH = 60
 const SUBAGENT_PATH_REGEX = /^agent\/subagents\/([^/]+)/
+const SKILL_PATH_REGEX = /\/skills\//
+const TOOL_PATH_REGEX = /\/tools\//
+const UPDATED_DATE_FORMATTER = new Intl.DateTimeFormat('en', {
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric',
+})
 
 function pluralize(count: number, singular: string, plural = `${singular}s`) {
   return `${count} ${count === 1 ? singular : plural}`
 }
 
 function formatUpdatedDate(date: Date): string {
-  return new Intl.DateTimeFormat('en', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  }).format(date)
+  return UPDATED_DATE_FORMATTER.format(date)
 }
 
 function countFilesByKind(files: readonly AgentRegistryFile[]) {
@@ -57,12 +60,12 @@ function countFilesByKind(files: readonly AgentRegistryFile[]) {
       continue
     }
 
-    if (file.path.includes('/skills/')) {
+    if (SKILL_PATH_REGEX.test(file.path)) {
       skills += 1
       continue
     }
 
-    if (file.path.includes('/tools/')) {
+    if (TOOL_PATH_REGEX.test(file.path)) {
       tools += 1
     }
   }

@@ -23,6 +23,7 @@ import { cn } from '@/lib/utils'
 
 const DEFAULT_CATEGORY = 'all'
 const SEARCH_URL_SYNC_DELAY_MS = 200
+const FILTER_CATEGORIES = [DEFAULT_CATEGORY, ...AGENT_CATEGORIES] as const
 
 function getFiltersPath(
   search: string,
@@ -150,7 +151,6 @@ export function BrowseFilters() {
     })
   }, [router])
 
-  const categories = [DEFAULT_CATEGORY, ...AGENT_CATEGORIES] as const
   const hasCategory = selectedCategory !== DEFAULT_CATEGORY
   const hasSort = selectedSort !== DEFAULT_AGENT_SORT
   const hasActiveFilters = Boolean(searchValue) || hasCategory || hasSort
@@ -211,7 +211,7 @@ export function BrowseFilters() {
         }
         value={[selectedCategory]}
       >
-        {categories.map((c) => (
+        {FILTER_CATEGORIES.map((c) => (
           <ToggleGroupItem
             className="mono-label rounded-md capitalize data-[state=on]:border-primary data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
             key={c}

@@ -36,6 +36,17 @@ const colors = {
   accent: '#47a8ff',
 }
 
+const EVEX_MARK_CELLS = [
+  { color: colors.accent, x: 43, y: 42 },
+  { color: colors.foreground, x: 76, y: 42 },
+  { color: colors.accent, x: 109, y: 42 },
+  { color: colors.foreground, x: 43, y: 76 },
+  { color: colors.accent, x: 76, y: 76 },
+  { color: colors.accent, x: 43, y: 110 },
+  { color: colors.foreground, x: 76, y: 110 },
+  { color: colors.accent, x: 109, y: 110 },
+] as const
+
 interface OgImageProps {
   author?: string
   description?: string
@@ -46,16 +57,6 @@ interface OgImageProps {
 
 function EvexMark({ size = 54 }: { size?: number }) {
   const scale = size / 180
-  const cells = [
-    { color: colors.accent, x: 43, y: 42 },
-    { color: colors.foreground, x: 76, y: 42 },
-    { color: colors.accent, x: 109, y: 42 },
-    { color: colors.foreground, x: 43, y: 76 },
-    { color: colors.accent, x: 76, y: 76 },
-    { color: colors.accent, x: 43, y: 110 },
-    { color: colors.foreground, x: 76, y: 110 },
-    { color: colors.accent, x: 109, y: 110 },
-  ]
 
   return (
     <div
@@ -70,7 +71,7 @@ function EvexMark({ size = 54 }: { size?: number }) {
         backgroundColor: colors.background,
       }}
     >
-      {cells.map((cell) => (
+      {EVEX_MARK_CELLS.map((cell) => (
         <div
           key={`${cell.x}-${cell.y}`}
           style={{

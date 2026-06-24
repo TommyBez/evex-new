@@ -17,6 +17,23 @@ import { getInstallCountMap } from '@/lib/queries'
 import { buildInstallCommand } from '@/lib/site-url'
 import { getStaticRegistryStats, listStaticAgents } from '@/lib/static-agents'
 
+const STATS_SKELETON_LABELS = ['Agents', 'Installs', 'Authors'] as const
+const FILTER_SKELETON_CHIP_IDS = [
+  'filter-chip-a',
+  'filter-chip-b',
+  'filter-chip-c',
+  'filter-chip-d',
+  'filter-chip-e',
+] as const
+const AGENT_GRID_SKELETON_CARD_IDS = [
+  'agent-card-a',
+  'agent-card-b',
+  'agent-card-c',
+  'agent-card-d',
+  'agent-card-e',
+  'agent-card-f',
+] as const
+
 export default function HomePage({
   searchParams,
 }: {
@@ -131,11 +148,9 @@ async function Stats() {
 function StatsSkeleton() {
   // Labels are static (not awaited), so render them for real to reserve the
   // exact same height as <Stats /> and avoid a layout shift on load.
-  const labels = ['Agents', 'Installs', 'Authors'] as const
-
   return (
     <dl className="mt-8 flex items-center gap-8 border-border border-t pt-5 sm:mt-12 sm:gap-10 sm:pt-6">
-      {labels.map((label) => (
+      {STATS_SKELETON_LABELS.map((label) => (
         <div className="flex flex-col gap-1" key={label}>
           <dd className="flex h-8 items-center">
             <Skeleton className="h-6 w-9" />
@@ -277,19 +292,11 @@ async function AgentResults({
 }
 
 function FiltersSkeleton() {
-  const chipIds = [
-    'filter-chip-a',
-    'filter-chip-b',
-    'filter-chip-c',
-    'filter-chip-d',
-    'filter-chip-e',
-  ] as const
-
   return (
     <div className="flex flex-col gap-4">
       <Skeleton className="h-9 border border-border" />
       <div className="flex flex-wrap gap-2">
-        {chipIds.map((id) => (
+        {FILTER_SKELETON_CHIP_IDS.map((id) => (
           <Skeleton className="h-8 w-20 border border-border" key={id} />
         ))}
       </div>
@@ -298,18 +305,9 @@ function FiltersSkeleton() {
 }
 
 function AgentGridSkeleton() {
-  const cardIds = [
-    'agent-card-a',
-    'agent-card-b',
-    'agent-card-c',
-    'agent-card-d',
-    'agent-card-e',
-    'agent-card-f',
-  ] as const
-
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {cardIds.map((id) => (
+      {AGENT_GRID_SKELETON_CARD_IDS.map((id) => (
         <Skeleton className="h-44 rounded-md border border-border" key={id} />
       ))}
     </div>
