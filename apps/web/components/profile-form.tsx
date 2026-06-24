@@ -88,7 +88,7 @@ export function ProfileForm({
       className="flex w-full min-w-0 flex-col gap-8"
       onSubmit={handleSubmit}
     >
-      <Card className="w-full min-w-0 rounded-md border border-border shadow-[var(--shadow-card)] ring-0">
+      <Card className="w-full min-w-0 rounded-md border border-border shadow-(--shadow-card) ring-0">
         <CardHeader>
           <CardTitle className="font-semibold text-lg">Avatar</CardTitle>
           <CardDescription>A square image works best. Max 4MB.</CardDescription>
@@ -125,7 +125,7 @@ export function ProfileForm({
         </CardContent>
       </Card>
 
-      <Card className="w-full min-w-0 rounded-md border border-border shadow-[var(--shadow-card)] ring-0">
+      <Card className="w-full min-w-0 rounded-md border border-border shadow-(--shadow-card) ring-0">
         <CardHeader>
           <CardTitle className="font-semibold text-lg">About</CardTitle>
         </CardHeader>
@@ -145,7 +145,7 @@ export function ProfileForm({
         </CardContent>
       </Card>
 
-      <Card className="w-full min-w-0 rounded-md border border-border shadow-[var(--shadow-card)] ring-0">
+      <Card className="w-full min-w-0 rounded-md border border-border shadow-(--shadow-card) ring-0">
         <CardHeader>
           <CardTitle className="font-semibold text-lg">Links</CardTitle>
           <CardDescription>
