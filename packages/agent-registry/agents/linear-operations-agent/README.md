@@ -95,11 +95,11 @@ LINEAR_OPS_P1_SLACK_CHANNEL_ID=
 
 The top-level credentials do different jobs:
 
-- `LINEAR_AGENT_ACCESS_TOKEN` lets the Linear channel post Agent Activities and create proactive Agent Sessions.
+- `LINEAR_AGENT_ACCESS_TOKEN` is used by the Linear channel to post Agent Activities and manage Agent Sessions.
 - `LINEAR_CONNECT_UID` is the `uid` returned by `vercel connect create linear`.
 - `SLACK_CONNECT_UID` is the `uid` returned by `vercel connect create slack`.
 
-Setting `LINEAR_AGENT_ACCESS_TOKEN` does not authorize the MCP connection. If the agent needs to call Linear MCP tools, the caller still needs the Connect-backed Linear OAuth grant.
+`LINEAR_AGENT_ACCESS_TOKEN` does not authorize Linear MCP tools. Linear MCP reads and writes use the Vercel Connect Linear connector referenced by `LINEAR_CONNECT_UID`.
 
 ## 1. Configure The Linear Channel
 
@@ -317,7 +317,7 @@ Other schedule ids are `cycle-health`, `weekly-backlog-hygiene`, `weekly-project
 
 If Linear mentions do nothing, check that the Linear app webhook points to `/eve/v1/linear`, subscribes to `AgentSessionEvent`, and sends a valid `Linear-Signature` matching `LINEAR_WEBHOOK_SECRET`.
 
-If Linear replies fail, check `LINEAR_AGENT_ACCESS_TOKEN`. This token is for Agent Activities, not for MCP data access.
+If Linear Agent Session replies fail, check `LINEAR_AGENT_ACCESS_TOKEN`. This token lets the channel post Agent Activities and manage Agent Sessions; it is not used for Linear MCP reads or writes.
 
 If Slack mentions do nothing, check that the Slack Connect client is attached with `--triggers` and `--trigger-path /eve/v1/slack`, and that `SLACK_CONNECT_UID` matches the created connector UID.
 
