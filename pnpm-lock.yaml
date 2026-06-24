@@ -31,7 +31,7 @@ importers:
         version: 2.4.0
       better-auth:
         specifier: ^1.6.19
-        version: 1.6.19(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@types/pg@8.20.0)(kysely@0.29.2)(pg@8.21.0))(next@16.2.6(@babel/core@7.29.7)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(pg@8.21.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        version: 1.6.19(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@types/pg@8.20.0)(@upstash/redis@1.38.0)(kysely@0.29.2)(pg@8.21.0))(next@16.2.6(@babel/core@7.29.7)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(pg@8.21.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       botid:
         specifier: ^1.5.11
         version: 1.5.11(next@16.2.6(@babel/core@7.29.7)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)
@@ -49,7 +49,7 @@ importers:
         version: 4.4.0
       drizzle-orm:
         specifier: ^0.45.2
-        version: 0.45.2(@types/pg@8.20.0)(kysely@0.29.2)(pg@8.21.0)
+        version: 0.45.2(@types/pg@8.20.0)(@upstash/redis@1.38.0)(kysely@0.29.2)(pg@8.21.0)
       embla-carousel-react:
         specifier: ^8.6.0
         version: 8.6.0(react@19.2.4)
@@ -143,7 +143,7 @@ importers:
         version: 0.31.10
       eve:
         specifier: ^0.11.10
-        version: 0.11.10(@vercel/blob@2.4.0)(ai@7.0.0-beta.178(zod@4.3.6))(chokidar@4.0.3)(dotenv@17.4.2)(drizzle-orm@0.45.2(@types/pg@8.20.0)(kysely@0.29.2)(pg@8.21.0))(lru-cache@11.5.1)(next@16.2.6(@babel/core@7.29.7)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)
+        version: 0.11.10(@upstash/redis@1.38.0)(@vercel/blob@2.4.0)(ai@7.0.0-beta.178(zod@4.3.6))(chokidar@4.0.3)(dotenv@17.4.2)(drizzle-orm@0.45.2(@types/pg@8.20.0)(@upstash/redis@1.38.0)(kysely@0.29.2)(pg@8.21.0))(lru-cache@11.5.1)(next@16.2.6(@babel/core@7.29.7)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)
       postcss:
         specifier: ^8.5
         version: 8.5.6
@@ -178,7 +178,7 @@ importers:
         specifier: ^1.38.0
         version: 1.38.0
       eve:
-        specifier: ^0.11.4
+        specifier: ^0.11.10
         version: 0.11.10(@upstash/redis@1.38.0)(@vercel/blob@2.4.0)(ai@7.0.0-beta.178(zod@4.3.6))(chokidar@4.0.3)(dotenv@17.4.2)(drizzle-orm@0.45.2(@types/pg@8.20.0)(@upstash/redis@1.38.0)(kysely@0.29.2)(pg@8.21.0))(lru-cache@11.5.1)(next@16.2.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)
       zod:
         specifier: 4.3.6
@@ -187,6 +187,34 @@ importers:
       '@types/node':
         specifier: ^24
         version: 24.10.4
+      typescript:
+        specifier: 5.7.3
+        version: 5.7.3
+
+  packages/agent-registry/agents/postgres-data-analyst:
+    dependencies:
+      '@vercel/connect':
+        specifier: ^0.2.6
+        version: 0.2.6(better-auth@1.6.19(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@types/pg@8.20.0)(@upstash/redis@1.38.0)(kysely@0.29.2)(pg@8.21.0))(next@16.2.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(pg@8.21.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(eve@0.11.10(@upstash/redis@1.38.0)(@vercel/blob@2.4.0)(chokidar@4.0.3)(dotenv@17.4.2)(drizzle-orm@0.45.2(@types/pg@8.20.0)(@upstash/redis@1.38.0)(kysely@0.29.2)(pg@8.21.0))(lru-cache@11.5.1)(next@16.2.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4))
+      eve:
+        specifier: ^0.11.10
+        version: 0.11.10(@upstash/redis@1.38.0)(@vercel/blob@2.4.0)(chokidar@4.0.3)(dotenv@17.4.2)(drizzle-orm@0.45.2(@types/pg@8.20.0)(@upstash/redis@1.38.0)(kysely@0.29.2)(pg@8.21.0))(lru-cache@11.5.1)(next@16.2.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)
+      pg:
+        specifier: ^8.21.0
+        version: 8.21.0
+      pgsql-ast-parser:
+        specifier: ^12.0.1
+        version: 12.0.2
+      zod:
+        specifier: 4.3.6
+        version: 4.3.6
+    devDependencies:
+      '@types/node':
+        specifier: ^24
+        version: 24.10.4
+      '@types/pg':
+        specifier: ^8.20.0
+        version: 8.20.0
       typescript:
         specifier: 5.7.3
         version: 5.7.3
@@ -542,14 +570,8 @@ packages:
     peerDependencies:
       '@noble/ciphers': ^1.0.0
 
-  '@emnapi/core@1.11.0':
-    resolution: {integrity: sha512-l9Oo58x0HOP5znGzVhYW9U3e5wVuA4LAZU2AGezTmkhO1CgQRFDhDg4nneHsu/t3WniXg9QrG2nIXL/ZS8ln8Q==}
-
   '@emnapi/core@1.11.1':
     resolution: {integrity: sha512-RSvbQmHzdKzNsLYa/wHrbc3KN4sYLKAdPZxqiM2HATqv/SBk2/ENSHpvXGaLOMcsAyz0poEGqkmmKYG3OWiJEQ==}
-
-  '@emnapi/runtime@1.11.0':
-    resolution: {integrity: sha512-55coeOFKHv1ywEcUXJtWU5f+Jr/W5tZDvZig8DLKSwUN1JpROQ4rk/SNOQiFWmaR/VKF4zuFyW1B8JduOSv6Pg==}
 
   '@emnapi/runtime@1.11.1':
     resolution: {integrity: sha512-vgj7R3y3Wgx24IQaGPA/R6YFXLHVMOZ0uVEyIQPaWs+rd1AzfEMXlAC22FYwO1XkKR6NPsq7mUandH8oIRdZFw==}
@@ -2179,8 +2201,39 @@ packages:
     resolution: {integrity: sha512-ncQ8CRb6XoEAYJwjOTRGpACRT6h/AeY+/33gLyeVxG5BIes27OPm1jmqreF+JHjcTmGhClTP+kBpmyLfbV0xew==}
     engines: {node: '>=20.0.0'}
 
+  '@vercel/cli-config@0.2.0':
+    resolution: {integrity: sha512-fJRRRB7734BDuXZ89yBEaA2ncYhH7bWX30mk04W80J6VAfQc+4iB8lyzAdaGpFV3/vNlkt9VZt+/uoQoWX6UsQ==}
+
+  '@vercel/cli-exec@1.0.0':
+    resolution: {integrity: sha512-kQF8LGie/Hbdq9/psJxLE7owRTcqMQMhgybU04gCeR7cbQAr5t8OrjefDNColJv1QSSucFt4pLwRiARVmlOnug==}
+    engines: {node: '>= 18'}
+
+  '@vercel/connect@0.2.6':
+    resolution: {integrity: sha512-zVzg4rg0I8oXgMhRdfosHm7n2RxG5giRIWXJILBUiH9yIqDL5KG9ZCdsue92PZqhIF9EJ05tQJIud4sGYhx/mQ==}
+    peerDependencies:
+      '@ai-sdk/mcp': ^1 || ^2
+      '@auth/core': '>=0.37.0'
+      ai: ^6 || ^7.0.0-beta.0
+      better-auth: '>=1.5.0'
+      eve: '>=0.6.0-beta.1'
+    peerDependenciesMeta:
+      '@ai-sdk/mcp':
+        optional: true
+      '@auth/core':
+        optional: true
+      ai:
+        optional: true
+      better-auth:
+        optional: true
+      eve:
+        optional: true
+
   '@vercel/oidc@3.2.0':
     resolution: {integrity: sha512-UycprH3T6n3jH0k44NHMa7pnFHGu/N05MjojYr+Mc6I7obkoLIJujSWwin1pCvdy/eOxrI/l3uDLQsmcrOb4ug==}
+    engines: {node: '>= 20'}
+
+  '@vercel/oidc@3.6.2':
+    resolution: {integrity: sha512-1X8B+Za3JAh+FJQ6xLqFds4M/SBbLpEDJMNe+QcaQoqNXLEV8zjGl0eJ8ekj4ObDYC2jXK6fvaa3wRadIfkP8w==}
     engines: {node: '>= 20'}
 
   '@webassemblyjs/ast@1.14.1':
@@ -2757,6 +2810,9 @@ packages:
   diff@8.0.4:
     resolution: {integrity: sha512-DPi0FmjiSU5EvQV0++GFDOJ9ASQUVFh5kD+OzOnYdi7n3Wpm9hWWGfB/O2blfHcMVTL5WkQXSnRiK9makhrcnw==}
     engines: {node: '>=0.3.1'}
+
+  discontinuous-range@1.0.0:
+    resolution: {integrity: sha512-c68LpLbO+7kP/b1Hr1qs8/BJ09F5khZGTxqxZuhzxpmwJKOgRFHJWIb9/KmqnqHhLdO55aOxFH/EGBvUQbL/RQ==}
 
   dom-serializer@2.0.0:
     resolution: {integrity: sha512-wIkAryiqt/nV5EQKqQpo3SToSOV9J0DnbJqwK7Wv/Trc92zIAYZ4FlMu+JPFW1DfGFt81ZTCGgDEabffXeLyJg==}
@@ -3481,6 +3537,9 @@ packages:
     resolution: {integrity: sha512-ekilCSN1jwRvIbgeg/57YFh8qQDNbwDb9xT/qu2DAHbFFZUicIl4ygVaAvzveMhMVr3LnpSKTNnwt8PoOfmKhQ==}
     hasBin: true
 
+  jose@5.10.0:
+    resolution: {integrity: sha512-s+3Al/p9g32Iq+oqXxkW//7jk2Vig6FF1CFqzVXoTUXt2qz89YWbL+OwS17NFYEvxC35n0FKeGO2LGYSxeM2Gg==}
+
   jose@6.2.3:
     resolution: {integrity: sha512-YYVDInQKFJfR/xa3ojUTl8c2KoTwiL1R5Wg9YCydwH0x0B9grbzlg5HC7mMjCtUJjbQ/YnGEZIhI5tCgfTb4Hw==}
 
@@ -3707,6 +3766,9 @@ packages:
     resolution: {integrity: sha512-tEBHqDnIoM/1rXME1zgka9g6Q2lcoCkxHLuc7ODJ5BxbP5d4c2Z5cGgtXAku59200Cx7diuHTOYfSBD8n6mm8A==}
     engines: {node: '>=16 || 14 >=14.17'}
 
+  moo@0.5.3:
+    resolution: {integrity: sha512-m2fmM2dDm7GZQsY7KK2cme8agi+AAljILjQnof7p1ZMDe6dQ4bdnSMx0cPppudoeNv5hEFQirN6u+O4fDE0IWA==}
+
   ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
 
@@ -3732,6 +3794,10 @@ packages:
   nanostores@1.3.0:
     resolution: {integrity: sha512-XPUa/jz+P1oJvN9VBxw4L9MtdFfaH3DAryqPssqhb2kXjmb9npz0dly6rCsgFWOPr4Yg9mTfM3MDZgZZ+7A3lA==}
     engines: {node: ^20.0.0 || >=22.0.0}
+
+  nearley@2.20.1:
+    resolution: {integrity: sha512-+Mc8UaAebFzgV+KpI5n7DasuuQCHA89dmwm7JXw3TV43ukfNQ9DnBH3Mdb2g/I4Fdxc26pwimBWvjIw0UAILSQ==}
+    hasBin: true
 
   negotiator@0.6.3:
     resolution: {integrity: sha512-+EUsqGPLsM+j/zdChZjsnX51g4XrHFOIXwfnCVPGlQk/k5giakcKsuxCObBRu6DSm9opw/O6slWbJdghQM4bBg==}
@@ -3883,6 +3949,10 @@ packages:
     resolution: {integrity: sha512-weP+BZ8MVNnlCm8c0Qdc1WSWq4Qn7I+9CJGm7Qali6g44e/PUzbjNqJX5NJ9ljlNMosfJvg1fKEGILklK9cwnw==}
     engines: {node: '>=18'}
 
+  os-paths@4.4.0:
+    resolution: {integrity: sha512-wrAwOeXp1RRMFfQY8Sy7VaGVmPocaLwSFOYCGKSyo8qmJ+/yaafCl5BCA1IQZWqFSRBrKDYFeR9d/VyQzfH/jg==}
+    engines: {node: '>= 6.0'}
+
   outvariant@1.4.3:
     resolution: {integrity: sha512-+Sl2UErvtsoajRDKCE5/dBz4DIvHXQQnAxtQTF04OJxY0+DyZXSo5P5Bb7XYWOh81syohlYL24hbDwxedPUJCA==}
 
@@ -3968,6 +4038,9 @@ packages:
 
   pgpass@1.0.5:
     resolution: {integrity: sha512-FdW9r/jQZhSeohs1Z3sI1yxFQNFvMcnmfuj4WBMUTxOrAyLMaTcE1aAMBiTlbMNaXvBCQuVi0R7hd8udDSP7ug==}
+
+  pgsql-ast-parser@12.0.2:
+    resolution: {integrity: sha512-1WWa96Sw6h4uv9GLw98EzH/+xoBTC8j2TwV/AMW3E+Ir/fHOu/jLLbj6kPiz3y2bGISTKNYvKWwHoqvQ5FLuAw==}
 
   picocolors@1.1.1:
     resolution: {integrity: sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==}
@@ -4066,6 +4139,13 @@ packages:
 
   queue-microtask@1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
+
+  railroad-diagrams@1.0.0:
+    resolution: {integrity: sha512-cz93DjNeLY0idrCNOH6PviZGRN9GJhsdm9hpn1YCS879fj4W+x5IFJhhkRZcwVgMmFF7R82UA/7Oh+R8lLZg6A==}
+
+  randexp@0.4.6:
+    resolution: {integrity: sha512-80WNmd9DA0tmZrw9qQa62GPPWfuXJknrmVmLcxvq4uZBdYqb1wYoKTmnlGUchvVWe0XiLupYkBoXVOxz3C8DYQ==}
+    engines: {node: '>=0.12'}
 
   range-parser@1.2.1:
     resolution: {integrity: sha512-Hrgsx+orqoygnmhFbKaHE6c296J+HTAQXoxEF6gNupROmmGJRoyzfG3ccAveqCBrwr/2yxQ5BVd/GTl5agOwSg==}
@@ -4219,6 +4299,10 @@ packages:
   restore-cursor@5.1.0:
     resolution: {integrity: sha512-oMA2dcrw6u0YfxJQXm342bFKX/E4sG9rbTzO9ptUcR/e8A33cHuvStiYOwH7fszkZlZ1z/ta9AAoPk2F4qIOHA==}
     engines: {node: '>=18'}
+
+  ret@0.1.15:
+    resolution: {integrity: sha512-TTlYpa+OL+vMMNG24xSlQGEJ3B/RzEfUlLct7b5G/ytav+wPrplCpVMFuwzXbkecJrb6IYo1iFb0S9v37754mg==}
+    engines: {node: '>=0.12'}
 
   retry@0.13.1:
     resolution: {integrity: sha512-XQBQ3I8W1Cge0Seh+6gjj03LbmRFWuoszgK9ooCpwYIrhhoO80pfq4cUkU5DkknwfOfFteRwlZ56PYOGYyFWdg==}
@@ -4797,6 +4881,14 @@ packages:
     resolution: {integrity: sha512-g/eziiSUNBSsdDJtCLB8bdYEUMj4jR7AGeUo96p/3dTafgjHhpF4RiCFPiRILwjQoDXx5MqkBr4fwWtR3Ky4Wg==}
     engines: {node: '>=20'}
 
+  xdg-app-paths@5.5.1:
+    resolution: {integrity: sha512-hI3flOB4PLZIy5prbtTpirobtPE2ZtZ52szO+2mM9Efp6ErM398La+C1lIpNWDfNoQk+6Lsi6nMcCwVB7pxeMQ==}
+    engines: {node: '>= 6.0'}
+
+  xdg-portable@7.3.0:
+    resolution: {integrity: sha512-sqMMuL1rc0FmMBOzCpd0yuy9trqF2yTTVe+E9ogwCSWQCdDEtQUwrZPT6AxqtsFGRNxycgncbP/xmOOSPw5ZUw==}
+    engines: {node: '>= 6.0'}
+
   xtend@4.0.2:
     resolution: {integrity: sha512-LKYU1iAXJXUgAXn9URjiu+MWhyUXHsvfp7mcuYm9dSUKK0/CjtrUwFAxD82/mCWbtLsGjFIad0wIsod4zrTAEQ==}
     engines: {node: '>=0.4'}
@@ -4836,6 +4928,9 @@ packages:
 
   zod@3.25.76:
     resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
+
+  zod@4.1.11:
+    resolution: {integrity: sha512-WPsqwxITS2tzx1bzhIKsEs19ABD5vmCVa4xBo2tq/SrV4RNZtfws1EnCWQXM6yh8bD08a1idvkB5MZSBiZsjwg==}
 
   zod@4.3.6:
     resolution: {integrity: sha512-rftlrkhHZOcjDwkGlnUtZZkvaPHCsDATp4pGpuOOMDaTdDDXF91wuVDJoWoPsKX/3YPQ5fHuF3STjcYyKr+Qhg==}
@@ -5107,12 +5202,12 @@ snapshots:
       nanostores: 1.3.0
       zod: 4.3.6
 
-  '@better-auth/drizzle-adapter@1.6.19(@better-auth/core@1.6.19(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.1)(better-call@1.3.6(zod@4.3.6))(jose@6.2.3)(kysely@0.29.2)(nanostores@1.3.0))(@better-auth/utils@0.4.2)(drizzle-orm@0.45.2(@types/pg@8.20.0)(kysely@0.29.2)(pg@8.21.0))':
+  '@better-auth/drizzle-adapter@1.6.19(@better-auth/core@1.6.19(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.1)(better-call@1.3.6(zod@4.3.6))(jose@6.2.3)(kysely@0.29.2)(nanostores@1.3.0))(@better-auth/utils@0.4.2)(drizzle-orm@0.45.2(@types/pg@8.20.0)(@upstash/redis@1.38.0)(kysely@0.29.2)(pg@8.21.0))':
     dependencies:
       '@better-auth/core': 1.6.19(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.1)(better-call@1.3.6(zod@4.3.6))(jose@6.2.3)(kysely@0.29.2)(nanostores@1.3.0)
       '@better-auth/utils': 0.4.2
     optionalDependencies:
-      drizzle-orm: 0.45.2(@types/pg@8.20.0)(kysely@0.29.2)(pg@8.21.0)
+      drizzle-orm: 0.45.2(@types/pg@8.20.0)(@upstash/redis@1.38.0)(kysely@0.29.2)(pg@8.21.0)
 
   '@better-auth/kysely-adapter@1.6.19(@better-auth/core@1.6.19(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.1)(better-call@1.3.6(zod@4.3.6))(jose@6.2.3)(kysely@0.29.2)(nanostores@1.3.0))(@better-auth/utils@0.4.2)(kysely@0.29.2)':
     dependencies:
@@ -5217,20 +5312,9 @@ snapshots:
     dependencies:
       '@noble/ciphers': 1.3.0
 
-  '@emnapi/core@1.11.0':
-    dependencies:
-      '@emnapi/wasi-threads': 1.2.2
-      tslib: 2.8.1
-    optional: true
-
   '@emnapi/core@1.11.1':
     dependencies:
       '@emnapi/wasi-threads': 1.2.2
-      tslib: 2.8.1
-    optional: true
-
-  '@emnapi/runtime@1.11.0':
-    dependencies:
       tslib: 2.8.1
     optional: true
 
@@ -5788,8 +5872,8 @@ snapshots:
 
   '@napi-rs/wasm-runtime@1.0.7':
     dependencies:
-      '@emnapi/core': 1.11.0
-      '@emnapi/runtime': 1.11.0
+      '@emnapi/core': 1.11.1
+      '@emnapi/runtime': 1.11.1
       '@tybys/wasm-util': 0.10.2
     optional: true
 
@@ -6386,7 +6470,29 @@ snapshots:
       throttleit: 2.1.0
       undici: 6.27.0
 
+  '@vercel/cli-config@0.2.0':
+    dependencies:
+      xdg-app-paths: 5.5.1
+      zod: 4.1.11
+
+  '@vercel/cli-exec@1.0.0':
+    dependencies:
+      execa: 5.1.1
+
+  '@vercel/connect@0.2.6(better-auth@1.6.19(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@types/pg@8.20.0)(@upstash/redis@1.38.0)(kysely@0.29.2)(pg@8.21.0))(next@16.2.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(pg@8.21.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(eve@0.11.10(@upstash/redis@1.38.0)(@vercel/blob@2.4.0)(chokidar@4.0.3)(dotenv@17.4.2)(drizzle-orm@0.45.2(@types/pg@8.20.0)(@upstash/redis@1.38.0)(kysely@0.29.2)(pg@8.21.0))(lru-cache@11.5.1)(next@16.2.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4))':
+    dependencies:
+      '@vercel/oidc': 3.6.2
+    optionalDependencies:
+      better-auth: 1.6.19(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@types/pg@8.20.0)(@upstash/redis@1.38.0)(kysely@0.29.2)(pg@8.21.0))(next@16.2.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(pg@8.21.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      eve: 0.11.10(@upstash/redis@1.38.0)(@vercel/blob@2.4.0)(chokidar@4.0.3)(dotenv@17.4.2)(drizzle-orm@0.45.2(@types/pg@8.20.0)(@upstash/redis@1.38.0)(kysely@0.29.2)(pg@8.21.0))(lru-cache@11.5.1)(next@16.2.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)
+
   '@vercel/oidc@3.2.0': {}
+
+  '@vercel/oidc@3.6.2':
+    dependencies:
+      '@vercel/cli-config': 0.2.0
+      '@vercel/cli-exec': 1.0.0
+      jose: 5.10.0
 
   '@webassemblyjs/ast@1.14.1':
     dependencies:
@@ -6571,10 +6677,10 @@ snapshots:
 
   baseline-browser-mapping@2.9.19: {}
 
-  better-auth@1.6.19(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@types/pg@8.20.0)(kysely@0.29.2)(pg@8.21.0))(next@16.2.6(@babel/core@7.29.7)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(pg@8.21.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4):
+  better-auth@1.6.19(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@types/pg@8.20.0)(@upstash/redis@1.38.0)(kysely@0.29.2)(pg@8.21.0))(next@16.2.6(@babel/core@7.29.7)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(pg@8.21.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4):
     dependencies:
       '@better-auth/core': 1.6.19(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.1)(better-call@1.3.6(zod@4.3.6))(jose@6.2.3)(kysely@0.29.2)(nanostores@1.3.0)
-      '@better-auth/drizzle-adapter': 1.6.19(@better-auth/core@1.6.19(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.1)(better-call@1.3.6(zod@4.3.6))(jose@6.2.3)(kysely@0.29.2)(nanostores@1.3.0))(@better-auth/utils@0.4.2)(drizzle-orm@0.45.2(@types/pg@8.20.0)(kysely@0.29.2)(pg@8.21.0))
+      '@better-auth/drizzle-adapter': 1.6.19(@better-auth/core@1.6.19(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.1)(better-call@1.3.6(zod@4.3.6))(jose@6.2.3)(kysely@0.29.2)(nanostores@1.3.0))(@better-auth/utils@0.4.2)(drizzle-orm@0.45.2(@types/pg@8.20.0)(@upstash/redis@1.38.0)(kysely@0.29.2)(pg@8.21.0))
       '@better-auth/kysely-adapter': 1.6.19(@better-auth/core@1.6.19(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.1)(better-call@1.3.6(zod@4.3.6))(jose@6.2.3)(kysely@0.29.2)(nanostores@1.3.0))(@better-auth/utils@0.4.2)(kysely@0.29.2)
       '@better-auth/memory-adapter': 1.6.19(@better-auth/core@1.6.19(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.1)(better-call@1.3.6(zod@4.3.6))(jose@6.2.3)(kysely@0.29.2)(nanostores@1.3.0))(@better-auth/utils@0.4.2)
       '@better-auth/mongo-adapter': 1.6.19(@better-auth/core@1.6.19(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.1)(better-call@1.3.6(zod@4.3.6))(jose@6.2.3)(kysely@0.29.2)(nanostores@1.3.0))(@better-auth/utils@0.4.2)
@@ -6592,7 +6698,7 @@ snapshots:
       zod: 4.3.6
     optionalDependencies:
       drizzle-kit: 0.31.10
-      drizzle-orm: 0.45.2(@types/pg@8.20.0)(kysely@0.29.2)(pg@8.21.0)
+      drizzle-orm: 0.45.2(@types/pg@8.20.0)(@upstash/redis@1.38.0)(kysely@0.29.2)(pg@8.21.0)
       next: 16.2.6(@babel/core@7.29.7)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       pg: 8.21.0
       react: 19.2.4
@@ -6600,6 +6706,37 @@ snapshots:
     transitivePeerDependencies:
       - '@cloudflare/workers-types'
       - '@opentelemetry/api'
+
+  better-auth@1.6.19(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@types/pg@8.20.0)(@upstash/redis@1.38.0)(kysely@0.29.2)(pg@8.21.0))(next@16.2.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(pg@8.21.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4):
+    dependencies:
+      '@better-auth/core': 1.6.19(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.1)(better-call@1.3.6(zod@4.3.6))(jose@6.2.3)(kysely@0.29.2)(nanostores@1.3.0)
+      '@better-auth/drizzle-adapter': 1.6.19(@better-auth/core@1.6.19(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.1)(better-call@1.3.6(zod@4.3.6))(jose@6.2.3)(kysely@0.29.2)(nanostores@1.3.0))(@better-auth/utils@0.4.2)(drizzle-orm@0.45.2(@types/pg@8.20.0)(@upstash/redis@1.38.0)(kysely@0.29.2)(pg@8.21.0))
+      '@better-auth/kysely-adapter': 1.6.19(@better-auth/core@1.6.19(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.1)(better-call@1.3.6(zod@4.3.6))(jose@6.2.3)(kysely@0.29.2)(nanostores@1.3.0))(@better-auth/utils@0.4.2)(kysely@0.29.2)
+      '@better-auth/memory-adapter': 1.6.19(@better-auth/core@1.6.19(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.1)(better-call@1.3.6(zod@4.3.6))(jose@6.2.3)(kysely@0.29.2)(nanostores@1.3.0))(@better-auth/utils@0.4.2)
+      '@better-auth/mongo-adapter': 1.6.19(@better-auth/core@1.6.19(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.1)(better-call@1.3.6(zod@4.3.6))(jose@6.2.3)(kysely@0.29.2)(nanostores@1.3.0))(@better-auth/utils@0.4.2)
+      '@better-auth/prisma-adapter': 1.6.19(@better-auth/core@1.6.19(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.1)(better-call@1.3.6(zod@4.3.6))(jose@6.2.3)(kysely@0.29.2)(nanostores@1.3.0))(@better-auth/utils@0.4.2)
+      '@better-auth/telemetry': 1.6.19(@better-auth/core@1.6.19(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.1)(better-call@1.3.6(zod@4.3.6))(jose@6.2.3)(kysely@0.29.2)(nanostores@1.3.0))(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.1)
+      '@better-auth/utils': 0.4.2
+      '@better-fetch/fetch': 1.3.1
+      '@noble/ciphers': 2.2.0
+      '@noble/hashes': 2.2.0
+      better-call: 1.3.6(zod@4.3.6)
+      defu: 6.1.7
+      jose: 6.2.3
+      kysely: 0.29.2
+      nanostores: 1.3.0
+      zod: 4.3.6
+    optionalDependencies:
+      drizzle-kit: 0.31.10
+      drizzle-orm: 0.45.2(@types/pg@8.20.0)(@upstash/redis@1.38.0)(kysely@0.29.2)(pg@8.21.0)
+      next: 16.2.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      pg: 8.21.0
+      react: 19.2.4
+      react-dom: 19.2.4(react@19.2.4)
+    transitivePeerDependencies:
+      - '@cloudflare/workers-types'
+      - '@opentelemetry/api'
+    optional: true
 
   better-call@1.3.6(zod@4.3.6):
     dependencies:
@@ -6736,8 +6873,7 @@ snapshots:
 
   commander@15.0.0: {}
 
-  commander@2.20.3:
-    optional: true
+  commander@2.20.3: {}
 
   conf@15.1.0:
     dependencies:
@@ -6846,10 +6982,6 @@ snapshots:
     optionalDependencies:
       drizzle-orm: 0.45.2(@types/pg@8.20.0)(@upstash/redis@1.38.0)(kysely@0.29.2)(pg@8.21.0)
 
-  db0@0.3.4(drizzle-orm@0.45.2(@types/pg@8.20.0)(kysely@0.29.2)(pg@8.21.0)):
-    optionalDependencies:
-      drizzle-orm: 0.45.2(@types/pg@8.20.0)(kysely@0.29.2)(pg@8.21.0)
-
   debounce-fn@6.0.0:
     dependencies:
       mimic-function: 5.0.1
@@ -6889,6 +7021,8 @@ snapshots:
 
   diff@8.0.4: {}
 
+  discontinuous-range@1.0.0: {}
+
   dom-serializer@2.0.0:
     dependencies:
       domelementtype: 2.3.0
@@ -6924,13 +7058,6 @@ snapshots:
     optionalDependencies:
       '@types/pg': 8.20.0
       '@upstash/redis': 1.38.0
-      kysely: 0.29.2
-      pg: 8.21.0
-    optional: true
-
-  drizzle-orm@0.45.2(@types/pg@8.20.0)(kysely@0.29.2)(pg@8.21.0):
-    optionalDependencies:
-      '@types/pg': 8.20.0
       kysely: 0.29.2
       pg: 8.21.0
 
@@ -7165,6 +7292,52 @@ snapshots:
 
   etag@1.8.1: {}
 
+  eve@0.11.10(@upstash/redis@1.38.0)(@vercel/blob@2.4.0)(ai@7.0.0-beta.178(zod@4.3.6))(chokidar@4.0.3)(dotenv@17.4.2)(drizzle-orm@0.45.2(@types/pg@8.20.0)(@upstash/redis@1.38.0)(kysely@0.29.2)(pg@8.21.0))(lru-cache@11.5.1)(next@16.2.6(@babel/core@7.29.7)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4):
+    dependencies:
+      ai: 7.0.0-beta.178(zod@4.3.6)
+      nitro: 3.0.260610-beta(@upstash/redis@1.38.0)(@vercel/blob@2.4.0)(chokidar@4.0.3)(dotenv@17.4.2)(drizzle-orm@0.45.2(@types/pg@8.20.0)(@upstash/redis@1.38.0)(kysely@0.29.2)(pg@8.21.0))(lru-cache@11.5.1)
+    optionalDependencies:
+      next: 16.2.6(@babel/core@7.29.7)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      react: 19.2.4
+    transitivePeerDependencies:
+      - '@azure/app-configuration'
+      - '@azure/cosmos'
+      - '@azure/data-tables'
+      - '@azure/identity'
+      - '@azure/keyvault-secrets'
+      - '@azure/storage-blob'
+      - '@capacitor/preferences'
+      - '@deno/kv'
+      - '@electric-sql/pglite'
+      - '@libsql/client'
+      - '@netlify/blobs'
+      - '@netlify/runtime'
+      - '@planetscale/database'
+      - '@upstash/redis'
+      - '@vercel/blob'
+      - '@vercel/functions'
+      - '@vercel/kv'
+      - '@vercel/queue'
+      - aws4fetch
+      - better-sqlite3
+      - chokidar
+      - dotenv
+      - drizzle-orm
+      - giget
+      - idb-keyval
+      - ioredis
+      - jiti
+      - lru-cache
+      - miniflare
+      - mongodb
+      - mysql2
+      - rollup
+      - sqlite3
+      - uploadthing
+      - wrangler
+      - xml2js
+      - zephyr-agent
+
   eve@0.11.10(@upstash/redis@1.38.0)(@vercel/blob@2.4.0)(ai@7.0.0-beta.178(zod@4.3.6))(chokidar@4.0.3)(dotenv@17.4.2)(drizzle-orm@0.45.2(@types/pg@8.20.0)(@upstash/redis@1.38.0)(kysely@0.29.2)(pg@8.21.0))(lru-cache@11.5.1)(next@16.2.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4):
     dependencies:
       ai: 7.0.0-beta.178(zod@4.3.6)
@@ -7211,12 +7384,11 @@ snapshots:
       - xml2js
       - zephyr-agent
 
-  eve@0.11.10(@vercel/blob@2.4.0)(ai@7.0.0-beta.178(zod@4.3.6))(chokidar@4.0.3)(dotenv@17.4.2)(drizzle-orm@0.45.2(@types/pg@8.20.0)(kysely@0.29.2)(pg@8.21.0))(lru-cache@11.5.1)(next@16.2.6(@babel/core@7.29.7)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4):
+  eve@0.11.10(@upstash/redis@1.38.0)(@vercel/blob@2.4.0)(chokidar@4.0.3)(dotenv@17.4.2)(drizzle-orm@0.45.2(@types/pg@8.20.0)(@upstash/redis@1.38.0)(kysely@0.29.2)(pg@8.21.0))(lru-cache@11.5.1)(next@16.2.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4):
     dependencies:
-      ai: 7.0.0-beta.178(zod@4.3.6)
-      nitro: 3.0.260610-beta(@vercel/blob@2.4.0)(chokidar@4.0.3)(dotenv@17.4.2)(drizzle-orm@0.45.2(@types/pg@8.20.0)(kysely@0.29.2)(pg@8.21.0))(lru-cache@11.5.1)
+      nitro: 3.0.260610-beta(@upstash/redis@1.38.0)(@vercel/blob@2.4.0)(chokidar@4.0.3)(dotenv@17.4.2)(drizzle-orm@0.45.2(@types/pg@8.20.0)(@upstash/redis@1.38.0)(kysely@0.29.2)(pg@8.21.0))(lru-cache@11.5.1)
     optionalDependencies:
-      next: 16.2.6(@babel/core@7.29.7)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      next: 16.2.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       react: 19.2.4
     transitivePeerDependencies:
       - '@azure/app-configuration'
@@ -7659,6 +7831,8 @@ snapshots:
 
   jiti@2.6.1: {}
 
+  jose@5.10.0: {}
+
   jose@6.2.3: {}
 
   js-tokens@4.0.0: {}
@@ -7821,6 +7995,8 @@ snapshots:
 
   minipass@7.1.3: {}
 
+  moo@0.5.3: {}
+
   ms@2.1.3: {}
 
   msw@2.14.6(@types/node@24.10.4)(typescript@5.7.3):
@@ -7853,6 +8029,13 @@ snapshots:
   nanoid@3.3.11: {}
 
   nanostores@1.3.0: {}
+
+  nearley@2.20.1:
+    dependencies:
+      commander: 2.20.3
+      moo: 0.5.3
+      railroad-diagrams: 1.0.0
+      randexp: 0.4.6
 
   negotiator@0.6.3: {}
 
@@ -7933,56 +8116,6 @@ snapshots:
       srvx: 0.11.17
       unenv: 2.0.0-rc.24
       unstorage: 2.0.0-alpha.7(@upstash/redis@1.38.0)(@vercel/blob@2.4.0)(chokidar@4.0.3)(db0@0.3.4(drizzle-orm@0.45.2(@types/pg@8.20.0)(@upstash/redis@1.38.0)(kysely@0.29.2)(pg@8.21.0)))(lru-cache@11.5.1)(ofetch@2.0.0-alpha.3)
-    optionalDependencies:
-      dotenv: 17.4.2
-    transitivePeerDependencies:
-      - '@azure/app-configuration'
-      - '@azure/cosmos'
-      - '@azure/data-tables'
-      - '@azure/identity'
-      - '@azure/keyvault-secrets'
-      - '@azure/storage-blob'
-      - '@capacitor/preferences'
-      - '@deno/kv'
-      - '@electric-sql/pglite'
-      - '@libsql/client'
-      - '@netlify/blobs'
-      - '@netlify/runtime'
-      - '@planetscale/database'
-      - '@upstash/redis'
-      - '@vercel/blob'
-      - '@vercel/functions'
-      - '@vercel/kv'
-      - aws4fetch
-      - better-sqlite3
-      - chokidar
-      - drizzle-orm
-      - idb-keyval
-      - ioredis
-      - lru-cache
-      - miniflare
-      - mongodb
-      - mysql2
-      - sqlite3
-      - uploadthing
-      - wrangler
-
-  nitro@3.0.260610-beta(@vercel/blob@2.4.0)(chokidar@4.0.3)(dotenv@17.4.2)(drizzle-orm@0.45.2(@types/pg@8.20.0)(kysely@0.29.2)(pg@8.21.0))(lru-cache@11.5.1):
-    dependencies:
-      consola: 3.4.2
-      crossws: 0.4.6(srvx@0.11.17)
-      db0: 0.3.4(drizzle-orm@0.45.2(@types/pg@8.20.0)(kysely@0.29.2)(pg@8.21.0))
-      env-runner: 0.1.14
-      h3: 2.0.1-rc.22(crossws@0.4.6(srvx@0.11.17))
-      hookable: 6.1.1
-      nf3: 0.3.17
-      ocache: 0.1.5
-      ofetch: 2.0.0-alpha.3
-      ohash: 2.0.11
-      rolldown: 1.1.2
-      srvx: 0.11.17
-      unenv: 2.0.0-rc.24
-      unstorage: 2.0.0-alpha.7(@vercel/blob@2.4.0)(chokidar@4.0.3)(db0@0.3.4(drizzle-orm@0.45.2(@types/pg@8.20.0)(kysely@0.29.2)(pg@8.21.0)))(lru-cache@11.5.1)(ofetch@2.0.0-alpha.3)
     optionalDependencies:
       dotenv: 17.4.2
     transitivePeerDependencies:
@@ -8101,6 +8234,8 @@ snapshots:
       string-width: 7.2.0
       strip-ansi: 7.2.0
 
+  os-paths@4.4.0: {}
+
   outvariant@1.4.3: {}
 
   parent-module@1.0.1:
@@ -8187,6 +8322,11 @@ snapshots:
     dependencies:
       split2: 4.2.0
 
+  pgsql-ast-parser@12.0.2:
+    dependencies:
+      moo: 0.5.3
+      nearley: 2.20.1
+
   picocolors@1.1.1: {}
 
   picomatch@2.3.2: {}
@@ -8265,6 +8405,13 @@ snapshots:
       side-channel: 1.1.0
 
   queue-microtask@1.2.3: {}
+
+  railroad-diagrams@1.0.0: {}
+
+  randexp@0.4.6:
+    dependencies:
+      discontinuous-range: 1.0.0
+      ret: 0.1.15
 
   range-parser@1.2.1: {}
 
@@ -8440,6 +8587,8 @@ snapshots:
     dependencies:
       onetime: 7.0.0
       signal-exit: 4.1.0
+
+  ret@0.1.15: {}
 
   retry@0.13.1: {}
 
@@ -8901,14 +9050,6 @@ snapshots:
       lru-cache: 11.5.1
       ofetch: 2.0.0-alpha.3
 
-  unstorage@2.0.0-alpha.7(@vercel/blob@2.4.0)(chokidar@4.0.3)(db0@0.3.4(drizzle-orm@0.45.2(@types/pg@8.20.0)(kysely@0.29.2)(pg@8.21.0)))(lru-cache@11.5.1)(ofetch@2.0.0-alpha.3):
-    optionalDependencies:
-      '@vercel/blob': 2.4.0
-      chokidar: 4.0.3
-      db0: 0.3.4(drizzle-orm@0.45.2(@types/pg@8.20.0)(kysely@0.29.2)(pg@8.21.0))
-      lru-cache: 11.5.1
-      ofetch: 2.0.0-alpha.3
-
   until-async@3.0.2: {}
 
   update-browserslist-db@1.2.3(browserslist@4.28.1):
@@ -9045,6 +9186,15 @@ snapshots:
       is-wsl: 3.1.1
       powershell-utils: 0.1.0
 
+  xdg-app-paths@5.5.1:
+    dependencies:
+      os-paths: 4.4.0
+      xdg-portable: 7.3.0
+
+  xdg-portable@7.3.0:
+    dependencies:
+      os-paths: 4.4.0
+
   xtend@4.0.2: {}
 
   y18n@5.0.8: {}
@@ -9076,6 +9226,8 @@ snapshots:
       zod: 3.25.76
 
   zod@3.25.76: {}
+
+  zod@4.1.11: {}
 
   zod@4.3.6: {}
 
