@@ -140,7 +140,6 @@ Create a Slack Connect client and attach its trigger to Eve's Slack route:
 
 ```bash
 npm install -g vercel@latest
-export FF_CONNECT_ENABLED=1
 vercel connect create slack --name linear-operations-agent --triggers --format=json
 vercel connect detach <slack-connect-uid> --yes
 vercel connect attach <slack-connect-uid> --triggers --trigger-path /eve/v1/slack --yes
