@@ -1,7 +1,12 @@
 'use client'
 
 import { useTheme } from 'next-themes'
-import { type CSSProperties, useEffect, useMemo, useState } from 'react'
+import {
+  type CSSProperties,
+  useMemo,
+  useState,
+  useSyncExternalStore,
+} from 'react'
 import { Textarea } from '@/components/ui/textarea'
 import {
   languageFromPath,
@@ -29,6 +34,11 @@ const codeFontStyle: CSSProperties = {
 
 const lineNumberGutterWidth = '4rem'
 
+const unsubscribeFromClientHydration = () => undefined
+const subscribeToClientHydration = () => unsubscribeFromClientHydration
+const getClientHydrationSnapshot = () => true
+const getServerHydrationSnapshot = () => false
+
 const lineNumberStyle: CSSProperties = {
   boxSizing: 'border-box',
   minWidth: lineNumberGutterWidth,
@@ -50,13 +60,13 @@ export function CodeEditor({
   'aria-label': ariaLabel,
 }: CodeEditorProps) {
   const { resolvedTheme } = useTheme()
-  const [mounted, setMounted] = useState(false)
   const [scrollPosition, setScrollPosition] = useState({ left: 0, top: 0 })
-  const isDark = mounted && resolvedTheme === 'dark'
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
+  const hasMounted = useSyncExternalStore(
+    subscribeToClientHydration,
+    getClientHydrationSnapshot,
+    getServerHydrationSnapshot,
+  )
+  const isDark = hasMounted && resolvedTheme === 'dark'
 
   const language = useMemo(() => languageFromPath(path), [path])
   const theme = isDark
@@ -88,6 +98,7 @@ export function CodeEditor({
         readOnly && 'bg-muted/40',
         className,
       )}
+      suppressHydrationWarning
     >
       {readOnly ? (
         <SyntaxHighlighter

@@ -17,6 +17,15 @@ export const metadata = createPageMetadata({
   noIndex: true,
 })
 
+const FAVORITE_SKELETON_CARD_IDS = [
+  'favorite-card-a',
+  'favorite-card-b',
+  'favorite-card-c',
+  'favorite-card-d',
+  'favorite-card-e',
+  'favorite-card-f',
+] as const
+
 export default function FavoritesPage() {
   return (
     <Suspense fallback={<FavoritesSkeleton />}>
@@ -83,15 +92,6 @@ async function FavoritesContent() {
 }
 
 function FavoritesSkeleton() {
-  const cardIds = [
-    'favorite-card-a',
-    'favorite-card-b',
-    'favorite-card-c',
-    'favorite-card-d',
-    'favorite-card-e',
-    'favorite-card-f',
-  ] as const
-
   return (
     <main className="mx-auto w-full min-w-0 max-w-6xl px-4 py-10">
       <div className="w-full min-w-0 space-y-3">
@@ -100,7 +100,7 @@ function FavoritesSkeleton() {
         <Skeleton className="h-4 w-full max-w-64" />
       </div>
       <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {cardIds.map((id) => (
+        {FAVORITE_SKELETON_CARD_IDS.map((id) => (
           <Skeleton className="h-44 rounded-md border border-border" key={id} />
         ))}
       </div>

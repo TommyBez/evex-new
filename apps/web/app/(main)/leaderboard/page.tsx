@@ -24,6 +24,15 @@ export const metadata: Metadata = createPageMetadata({
   path: '/leaderboard',
 })
 
+const LEADERBOARD_SKELETON_ROW_IDS = [
+  'leaderboard-row-a',
+  'leaderboard-row-b',
+  'leaderboard-row-c',
+  'leaderboard-row-d',
+  'leaderboard-row-e',
+  'leaderboard-row-f',
+] as const
+
 export default function LeaderboardPage() {
   return (
     <main className="mx-auto w-full min-w-0 max-w-5xl px-4 py-10">
@@ -172,18 +181,9 @@ async function TopAuthors() {
 }
 
 function ListSkeleton() {
-  const rowIds = [
-    'leaderboard-row-a',
-    'leaderboard-row-b',
-    'leaderboard-row-c',
-    'leaderboard-row-d',
-    'leaderboard-row-e',
-    'leaderboard-row-f',
-  ] as const
-
   return (
     <div className="flex flex-col gap-px overflow-hidden rounded-md border border-border">
-      {rowIds.map((id) => (
+      {LEADERBOARD_SKELETON_ROW_IDS.map((id) => (
         <Skeleton className="h-16 rounded-none" key={id} />
       ))}
     </div>
