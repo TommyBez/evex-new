@@ -1,81 +1,108 @@
 # Sending Reliability
 
-Ensuring the digest is sent exactly once and that failures are handled gracefully.
+Ensuring an email is sent exactly once and that failures are handled gracefully.
 
 ## Idempotency
 
-`send_digest_email` accepts a `confirmSend` flag and an `idempotencyKey`. The key is
-forwarded to Resend as the `Idempotency-Key` header, and the tool also keeps an
-in-process map of sent keys so a replayed Eve step returns the recorded result instead
-of issuing a second send.
+Prevent duplicate emails when retrying failed requests.
 
-### Why it matters
+### The problem
 
-Eve replays a tool step that did not complete. Without idempotency, a retried send
-after a timeout would duplicate the digest. With idempotency, the same logical send
-reuses the same key and the duplicate is suppressed.
+Network issues, timeouts, or server errors can leave you uncertain whether an email was
+sent. Retrying without idempotency risks sending duplicates.
 
-### Key generation
+### Solution: idempotency keys
 
-Use a deterministic key based on the digest event. The recommended shape is:
+Send a unique key with each request. If the same key is sent again, the provider returns
+the original response instead of sending another email. Resend accepts this as the
+`Idempotency-Key` header.
 
+```typescript
+// Deterministic key based on the business event
+const idempotencyKey = `password-reset-${userId}-${resetRequestId}`;
+
+await resend.emails.send(
+  {
+    from: 'noreply@example.com',
+    to: user.email,
+    subject: 'Reset your password',
+    html: emailHtml,
+  },
+  { idempotencyKey },
+);
 ```
-x-hot-topic-digest-YYYY-MM-DD
-```
+
+### Key generation strategies
 
 | Strategy | Example | Use when |
 |----------|---------|----------|
-| Digest-date-based (recommended) | `x-hot-topic-digest-2026-06-26` | One digest per day |
-| Date + recipient | `x-hot-topic-digest-2026-06-26-ops@example.com` | Per-recipient dedup |
+| Event-based (recommended) | `order-confirm-${orderId}` | One email per event |
+| Request-scoped | `reset-${userId}-${resetRequestId}` | Retries within same request |
+| UUID | `crypto.randomUUID()` | No natural key (generate once, reuse on retry) |
 
-**Do not** generate a fresh random key per retry attempt, and do not use `Date.now()`
-or a new UUID on each call. The same logical send must produce the same key.
+**Best practice:** use deterministic keys based on the business event. If you retry the
+same logical send, the same key must be regenerated. Avoid `Date.now()` or random values
+generated fresh on each attempt.
 
-### Key expiration
+**Key expiration:** idempotency keys are typically cached for 24 hours. Retries within
+this window return the original response. After expiration, the same key triggers a new
+send — so complete retry logic well within 24 hours.
 
-Idempotency keys are typically cached for 24 hours. Replays within this window return
-the original response. After expiration the same key triggers a new send, so complete
-retries well within 24 hours.
+## Result shape: check `error`, don't rely on throws
 
-## The two-step send
+Email APIs such as Resend resolve `send` with `{ data, error }` rather than throwing on
+failure. An unverified sender, invalid recipient, rate limit, or validation error comes
+back as an `error` result, not an exception.
 
-1. `preview_digest_email` — no side effect. Resolves `from`/`to`/`subject` from
-   configuration and returns the exact payload plus an HTML preview. Use it to review
-   before any send.
-2. `send_digest_email` — the only path that calls Resend. Requires `confirmSend: true`
-   and a stable `idempotencyKey`. If `confirmSend` is omitted or false, the tool returns
-   `notConfirmed: true` and sends nothing.
+```typescript
+const { data, error } = await resend.emails.send(emailPayload, { idempotencyKey });
 
-Never skip the preview. Never call `send_digest_email` without `confirmSend` and an
-idempotency key.
+if (error) {
+  // Not delivered. Do not cache as success; the same key can be retried.
+  return { sent: false, error: { message: error.message, name: error.name } };
+}
 
-## Error handling
-
-Resend resolves `send` with `{ data, error }` rather than throwing. When `error` is
-present, `send_digest_email` returns:
-
-```json
-{ "sent": false, "idempotencyKey": "...", "to": [...], "error": { "message": "...", "name": "..." } }
+// Only successful sends are safe to short-circuit on replay.
+return { sent: true, messageId: data?.id };
 ```
 
-Failed sends are **not** cached, so the same `idempotencyKey` can be retried and will
-issue a new send once the underlying issue is fixed. Only successful sends are cached and
-short-circuited on replay.
+A failed send must not be cached as a success. Only successful sends should be
+short-circuited on replay; failures need to be retried with the same idempotency key.
 
-Common Resend error cases:
+## Retry logic
 
-| Cause | Action |
-|------|---------|
-| Invalid email / missing field | Fix the payload |
-| Unauthorized (`RESEND_API_KEY`) | Check the API key |
-| Forbidden / unverified domain | Verify the sender domain in Resend |
-| Validation error | Fix request data |
-| Rate limited | Back off and retry |
-| Server error (5xx) | Retry with backoff; the idempotency key makes retry safe |
+Handle transient failures with exponential backoff.
 
-If `send_digest_email` returns `authRequired: missingEnv RESEND_API_KEY`, stop and
-report the missing configuration instead of retrying. Treat `sent: false` as not
-delivered and surface the error in the digest output.
+| Error type | Retry? | Notes |
+|------------|--------|-------|
+| 5xx (server error) | Yes | Transient, likely to resolve |
+| 429 (rate limit) | Yes | Wait for the rate limit window |
+| 4xx (client error) | No | Fix the request first |
+| Network timeout | Yes | Transient |
+| DNS failure | Yes | May be transient |
+
+```typescript
+async function sendWithRetry(emailData, maxRetries = 3) {
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    const { data, error } = await resend.emails.send(emailData);
+    if (!error) return data;
+
+    if (isRetryable(error) || attempt < maxRetries - 1) {
+      const delay = Math.min(1000 * 2 ** attempt, 30000);
+      await sleep(delay + Math.random() * 1000); // jitter
+      continue;
+    }
+    throw error;
+  }
+}
+```
+
+Backoff schedule: 1s → 2s → 4s → 8s, with jitter to prevent thundering herd.
+
+## Timeouts
+
+Set appropriate timeouts to avoid hanging requests. 10–30 seconds is reasonable for
+email API calls.
 
 ## Related
 
