@@ -5,7 +5,7 @@
       "name": "x-hot-topic-digest",
       "type": "registry:item",
       "title": "X Hot Topic Digest",
-      "description": "A scheduled Eve agent that scans a configured set of X (Twitter) profiles every day, surfaces hot topics from their recent posts, researches each topic with the Parallel web search API, and delivers an HTML digest by email through Resend.",
+      "description": "A scheduled Eve agent that scans a configured set of X (Twitter) profiles every day, surfaces hot topics from their recent posts, researches each topic with the [Parallel](https://parallel.ai/) web search API, and delivers an HTML digest by email through [Resend](https://resend.com).",
       "categories": [
         "research"
       ],
@@ -37,11 +37,6 @@
           "target": "~/agent/schedules/daily-hot-topic-digest.ts"
         },
         {
-          "path": "agent/skills/email-best-practices/SKILL.md",
-          "type": "registry:file",
-          "target": "~/agent/skills/email-best-practices/SKILL.md"
-        },
-        {
           "path": "agent/skills/email-best-practices/references/accessibility.md",
           "type": "registry:file",
           "target": "~/agent/skills/email-best-practices/references/accessibility.md"
@@ -50,6 +45,11 @@
           "path": "agent/skills/email-best-practices/references/sending-reliability.md",
           "type": "registry:file",
           "target": "~/agent/skills/email-best-practices/references/sending-reliability.md"
+        },
+        {
+          "path": "agent/skills/email-best-practices/SKILL.md",
+          "type": "registry:file",
+          "target": "~/agent/skills/email-best-practices/SKILL.md"
         },
         {
           "path": "agent/tools/preview_digest_email.ts",
@@ -106,7 +106,7 @@
         "slug": "x-hot-topic-digest",
         "category": "research",
         "createdAt": "2026-06-26T09:40:22.348Z",
-        "updatedAt": "2026-06-26T10:50:00.000Z"
+        "updatedAt": "2026-06-26T17:16:52.206Z"
       },
       "author": "TommyBez"
     }

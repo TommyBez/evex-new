@@ -5,14 +5,13 @@
       "name": "postgres-data-analyst",
       "type": "registry:item",
       "title": "Postgres Data Analyst",
-      "description": "A Slack-native Eve agent that inspects a configured Postgres database and answers analytics questions with bounded read-only SQL.",
-      "author": "TommyBez",
+      "description": "An Eve-native Slack analyst for a single Postgres database. It answers Slack",
       "categories": [
         "data"
       ],
       "dependencies": [
         "@vercel/connect@^0.2.6",
-        "eve@^0.11.10",
+        "eve@^0.15.1",
         "pg@^8.21.0",
         "pgsql-ast-parser@^12.0.1",
         "zod@4.3.6"
@@ -68,8 +67,9 @@
         "slug": "postgres-data-analyst",
         "category": "data",
         "createdAt": "2026-06-23T00:00:00.000Z",
-        "updatedAt": "2026-06-23T00:00:00.000Z"
-      }
+        "updatedAt": "2026-06-26T17:16:51.823Z"
+      },
+      "author": "TommyBez"
     }
   ]
 }

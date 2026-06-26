@@ -5,15 +5,14 @@
       "name": "code-reviewer",
       "type": "registry:item",
       "title": "Code Reviewer",
-      "description": "A GitHub pull request reviewer for Eve. Mention it on a PR to get a native GitHub review with inline comments, small suggestion blocks, and Upstash-backed rate limiting for public repositories.",
-      "author": "TommyBez",
+      "description": "Review GitHub pull requests from a native GitHub App channel. Mention",
       "categories": [
         "coding"
       ],
       "dependencies": [
         "@upstash/ratelimit@^2.0.8",
         "@upstash/redis@^1.38.0",
-        "eve@^0.11.10",
+        "eve@^0.15.1",
         "zod@4.3.6"
       ],
       "files": [
@@ -38,11 +37,6 @@
           "target": "~/agent/lib/review-rate-limit.ts"
         },
         {
-          "path": "agent/skills/review-calibration/SKILL.md",
-          "type": "registry:file",
-          "target": "~/agent/skills/review-calibration/SKILL.md"
-        },
-        {
           "path": "agent/skills/review-calibration/references/review-checklist.md",
           "type": "registry:file",
           "target": "~/agent/skills/review-calibration/references/review-checklist.md"
@@ -51,6 +45,11 @@
           "path": "agent/skills/review-calibration/references/severity-scale.md",
           "type": "registry:file",
           "target": "~/agent/skills/review-calibration/references/severity-scale.md"
+        },
+        {
+          "path": "agent/skills/review-calibration/SKILL.md",
+          "type": "registry:file",
+          "target": "~/agent/skills/review-calibration/SKILL.md"
         },
         {
           "path": "agent/tools/submit_pr_review.ts",
@@ -87,8 +86,9 @@
         "slug": "code-reviewer",
         "category": "coding",
         "createdAt": "2026-06-20T00:00:00.000Z",
-        "updatedAt": "2026-06-22T00:00:00.000Z"
-      }
+        "updatedAt": "2026-06-26T17:16:51.607Z"
+      },
+      "author": "TommyBez"
     }
   ]
 }

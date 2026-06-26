@@ -41,21 +41,6 @@
           "target": "~/agent/schedules/daily-x-drafts.ts"
         },
         {
-          "path": "agent/skills/typefully-best-practices/references/exactly-once.md",
-          "type": "registry:file",
-          "target": "~/agent/skills/typefully-best-practices/references/exactly-once.md"
-        },
-        {
-          "path": "agent/skills/typefully-best-practices/references/x-automation.md",
-          "type": "registry:file",
-          "target": "~/agent/skills/typefully-best-practices/references/x-automation.md"
-        },
-        {
-          "path": "agent/skills/typefully-best-practices/SKILL.md",
-          "type": "registry:file",
-          "target": "~/agent/skills/typefully-best-practices/SKILL.md"
-        },
-        {
           "path": "agent/skills/social/references/listening-sources-template.md",
           "type": "registry:file",
           "target": "~/agent/skills/social/references/listening-sources-template.md"
@@ -96,14 +81,29 @@
           "target": "~/agent/skills/social/SKILL.md"
         },
         {
-          "path": "agent/tools/create_x_drafts.ts",
+          "path": "agent/skills/typefully-best-practices/references/exactly-once.md",
           "type": "registry:file",
-          "target": "~/agent/tools/create_x_drafts.ts"
+          "target": "~/agent/skills/typefully-best-practices/references/exactly-once.md"
+        },
+        {
+          "path": "agent/skills/typefully-best-practices/references/x-automation.md",
+          "type": "registry:file",
+          "target": "~/agent/skills/typefully-best-practices/references/x-automation.md"
+        },
+        {
+          "path": "agent/skills/typefully-best-practices/SKILL.md",
+          "type": "registry:file",
+          "target": "~/agent/skills/typefully-best-practices/SKILL.md"
         },
         {
           "path": "agent/tools/create_typefully_tag.ts",
           "type": "registry:file",
           "target": "~/agent/tools/create_typefully_tag.ts"
+        },
+        {
+          "path": "agent/tools/create_x_drafts.ts",
+          "type": "registry:file",
+          "target": "~/agent/tools/create_x_drafts.ts"
         },
         {
           "path": "agent/tools/list_typefully_tags.ts",
@@ -160,7 +160,7 @@
         "slug": "x-draft-assistant",
         "category": "general",
         "createdAt": "2026-06-26T16:19:57.402Z",
-        "updatedAt": "2026-06-26T16:19:57.402Z"
+        "updatedAt": "2026-06-26T17:16:52.009Z"
       },
       "author": "TommyBez"
     }

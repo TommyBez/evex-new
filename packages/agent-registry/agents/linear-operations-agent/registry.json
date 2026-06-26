@@ -5,15 +5,13 @@
       "name": "linear-operations-agent",
       "type": "registry:item",
       "title": "Linear Operations Agent",
-      "description": "A multi-channel Eve agent for Linear operations: issue triage, Slack intake, cycle health, backlog hygiene, project reporting, and weekly initiative updates.",
-      "author": "TommyBez",
+      "description": "An Eve agent for Linear operations across Linear, Slack, and scheduled runs.",
       "categories": [
         "productivity"
       ],
       "dependencies": [
         "@vercel/connect@^0.2.6",
-        "ai@7.0.0-beta.178",
-        "eve@^0.11.10"
+        "eve@^0.15.1"
       ],
       "files": [
         {
@@ -32,11 +30,6 @@
           "target": "~/agent/channels/slack.ts"
         },
         {
-          "path": "agent/lib/linear-operations-config.ts",
-          "type": "registry:file",
-          "target": "~/agent/lib/linear-operations-config.ts"
-        },
-        {
           "path": "agent/connections/linear.ts",
           "type": "registry:file",
           "target": "~/agent/connections/linear.ts"
@@ -45,6 +38,11 @@
           "path": "agent/instructions.md",
           "type": "registry:file",
           "target": "~/agent/instructions.md"
+        },
+        {
+          "path": "agent/lib/linear-operations-config.ts",
+          "type": "registry:file",
+          "target": "~/agent/lib/linear-operations-config.ts"
         },
         {
           "path": "agent/schedules/cycle-health.ts",
@@ -141,8 +139,9 @@
         "slug": "linear-operations-agent",
         "category": "productivity",
         "createdAt": "2026-06-20T00:00:00.000Z",
-        "updatedAt": "2026-06-23T00:00:00.000Z"
-      }
+        "updatedAt": "2026-06-26T17:16:51.674Z"
+      },
+      "author": "TommyBez"
     }
   ]
 }
