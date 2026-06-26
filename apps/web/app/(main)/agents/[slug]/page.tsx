@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { Suspense } from 'react'
 import { AgentCard } from '@/components/agent-card'
+import { AgentDescription } from '@/components/agent-description'
 import { AgentFileViewer } from '@/components/agent-file-viewer'
 import { AuthorAvatar } from '@/components/author-avatar'
 import { FavoriteButton } from '@/components/favorite-button'
@@ -254,7 +255,7 @@ function AgentDetailContent({ slug }: { slug: string }) {
             </Suspense>
           </div>
           <p className="mt-1 max-w-2xl text-pretty text-muted-foreground">
-            {agent.description}
+            <AgentDescription>{agent.description}</AgentDescription>
           </p>
           <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-muted-foreground text-sm">
             {agent.authorUsername ? (

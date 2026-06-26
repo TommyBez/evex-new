@@ -1,5 +1,6 @@
 import { Download } from 'lucide-react'
 import Link from 'next/link'
+import { AgentDescription } from '@/components/agent-description'
 import { AuthorAvatar } from '@/components/author-avatar'
 import { CopyButton } from '@/components/copy-button'
 import { FavoriteButton } from '@/components/favorite-button'
@@ -60,7 +61,7 @@ export function AgentCard({
           {agent.name}
         </h3>
         <p className="mt-1.5 line-clamp-2 text-pretty text-muted-foreground text-sm leading-relaxed">
-          {agent.description}
+          <AgentDescription>{agent.description}</AgentDescription>
         </p>
       </div>
       <div className="flex items-center justify-between gap-3 border-border border-t pt-3 text-muted-foreground text-xs">
