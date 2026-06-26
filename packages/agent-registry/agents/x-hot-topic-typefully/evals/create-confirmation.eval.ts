@@ -3,7 +3,7 @@ import { equals, includes } from "eve/evals/expect";
 
 export default defineEval({
   description:
-    "Confirms the create path requires confirmCreate=true and a stable, unique idempotencyKey per draft, and does not create when the flag is omitted.",
+    "Confirms the create path requires confirmCreate=true and a stable, unique idempotencyKey per draft, that madeWithAi/socialSetId/tag are never passed as tool input (they come from config), and that the reply mentions the X made-with-AI disclosure.",
   async test(t) {
     const turn = await t.send(`
 The three X draft candidates have been previewed with preview_x_draft and the user has approved creating them in Typefully for today (2026-06-26).
@@ -27,6 +27,9 @@ Now create the drafts with create_x_drafts. Use today's date and the candidate i
     t.check(allKeysUnique, equals(true).gate());
     t.check(call.input.socialSetId === undefined, equals(true).soft());
     t.check(call.input.tag === undefined, equals(true).soft());
+    t.check(call.input.madeWithAi === undefined, equals(true).soft());
     t.check(t.reply, includes("x-hot-topic-typefully-2026-06-26-1").soft());
+    const replyLower = (t.reply ?? "").toLowerCase();
+    t.check(replyLower, includes("made with ai").soft());
   },
 });

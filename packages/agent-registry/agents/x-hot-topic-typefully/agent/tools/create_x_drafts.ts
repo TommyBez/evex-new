@@ -89,6 +89,7 @@ type FailedDraft = {
 type CreateXDraftsOutput = {
   readonly socialSetId: string;
   readonly tag?: string;
+  readonly madeWithAi: boolean;
   readonly createdCount: number;
   readonly replayedCount: number;
   readonly failedCount: number;
@@ -120,13 +121,15 @@ function duplicateIdempotencyKeys(drafts: readonly { idempotencyKey: string }[])
 
 export default defineTool({
   description:
-    "Create one or more X draft candidates in Typefully. Each draft requires a stable idempotencyKey so a replayed step does not duplicate the draft. The target social set and tag come from configuration and cannot be overridden via input. Always call preview_x_draft first. Drafts are saved (not scheduled and not published).",
+    "Create one or more X draft candidates in Typefully. Each draft requires a stable idempotencyKey so a replayed step does not duplicate the draft. The target social set, tag, and madeWithAi disclosure come from configuration and cannot be overridden via input. Always call preview_x_draft first. Drafts are saved (not scheduled and not published). When madeWithAi is enabled (default), every X post is labeled as made with AI per X's content disclosure policy.",
   inputSchema: payloadSchema,
   async execute({ drafts, confirmCreate }): Promise<CreateXDraftsOutput> {
     const apiKey = process.env.TYPEFULLY_API_KEY;
+    const madeWithAi = hotTopicConfig.draft.madeWithAi;
     if (!apiKey) {
       return {
         socialSetId: hotTopicConfig.draft.socialSetId ?? "",
+        madeWithAi,
         createdCount: 0,
         replayedCount: 0,
         failedCount: drafts.length,
@@ -142,6 +145,7 @@ export default defineTool({
     if (!confirmCreate) {
       return {
         socialSetId: hotTopicConfig.draft.socialSetId ?? "",
+        madeWithAi,
         createdCount: 0,
         replayedCount: 0,
         failedCount: drafts.length,
@@ -161,6 +165,7 @@ export default defineTool({
     if (!socialSetId) {
       return {
         socialSetId: "",
+        madeWithAi,
         createdCount: 0,
         replayedCount: 0,
         failedCount: drafts.length,
@@ -177,6 +182,7 @@ export default defineTool({
     if (duplicates.length > 0) {
       return {
         socialSetId,
+        madeWithAi,
         createdCount: 0,
         replayedCount: 0,
         failedCount: drafts.length,
@@ -213,7 +219,7 @@ export default defineTool({
         const response = await createTypefullyDraft(
           {
             socialSetId,
-            posts: draft.posts.map((post) => ({ text: post })),
+            posts: draft.posts.map((post) => ({ text: post, madeWithAi })),
             draftTitle: draft.title,
             scratchpad: draft.scratchpad,
             tags,
@@ -266,6 +272,7 @@ export default defineTool({
 
     return {
       socialSetId,
+      madeWithAi,
       ...(tag ? { tag } : {}),
       createdCount,
       replayedCount,

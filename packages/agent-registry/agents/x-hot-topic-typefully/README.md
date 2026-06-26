@@ -39,6 +39,7 @@ Copy `.env.example` into your Eve app environment and fill in the values.
 ### Draft candidates
 
 - `X_HOT_TOPIC_DRAFT_COUNT` — number of distinct X draft candidates to produce per run. Defaults to `3`.
+- `X_HOT_TOPIC_DRAFT_MADE_WITH_AI` — whether to label every X post with the X "made with AI" content disclosure. Defaults to `true` because the agent drafts posts with an LLM. Set to `false` only if a human rewrites the posts before publishing.
 - `X_HOT_TOPIC_DRAFT_TAG` — optional Typefully tag slug to attach to every created draft. Tags must already exist in the social set; the agent does not create tags. Leave empty to skip tagging.
 
 ### Typefully credentials
@@ -47,6 +48,8 @@ Copy `.env.example` into your Eve app environment and fill in the values.
 - `TYPEFULLY_SOCIAL_SET_ID` — the Typefully social set id (the account) to create drafts under. Find it by listing your social sets via the Typefully API, or copy it from the Typefully URL for the account you want to post to.
 
 Creating drafts is a two-step, exactly-once-safe operation by design: the agent calls `preview_x_draft` first, then `create_x_drafts` with `confirmCreate: true` and a unique `idempotencyKey` per draft. The Typefully v2 API does not accept a server-side idempotency key, so the agent holds an in-process cache of successful creates keyed by the caller-provided idempotency key. A replayed Eve step with the same key returns the recorded response with `replayed: true` instead of issuing a second POST, so a retried create never duplicates a draft.
+
+When `X_HOT_TOPIC_DRAFT_MADE_WITH_AI` is `true` (the default), every X post in every created draft is labeled with the X "made with AI" content disclosure, since the agent drafts posts with an LLM. Set it to `false` only if a human rewrites the posts before publishing.
 
 ### Parallel credentials
 
@@ -79,7 +82,7 @@ Creating drafts is a two-step, exactly-once-safe operation by design: the agent 
 
 ## X automation compliance
 
-The agent only creates drafts — it never publishes, schedules, replies, likes, or reposts. Each run produces at most three drafts with distinct text, never duplicates, and never sets a reply target unless the user explicitly asks for a reply to a specific post. See the `typefully-best-practices` skill loaded by the agent for the full compliance model.
+The agent only creates drafts — it never publishes, schedules, replies, likes, or reposts. Each run produces at most three drafts with distinct text, never duplicates, never sets a reply target unless the user explicitly asks for a reply to a specific post, and labels every X post with the "made with AI" disclosure by default (configurable via `X_HOT_TOPIC_DRAFT_MADE_WITH_AI`) since the posts are drafted by an LLM. See the `typefully-best-practices` skill loaded by the agent for the full compliance model.
 
 ## Development
 

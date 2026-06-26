@@ -40,7 +40,7 @@ const draftsSchema = z
 
 export default defineTool({
   description:
-    "Preview one or more X draft candidates without creating them in Typefully. Validates each post against the 280-character X limit, the post count per draft, and resolves the target social set from configuration. Returns the exact payload that create_x_drafts would send. The target social set and tag come from configuration and cannot be overridden via input. Always call preview_x_draft before create_x_drafts.",
+    "Preview one or more X draft candidates without creating them in Typefully. Validates each post against the 280-character X limit, the post count per draft, and resolves the target social set from configuration. Returns the exact payload that create_x_drafts would send, including the madeWithAi flag from configuration. The target social set and tag come from configuration and cannot be overridden via input. Always call preview_x_draft before create_x_drafts.",
   inputSchema: z.object({
     drafts: draftsSchema,
   }),
@@ -59,6 +59,7 @@ export default defineTool({
       dryRun: true,
       socialSetId,
       tag: hotTopicConfig.draft.tag ?? null,
+      madeWithAi: hotTopicConfig.draft.madeWithAi,
       draftCount: drafts.length,
       drafts: drafts.map((draft) => ({
         title: draft.title,
@@ -66,6 +67,7 @@ export default defineTool({
         posts: draft.posts,
         postChars: draft.posts.map((post) => post.length),
         maxChars: X_POST_MAX_CHARS,
+        madeWithAi: hotTopicConfig.draft.madeWithAi,
         scratchpad: draft.scratchpad ?? null,
       })),
     };

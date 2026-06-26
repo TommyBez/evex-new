@@ -31,6 +31,17 @@ The agent does not like, repost, follow, or reply. It only creates drafts. Do
 not add engagement-style framing ("boost this", "retweet if you agree") to draft
 text either.
 
+### Label AI-drafted posts
+
+X's content disclosure policy requires a "made with AI" label on posts generated
+by an LLM. The agent drafts posts with a model, so every X post is created with
+`made_with_ai: true` by default. `X_HOT_TOPIC_DRAFT_MADE_WITH_AI` controls the
+flag and defaults to `true`.
+
+Only disable the label (`X_HOT_TOPIC_DRAFT_MADE_WITH_AI=false`) if a human
+rewrites the posts before publishing. Disabling it for AI-drafted content
+violates X's content disclosure policy and risks account enforcement.
+
 ### Respect rate limits
 
 The Typefully API rate-limits draft creation per user and per social set. One
@@ -42,14 +53,17 @@ the user retry on a later run.
 
 When you cannot satisfy every rule, fix in this order:
 
-1. Duplicate content across the three drafts in the same run.
-2. Unsolicited reply target on a draft.
-3. Hashtag stuffing or trending manipulation.
-4. Engagement-bait framing in the post text.
-5. Retrying a failed create in the same step.
+1. Missing "made with AI" label on AI-drafted posts (policy violation, account
+   enforcement risk).
+2. Duplicate content across the three drafts in the same run.
+3. Unsolicited reply target on a draft.
+4. Hashtag stuffing or trending manipulation.
+5. Engagement-bait framing in the post text.
+6. Retrying a failed create in the same step.
 
 ## Authoring checklist
 
+- [ ] `X_HOT_TOPIC_DRAFT_MADE_WITH_AI` is `true` (default) unless a human rewrites the posts before publishing
 - [ ] Each of the three draft candidates has distinct text and a distinct angle
 - [ ] No draft sets a reply target unless the user explicitly asked for a reply
 - [ ] No hashtag stuffing, no engagement bait, no trending manipulation

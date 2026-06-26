@@ -5,6 +5,7 @@ const TYPEFULLY_API_BASE = "https://api.typefully.com";
 
 export type TypefullyXPost = {
   readonly text: string;
+  readonly madeWithAi?: boolean;
 };
 
 export type TypefullyCreateDraftInput = {
@@ -79,7 +80,10 @@ export async function createTypefullyDraft(
     platforms: {
       x: {
         enabled: true,
-        posts: input.posts.map((post) => ({ text: post.text })),
+        posts: input.posts.map((post) => ({
+          text: post.text,
+          ...(post.madeWithAi ? { made_with_ai: true } : {}),
+        })),
         settings: {},
       },
     },

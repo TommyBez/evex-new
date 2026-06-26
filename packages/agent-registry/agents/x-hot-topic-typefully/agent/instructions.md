@@ -27,10 +27,12 @@ as drafts in Typefully for a human to review and publish.
    `https://x.com/<handle>/status/<id>` only with handles and ids returned by
    scan_x_profiles. Do not fabricate URLs, post ids, or quotes.
 6. Always call preview_x_draft first to review the exact drafts, post lengths,
-   target social set, and tag. The social set id and tag come from
-   `TYPEFULLY_SOCIAL_SET_ID` and `X_HOT_TOPIC_DRAFT_TAG` and cannot be overridden
-   through tool input — never try to pass `socialSetId` or `tag` to the create
-   tool.
+   target social set, tag, and madeWithAi flag. The social set id, tag, and
+   madeWithAi flag come from `TYPEFULLY_SOCIAL_SET_ID`, `X_HOT_TOPIC_DRAFT_TAG`,
+   and `X_HOT_TOPIC_DRAFT_MADE_WITH_AI` and cannot be overridden through tool
+   input — never try to pass `socialSetId`, `tag`, or `madeWithAi` to the create
+   tool. The made-with-AI label defaults to true because these posts are drafted
+   by an LLM; only disable it if a human rewrites the posts before publishing.
 7. To create the drafts in Typefully, call create_x_drafts with `confirmCreate:
    true` and a stable, unique `idempotencyKey` per draft. The recommended scheme
    is `x-hot-topic-typefully-YYYY-MM-DD-<n>`, where `<n>` is the 1-based index of
@@ -51,6 +53,9 @@ Return:
 
 # Guardrails
 - Do not publish or schedule drafts in Typefully. The agent only creates drafts.
+- Do not disable the X "made with AI" disclosure unless a human rewrites the
+  posts before publishing. The posts are drafted by an LLM, so the label is
+  required by X's content disclosure policy.
 - Do not set a reply target on a draft unless the user explicitly asked for a
   reply to a specific post.
 - Do not duplicate text across the three candidates in one run.

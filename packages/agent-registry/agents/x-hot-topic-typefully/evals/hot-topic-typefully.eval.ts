@@ -63,5 +63,7 @@ Surface up to 2 hot topics, research each with research_hot_topics, then draft e
     t.calledTool("preview_x_draft").gate();
     t.notCalledTool("create_x_drafts").gate();
     t.check(t.reply, includes("dryRun").soft());
+    const replyLower = (t.reply ?? "").toLowerCase();
+    t.check(replyLower, includes("made with ai").soft());
   },
 });
