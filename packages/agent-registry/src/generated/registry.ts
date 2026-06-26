@@ -95,162 +95,6 @@ export const generatedRegistry = {
       ]
     },
     {
-      "name": "github-release-scout",
-      "type": "registry:item",
-      "title": "GitHub Release Scout",
-      "description": "Connects to GitHub, gathers recently merged pull requests, and prepares release notes that preserve traceability to PR numbers, labels, and rollout risk.",
-      "author": "TommyBez",
-      "categories": [
-        "devops"
-      ],
-      "dependencies": [
-        "eve@^0.11.4",
-        "@octokit/rest@^22.0.1",
-        "zod@4.3.6"
-      ],
-      "meta": {
-        "slug": "github-release-scout",
-        "category": "devops",
-        "createdAt": "2026-06-20T00:00:00.000Z",
-        "updatedAt": "2026-06-20T00:00:00.000Z"
-      },
-      "files": [
-        {
-          "path": "agent/agent.ts",
-          "type": "registry:file",
-          "target": "~/agent/agent.ts"
-        },
-        {
-          "path": "agent/instructions.md",
-          "type": "registry:file",
-          "target": "~/agent/instructions.md"
-        },
-        {
-          "path": "agent/tools/collect_merged_prs.ts",
-          "type": "registry:file",
-          "target": "~/agent/tools/collect_merged_prs.ts"
-        },
-        {
-          "path": "README.md",
-          "type": "registry:file",
-          "target": "~/agent/README.md"
-        },
-        {
-          "path": ".env.example",
-          "type": "registry:file",
-          "target": "~/.env.example"
-        }
-      ]
-    },
-    {
-      "name": "incident-commander",
-      "type": "registry:item",
-      "title": "Incident Commander",
-      "description": "Designed for the first thirty minutes of an outage. It builds a factual timeline, tracks action items, and drafts stakeholder updates without blurring facts and assumptions.",
-      "author": "TommyBez",
-      "categories": [
-        "devops"
-      ],
-      "dependencies": [
-        "eve@^0.11.4",
-        "date-fns@^4.4.0",
-        "zod@4.3.6"
-      ],
-      "meta": {
-        "slug": "incident-commander",
-        "category": "devops",
-        "createdAt": "2026-06-20T00:00:00.000Z",
-        "updatedAt": "2026-06-20T00:00:00.000Z"
-      },
-      "files": [
-        {
-          "path": "agent/agent.ts",
-          "type": "registry:file",
-          "target": "~/agent/agent.ts"
-        },
-        {
-          "path": "agent/instructions.md",
-          "type": "registry:file",
-          "target": "~/agent/instructions.md"
-        },
-        {
-          "path": "agent/skills/incident-comms/SKILL.md",
-          "type": "registry:file",
-          "target": "~/agent/skills/incident-comms/SKILL.md"
-        },
-        {
-          "path": "agent/skills/incident-comms/references/severity-matrix.md",
-          "type": "registry:file",
-          "target": "~/agent/skills/incident-comms/references/severity-matrix.md"
-        },
-        {
-          "path": "agent/skills/incident-comms/references/update-style.md",
-          "type": "registry:file",
-          "target": "~/agent/skills/incident-comms/references/update-style.md"
-        },
-        {
-          "path": "agent/subagents/mitigation_coordinator/agent.ts",
-          "type": "registry:file",
-          "target": "~/agent/subagents/mitigation_coordinator/agent.ts"
-        },
-        {
-          "path": "agent/subagents/mitigation_coordinator/instructions.md",
-          "type": "registry:file",
-          "target": "~/agent/subagents/mitigation_coordinator/instructions.md"
-        },
-        {
-          "path": "agent/subagents/mitigation_coordinator/tools/triage_actions.ts",
-          "type": "registry:file",
-          "target": "~/agent/subagents/mitigation_coordinator/tools/triage_actions.ts"
-        },
-        {
-          "path": "agent/subagents/status_writer/agent.ts",
-          "type": "registry:file",
-          "target": "~/agent/subagents/status_writer/agent.ts"
-        },
-        {
-          "path": "agent/subagents/status_writer/instructions.md",
-          "type": "registry:file",
-          "target": "~/agent/subagents/status_writer/instructions.md"
-        },
-        {
-          "path": "agent/subagents/status_writer/tools/format_update.ts",
-          "type": "registry:file",
-          "target": "~/agent/subagents/status_writer/tools/format_update.ts"
-        },
-        {
-          "path": "agent/subagents/timeline_builder/agent.ts",
-          "type": "registry:file",
-          "target": "~/agent/subagents/timeline_builder/agent.ts"
-        },
-        {
-          "path": "agent/subagents/timeline_builder/instructions.md",
-          "type": "registry:file",
-          "target": "~/agent/subagents/timeline_builder/instructions.md"
-        },
-        {
-          "path": "agent/subagents/timeline_builder/tools/find_gaps.ts",
-          "type": "registry:file",
-          "target": "~/agent/subagents/timeline_builder/tools/find_gaps.ts"
-        },
-        {
-          "path": "agent/tools/build_timeline.ts",
-          "type": "registry:file",
-          "target": "~/agent/tools/build_timeline.ts"
-        },
-        {
-          "path": "agent/tools/track_actions.ts",
-          "type": "registry:file",
-          "target": "~/agent/tools/track_actions.ts"
-        },
-        {
-          "path": "README.md",
-          "type": "registry:file",
-          "target": "~/agent/README.md"
-        }
-      ]
-    },
-    {
       "name": "linear-operations-agent",
       "type": "registry:item",
       "title": "Linear Operations Agent",
@@ -464,60 +308,12 @@ export const generatedRegistry = {
       ]
     },
     {
-      "name": "resend-lifecycle-mailer",
-      "type": "registry:item",
-      "title": "Resend Lifecycle Mailer",
-      "description": "Builds event-driven lifecycle emails, previews exact recipients and HTML, and only sends through Resend when dry-run mode is disabled.",
-      "author": "TommyBez",
-      "categories": [
-        "support"
-      ],
-      "dependencies": [
-        "eve@^0.11.4",
-        "resend@^6.14.0",
-        "zod@4.3.6"
-      ],
-      "meta": {
-        "slug": "resend-lifecycle-mailer",
-        "category": "support",
-        "createdAt": "2026-06-20T00:00:00.000Z",
-        "updatedAt": "2026-06-20T00:00:00.000Z"
-      },
-      "files": [
-        {
-          "path": "agent/agent.ts",
-          "type": "registry:file",
-          "target": "~/agent/agent.ts"
-        },
-        {
-          "path": "agent/instructions.md",
-          "type": "registry:file",
-          "target": "~/agent/instructions.md"
-        },
-        {
-          "path": "agent/tools/send_lifecycle_email.ts",
-          "type": "registry:file",
-          "target": "~/agent/tools/send_lifecycle_email.ts"
-        },
-        {
-          "path": "README.md",
-          "type": "registry:file",
-          "target": "~/agent/README.md"
-        },
-        {
-          "path": ".env.example",
-          "type": "registry:file",
-          "target": "~/.env.example"
-        }
-      ]
-    },
-    {
       "name": "x-draft-assistant",
       "type": "registry:item",
       "title": "X Draft Assistant",
-      "description": "A scheduled Eve agent that scans a configured set of X (Twitter) profiles every day, surfaces hot topics from their recent posts, researches each topic with the Parallel web search API, and creates three draft candidates for X in Typefully so a human can review and publish them.",
+      "description": "A scheduled Eve agent that scans a configured set of X (Twitter) profiles every day, surfaces hot topics from their recent posts, researches each topic with the [Parallel](https://parallel.ai/) web search API, and creates **three draft candidates** for X in [Typefully](https://typefully.com) so a human can review and publish them.",
       "categories": [
-        "research"
+        "general"
       ],
       "dependencies": [
         "eve@^0.15.1",
@@ -526,9 +322,9 @@ export const generatedRegistry = {
       ],
       "meta": {
         "slug": "x-draft-assistant",
-        "category": "research",
-        "createdAt": "2026-06-26T15:22:15.793Z",
-        "updatedAt": "2026-06-26T15:40:00.000Z"
+        "category": "general",
+        "createdAt": "2026-06-26T16:19:57.402Z",
+        "updatedAt": "2026-06-26T16:19:57.402Z"
       },
       "author": "TommyBez",
       "files": [
@@ -558,11 +354,6 @@ export const generatedRegistry = {
           "target": "~/agent/schedules/daily-x-drafts.ts"
         },
         {
-          "path": "agent/skills/typefully-best-practices/SKILL.md",
-          "type": "registry:file",
-          "target": "~/agent/skills/typefully-best-practices/SKILL.md"
-        },
-        {
           "path": "agent/skills/typefully-best-practices/references/exactly-once.md",
           "type": "registry:file",
           "target": "~/agent/skills/typefully-best-practices/references/exactly-once.md"
@@ -571,6 +362,11 @@ export const generatedRegistry = {
           "path": "agent/skills/typefully-best-practices/references/x-automation.md",
           "type": "registry:file",
           "target": "~/agent/skills/typefully-best-practices/references/x-automation.md"
+        },
+        {
+          "path": "agent/skills/typefully-best-practices/SKILL.md",
+          "type": "registry:file",
+          "target": "~/agent/skills/typefully-best-practices/SKILL.md"
         },
         {
           "path": "agent/tools/create_x_drafts.ts",
@@ -593,24 +389,24 @@ export const generatedRegistry = {
           "target": "~/agent/tools/scan_x_profiles.ts"
         },
         {
-          "path": "evals/evals.config.ts",
-          "type": "registry:file",
-          "target": "~/evals/evals.config.ts"
-        },
-        {
-          "path": "evals/x-draft-assistant.eval.ts",
-          "type": "registry:file",
-          "target": "~/evals/x-draft-assistant.eval.ts"
-        },
-        {
           "path": "evals/create-confirmation.eval.ts",
           "type": "registry:file",
           "target": "~/evals/create-confirmation.eval.ts"
         },
         {
+          "path": "evals/evals.config.ts",
+          "type": "registry:file",
+          "target": "~/evals/evals.config.ts"
+        },
+        {
           "path": "evals/missing-config-does-not-create.eval.ts",
           "type": "registry:file",
           "target": "~/evals/missing-config-does-not-create.eval.ts"
+        },
+        {
+          "path": "evals/x-draft-assistant.eval.ts",
+          "type": "registry:file",
+          "target": "~/evals/x-draft-assistant.eval.ts"
         },
         {
           "path": "README.md",
@@ -837,186 +633,6 @@ export const generatedRegistryItems = {
         "type": "registry:file",
         "target": "~/.env.example",
         "content": "GITHUB_APP_ID=\nGITHUB_APP_PRIVATE_KEY=\nGITHUB_WEBHOOK_SECRET=\nGITHUB_APP_SLUG=code-reviewer\n\n# Vercel Redis/Upstash Marketplace REST credentials.\nKV_REST_API_URL=\nKV_REST_API_TOKEN=\n\nCODE_REVIEWER_RATE_LIMIT_ENABLED=true\nCODE_REVIEWER_RATE_LIMIT_PREFIX=evex:code-reviewer\nCODE_REVIEWER_PR_COOLDOWN_SECONDS=900\nCODE_REVIEWER_USER_PR_COOLDOWN_SECONDS=1800\nCODE_REVIEWER_PRIVATE_REPO_DAILY_LIMIT=25\nCODE_REVIEWER_PUBLIC_REPO_DAILY_LIMIT=10\nCODE_REVIEWER_COOLDOWN_REPLY=true\nCODE_REVIEWER_COOLDOWN_REPLY_SECONDS=900\nCODE_REVIEWER_RATE_LIMIT_FAILURE_MODE=public_closed\n"
-      }
-    ]
-  },
-  "github-release-scout": {
-    "$schema": "https://ui.shadcn.com/schema/registry.json",
-    "name": "github-release-scout",
-    "type": "registry:item",
-    "title": "GitHub Release Scout",
-    "description": "Connects to GitHub, gathers recently merged pull requests, and prepares release notes that preserve traceability to PR numbers, labels, and rollout risk.",
-    "author": "TommyBez",
-    "categories": [
-      "devops"
-    ],
-    "dependencies": [
-      "eve@^0.11.4",
-      "@octokit/rest@^22.0.1",
-      "zod@4.3.6"
-    ],
-    "meta": {
-      "slug": "github-release-scout",
-      "category": "devops",
-      "createdAt": "2026-06-20T00:00:00.000Z",
-      "updatedAt": "2026-06-20T00:00:00.000Z"
-    },
-    "files": [
-      {
-        "path": "agent/agent.ts",
-        "type": "registry:file",
-        "target": "~/agent/agent.ts",
-        "content": "import { defineAgent } from \"eve\";\n\nexport default defineAgent({\n  model: \"anthropic/claude-sonnet-4.6\",\n});\n"
-      },
-      {
-        "path": "agent/instructions.md",
-        "type": "registry:file",
-        "target": "~/agent/instructions.md",
-        "content": "# Mission\nInspect GitHub pull requests and releases to prepare release-risk notes.\n\n# Workflow\n1. Use collect_merged_prs to gather recently merged pull requests.\n2. Identify migrations, auth changes, dependency changes, and customer-visible work.\n3. Group risky changes separately from routine maintenance.\n4. Draft release notes that preserve traceability to pull request numbers.\n\n# Output contract\nProvide release themes, high-risk changes, missing validation, and rollout callouts.\n"
-      },
-      {
-        "path": "agent/tools/collect_merged_prs.ts",
-        "type": "registry:file",
-        "target": "~/agent/tools/collect_merged_prs.ts",
-        "content": "import { Octokit } from \"@octokit/rest\";\nimport { defineTool } from \"eve/tools\";\nimport { z } from \"zod\";\n\nexport default defineTool({\n  description: \"Fetch recently merged GitHub pull requests for release analysis.\",\n  inputSchema: z.object({\n    owner: z.string().min(1),\n    repo: z.string().min(1),\n    limit: z.number().int().min(1).max(100).default(30),\n    since: z.string().optional(),\n  }),\n  async execute({ owner, repo, limit, since }) {\n    const auth = process.env.GITHUB_TOKEN;\n    if (!auth) {\n      return { authRequired: true, missingEnv: \"GITHUB_TOKEN\", owner, repo };\n    }\n\n    const octokit = new Octokit({ auth });\n    const response = await octokit.pulls.list({\n      owner,\n      repo,\n      state: \"closed\",\n      sort: \"updated\",\n      direction: \"desc\",\n      per_page: limit,\n    });\n\n    const sinceTime = since ? new Date(since).getTime() : 0;\n    const merged = response.data\n      .filter((pull) => pull.merged_at)\n      .filter((pull) => !sinceTime || new Date(pull.merged_at || 0).getTime() >= sinceTime)\n      .map((pull) => ({\n        number: pull.number,\n        title: pull.title,\n        author: pull.user?.login,\n        mergedAt: pull.merged_at,\n        url: pull.html_url,\n        labels: pull.labels.map((label) => label.name),\n      }));\n\n    return { owner, repo, mergedCount: merged.length, merged };\n  },\n});\n"
-      },
-      {
-        "path": "README.md",
-        "type": "registry:file",
-        "target": "~/agent/README.md",
-        "content": "# GitHub Release Scout\n\nConnects to GitHub, gathers recently merged pull requests, and prepares release notes that preserve traceability to PR numbers, labels, and rollout risk.\n\n## Development\n\n```bash\npnpm install\npnpm dev\n```\n\nRun `pnpm info` to inspect the Eve surface and `pnpm build` before opening a PR.\n"
-      },
-      {
-        "path": ".env.example",
-        "type": "registry:file",
-        "target": "~/.env.example",
-        "content": "GITHUB_TOKEN=\n"
-      }
-    ]
-  },
-  "incident-commander": {
-    "$schema": "https://ui.shadcn.com/schema/registry.json",
-    "name": "incident-commander",
-    "type": "registry:item",
-    "title": "Incident Commander",
-    "description": "Designed for the first thirty minutes of an outage. It builds a factual timeline, tracks action items, and drafts stakeholder updates without blurring facts and assumptions.",
-    "author": "TommyBez",
-    "categories": [
-      "devops"
-    ],
-    "dependencies": [
-      "eve@^0.11.4",
-      "date-fns@^4.4.0",
-      "zod@4.3.6"
-    ],
-    "meta": {
-      "slug": "incident-commander",
-      "category": "devops",
-      "createdAt": "2026-06-20T00:00:00.000Z",
-      "updatedAt": "2026-06-20T00:00:00.000Z"
-    },
-    "files": [
-      {
-        "path": "agent/agent.ts",
-        "type": "registry:file",
-        "target": "~/agent/agent.ts",
-        "content": "import { defineAgent } from \"eve\";\n\nexport default defineAgent({\n  model: \"openai/gpt-5.4\",\n});\n"
-      },
-      {
-        "path": "agent/instructions.md",
-        "type": "registry:file",
-        "target": "~/agent/instructions.md",
-        "content": "# Mission\nYou are the first operator in the room during a production incident.\n\n# Priorities\n1. Stabilize customer impact.\n2. Build a trustworthy timeline.\n3. Assign clear next actions with owners and deadlines.\n4. Separate facts from assumptions in every update.\n\n# Workflow\n- Use build_timeline to order raw signals before drawing conclusions.\n- Use track_actions whenever there are more than three workstreams.\n- Delegate to timeline_builder when the event sequence is messy or incomplete.\n- Delegate to status_writer when stakeholders need a clean update drafted quickly.\n- Delegate to mitigation_coordinator when the action list is broad and needs tighter ownership.\n- Load the incident-comms skill before drafting an executive or customer-facing update.\n- Name the blast radius, likely failure domain, and safest containment option.\n- Escalate uncertainty early when data is missing or contradictory.\n\n# Output contract\nProvide:\n- current severity and confidence\n- impact summary in customer terms\n- a timeline of confirmed events\n- the next three actions with owners\n- the message you would send to stakeholders right now\n"
-      },
-      {
-        "path": "agent/skills/incident-comms/SKILL.md",
-        "type": "registry:file",
-        "target": "~/agent/skills/incident-comms/SKILL.md",
-        "content": "---\ndescription: Use when the incident needs a concise stakeholder or executive update.\n---\n\nWrite updates in four blocks:\n- current impact\n- what is confirmed\n- what is being done now\n- when the next update will arrive\n\nAvoid root-cause claims that are still speculative.\n"
-      },
-      {
-        "path": "agent/skills/incident-comms/references/severity-matrix.md",
-        "type": "registry:file",
-        "target": "~/agent/skills/incident-comms/references/severity-matrix.md",
-        "content": "# Severity guide\n- SEV1: widespread outage, data corruption, or security event in progress\n- SEV2: critical workflow degraded for a meaningful customer segment\n- SEV3: isolated or recoverable issue with a workaround\n\n# Upgrade the severity when\n- impact is spreading faster than mitigation\n- ownership is unclear\n- there is any chance of irreversible data loss\n\n# Downgrade only after\n- impact has stopped growing\n- mitigation is holding\n- follow-up owners are assigned\n"
-      },
-      {
-        "path": "agent/skills/incident-comms/references/update-style.md",
-        "type": "registry:file",
-        "target": "~/agent/skills/incident-comms/references/update-style.md",
-        "content": "# Update style\n- lead with customer impact\n- be explicit about uncertainty\n- avoid implementation trivia unless it affects decisions\n- always include the next checkpoint\n"
-      },
-      {
-        "path": "agent/subagents/mitigation_coordinator/agent.ts",
-        "type": "registry:file",
-        "target": "~/agent/subagents/mitigation_coordinator/agent.ts",
-        "content": "import { defineAgent } from \"eve\";\n\nexport default defineAgent({\n  description: \"Turn incident workstreams into an ordered mitigation plan with clear owners, blockers, and escalation points.\",\n  model: \"openai/gpt-5.4\",\n});\n"
-      },
-      {
-        "path": "agent/subagents/mitigation_coordinator/instructions.md",
-        "type": "registry:file",
-        "target": "~/agent/subagents/mitigation_coordinator/instructions.md",
-        "content": "You are the workstream coordination specialist.\n\nNormalize parallel mitigation tasks into an execution plan. Make blockers visible, identify\noverloaded owners, and tell the parent what should be escalated immediately.\n"
-      },
-      {
-        "path": "agent/subagents/mitigation_coordinator/tools/triage_actions.ts",
-        "type": "registry:file",
-        "target": "~/agent/subagents/mitigation_coordinator/tools/triage_actions.ts",
-        "content": "import { defineTool } from \"eve/tools\";\nimport { z } from \"zod\";\n\nconst action = z.object({\n  summary: z.string().min(1),\n  owner: z.string().min(1),\n  blocked: z.boolean().default(false),\n  impact: z.enum([\"low\", \"medium\", \"high\"]),\n});\n\nexport default defineTool({\n  description: \"Order mitigation actions by impact and blocker state.\",\n  inputSchema: z.object({\n    actions: z.array(action).min(1),\n  }),\n  async execute({ actions }) {\n    const impactRank = { high: 3, medium: 2, low: 1 };\n\n    return {\n      prioritized: actions\n        .map((action) => ({\n          ...action,\n          score: impactRank[action.impact] * 2 - (action.blocked ? 2 : 0),\n        }))\n        .sort((left, right) => right.score - left.score),\n    };\n  },\n});\n"
-      },
-      {
-        "path": "agent/subagents/status_writer/agent.ts",
-        "type": "registry:file",
-        "target": "~/agent/subagents/status_writer/agent.ts",
-        "content": "import { defineAgent } from \"eve\";\n\nexport default defineAgent({\n  description: \"Draft high-clarity incident updates for stakeholders, executives, or customers without changing the underlying facts.\",\n  model: \"openai/gpt-5.4\",\n});\n"
-      },
-      {
-        "path": "agent/subagents/status_writer/instructions.md",
-        "type": "registry:file",
-        "target": "~/agent/subagents/status_writer/instructions.md",
-        "content": "You are the communications specialist during incidents.\n\nRewrite facts into calm, direct status updates. Keep the message safe for broad distribution,\navoid blame, and never imply the incident is resolved unless containment is confirmed.\n"
-      },
-      {
-        "path": "agent/subagents/status_writer/tools/format_update.ts",
-        "type": "registry:file",
-        "target": "~/agent/subagents/status_writer/tools/format_update.ts",
-        "content": "import { defineTool } from \"eve/tools\";\nimport { z } from \"zod\";\n\nexport default defineTool({\n  description: \"Structure a stakeholder-safe incident update.\",\n  inputSchema: z.object({\n    impact: z.string().min(1),\n    confirmed: z.array(z.string()).min(1),\n    inFlight: z.array(z.string()).min(1),\n    nextUpdateAt: z.string().min(1),\n  }),\n  async execute({ impact, confirmed, inFlight, nextUpdateAt }) {\n    return {\n      update: [\n        \"Impact: \" + impact,\n        \"Confirmed: \" + confirmed.join(\"; \"),\n        \"In progress: \" + inFlight.join(\"; \"),\n        \"Next update: \" + nextUpdateAt,\n      ].join(\"\\n\"),\n    };\n  },\n});\n"
-      },
-      {
-        "path": "agent/subagents/timeline_builder/agent.ts",
-        "type": "registry:file",
-        "target": "~/agent/subagents/timeline_builder/agent.ts",
-        "content": "import { defineAgent } from \"eve\";\n\nexport default defineAgent({\n  description: \"Reconstruct an incident timeline, highlight evidence gaps, and return only the factual sequence needed by the parent.\",\n  model: \"openai/gpt-5.4\",\n});\n"
-      },
-      {
-        "path": "agent/subagents/timeline_builder/instructions.md",
-        "type": "registry:file",
-        "target": "~/agent/subagents/timeline_builder/instructions.md",
-        "content": "You are the timeline reconstruction specialist.\n\nSeparate confirmed events from inference. Call out missing telemetry windows, contradictory\ntimestamps, and moments where the team likely lost observability.\n"
-      },
-      {
-        "path": "agent/subagents/timeline_builder/tools/find_gaps.ts",
-        "type": "registry:file",
-        "target": "~/agent/subagents/timeline_builder/tools/find_gaps.ts",
-        "content": "import { defineTool } from \"eve/tools\";\nimport { z } from \"zod\";\n\nconst eventWindow = z.object({\n  source: z.string().min(1),\n  startedAt: z.string().min(1),\n  endedAt: z.string().min(1),\n  confidence: z.enum([\"low\", \"medium\", \"high\"]).default(\"medium\"),\n});\n\nexport default defineTool({\n  description: \"Highlight weak evidence windows inside an incident timeline.\",\n  inputSchema: z.object({\n    windows: z.array(eventWindow).min(1),\n  }),\n  async execute({ windows }) {\n    return {\n      weakWindows: windows.filter((window) => window.confidence !== \"high\"),\n      sourceCount: new Set(windows.map((window) => window.source)).size,\n    };\n  },\n});\n"
-      },
-      {
-        "path": "agent/tools/build_timeline.ts",
-        "type": "registry:file",
-        "target": "~/agent/tools/build_timeline.ts",
-        "content": "import { defineTool } from \"eve/tools\";\nimport { differenceInMinutes, parseISO } from \"date-fns\";\nimport { z } from \"zod\";\n\nconst incidentEvent = z.object({\n  at: z.string().min(1),\n  source: z.string().min(1),\n  summary: z.string().min(1),\n  evidence: z.string().optional(),\n});\n\nexport default defineTool({\n  description: \"Sort incident signals into a timeline and highlight suspicious gaps.\",\n  inputSchema: z.object({\n    events: z.array(incidentEvent).min(1),\n  }),\n  async execute({ events }) {\n    const ordered = [...events].sort((left, right) => {\n      return parseISO(left.at).getTime() - parseISO(right.at).getTime();\n    });\n\n    const gaps = [];\n    for (let index = 1; index < ordered.length; index += 1) {\n      const previous = ordered[index - 1];\n      const current = ordered[index];\n      const gapMinutes = differenceInMinutes(\n        parseISO(current.at),\n        parseISO(previous.at),\n      );\n\n      if (gapMinutes >= 20) {\n        gaps.push({\n          after: previous.at,\n          before: current.at,\n          gapMinutes,\n        });\n      }\n    }\n\n    return {\n      sources: Array.from(new Set(ordered.map((event) => event.source))),\n      gaps,\n      timeline: ordered.map((event, index) => ({\n        index: index + 1,\n        ...event,\n      })),\n    };\n  },\n});\n"
-      },
-      {
-        "path": "agent/tools/track_actions.ts",
-        "type": "registry:file",
-        "target": "~/agent/tools/track_actions.ts",
-        "content": "import { defineTool } from \"eve/tools\";\nimport { z } from \"zod\";\n\nconst actionItem = z.object({\n  summary: z.string().min(1),\n  owner: z.string().default(\"unassigned\"),\n  status: z.enum([\"planned\", \"in_progress\", \"blocked\", \"done\"]),\n  dueAt: z.string().optional(),\n  blockers: z.array(z.string()).default([]),\n});\n\nexport default defineTool({\n  description: \"Summarize operational action items and reveal owner or blocker gaps.\",\n  inputSchema: z.object({\n    actions: z.array(actionItem).min(1),\n  }),\n  async execute({ actions }) {\n    const byOwner: Record<string, number> = {};\n    const blocked: string[] = [];\n    const unassigned: string[] = [];\n\n    for (const action of actions) {\n      byOwner[action.owner] = (byOwner[action.owner] ?? 0) + 1;\n      if (action.status === \"blocked\") blocked.push(action.summary);\n      if (action.owner === \"unassigned\") unassigned.push(action.summary);\n    }\n\n    return {\n      total: actions.length,\n      blocked,\n      unassigned,\n      byOwner,\n      open: actions.filter((action) => action.status !== \"done\").length,\n    };\n  },\n});\n"
-      },
-      {
-        "path": "README.md",
-        "type": "registry:file",
-        "target": "~/agent/README.md",
-        "content": "# Incident Commander\n\nDesigned for the first thirty minutes of an outage. It builds a factual timeline, tracks action items, and drafts stakeholder updates without blurring facts and assumptions.\n\n## Development\n\n```bash\npnpm install\npnpm dev\n```\n\nRun `pnpm info` to inspect the Eve surface and `pnpm build` before opening a PR.\n"
       }
     ]
   },
@@ -1268,68 +884,14 @@ export const generatedRegistryItems = {
       }
     ]
   },
-  "resend-lifecycle-mailer": {
-    "$schema": "https://ui.shadcn.com/schema/registry.json",
-    "name": "resend-lifecycle-mailer",
-    "type": "registry:item",
-    "title": "Resend Lifecycle Mailer",
-    "description": "Builds event-driven lifecycle emails, previews exact recipients and HTML, and only sends through Resend when dry-run mode is disabled.",
-    "author": "TommyBez",
-    "categories": [
-      "support"
-    ],
-    "dependencies": [
-      "eve@^0.11.4",
-      "resend@^6.14.0",
-      "zod@4.3.6"
-    ],
-    "meta": {
-      "slug": "resend-lifecycle-mailer",
-      "category": "support",
-      "createdAt": "2026-06-20T00:00:00.000Z",
-      "updatedAt": "2026-06-20T00:00:00.000Z"
-    },
-    "files": [
-      {
-        "path": "agent/agent.ts",
-        "type": "registry:file",
-        "target": "~/agent/agent.ts",
-        "content": "import { defineAgent } from \"eve\";\n\nexport default defineAgent({\n  model: \"openai/gpt-5.4-mini\",\n});\n"
-      },
-      {
-        "path": "agent/instructions.md",
-        "type": "registry:file",
-        "target": "~/agent/instructions.md",
-        "content": "# Mission\nDraft and optionally send lifecycle emails that are tied to clear product events.\n\n# Workflow\n1. Use send_lifecycle_email in dry-run mode to preview copy and recipients.\n2. Keep the subject concrete and the body tied to the user's actual state.\n3. Do not send unless a human has reviewed the exact recipients and copy.\n4. Report message IDs and failures when sending is enabled.\n\n# Output contract\nReturn the email preview, recipient count, and send status.\n"
-      },
-      {
-        "path": "agent/tools/send_lifecycle_email.ts",
-        "type": "registry:file",
-        "target": "~/agent/tools/send_lifecycle_email.ts",
-        "content": "import { Resend } from \"resend\";\nimport { defineTool } from \"eve/tools\";\nimport { z } from \"zod\";\n\nexport default defineTool({\n  description: \"Preview or send a lifecycle email through Resend.\",\n  inputSchema: z.object({\n    from: z.string().email(),\n    to: z.array(z.string().email()).min(1).max(50),\n    subject: z.string().min(1),\n    html: z.string().min(1),\n    dryRun: z.boolean().default(true),\n  }),\n  async execute({ from, to, subject, html, dryRun }) {\n    const apiKey = process.env.RESEND_API_KEY;\n    if (!apiKey) {\n      return { authRequired: true, missingEnv: \"RESEND_API_KEY\", recipients: to.length };\n    }\n\n    if (dryRun) {\n      return { dryRun: true, from, to, subject, htmlPreview: html.slice(0, 500) };\n    }\n\n    const resend = new Resend(apiKey);\n    const result = await resend.emails.send({ from, to, subject, html });\n    return { result };\n  },\n});\n"
-      },
-      {
-        "path": "README.md",
-        "type": "registry:file",
-        "target": "~/agent/README.md",
-        "content": "# Resend Lifecycle Mailer\n\nBuilds event-driven lifecycle emails, previews exact recipients and HTML, and only sends through Resend when dry-run mode is disabled.\n\n## Development\n\n```bash\npnpm install\npnpm dev\n```\n\nRun `pnpm info` to inspect the Eve surface and `pnpm build` before opening a PR.\n"
-      },
-      {
-        "path": ".env.example",
-        "type": "registry:file",
-        "target": "~/.env.example",
-        "content": "RESEND_API_KEY=\n"
-      }
-    ]
-  },
   "x-draft-assistant": {
     "$schema": "https://ui.shadcn.com/schema/registry.json",
     "name": "x-draft-assistant",
     "type": "registry:item",
     "title": "X Draft Assistant",
-    "description": "A scheduled Eve agent that scans a configured set of X (Twitter) profiles every day, surfaces hot topics from their recent posts, researches each topic with the Parallel web search API, and creates three draft candidates for X in Typefully so a human can review and publish them.",
+    "description": "A scheduled Eve agent that scans a configured set of X (Twitter) profiles every day, surfaces hot topics from their recent posts, researches each topic with the [Parallel](https://parallel.ai/) web search API, and creates **three draft candidates** for X in [Typefully](https://typefully.com) so a human can review and publish them.",
     "categories": [
-      "research"
+      "general"
     ],
     "dependencies": [
       "eve@^0.15.1",
@@ -1338,9 +900,9 @@ export const generatedRegistryItems = {
     ],
     "meta": {
       "slug": "x-draft-assistant",
-      "category": "research",
-      "createdAt": "2026-06-26T15:22:15.793Z",
-      "updatedAt": "2026-06-26T15:40:00.000Z"
+      "category": "general",
+      "createdAt": "2026-06-26T16:19:57.402Z",
+      "updatedAt": "2026-06-26T16:19:57.402Z"
     },
     "author": "TommyBez",
     "files": [
@@ -1375,12 +937,6 @@ export const generatedRegistryItems = {
         "content": "import { defineSchedule } from \"eve/schedules\";\n\nimport { hotTopicConfig } from \"../lib/hot-topic-config.js\";\n\nexport default defineSchedule({\n  cron: hotTopicConfig.dailyCron,\n  markdown: `Run the daily X draft assistant.\n\n1. Use scan_x_profiles to scan every handle configured in X_HOT_TOPIC_HANDLES, scoped to the last ${hotTopicConfig.lookbackHours} hours (X_HOT_TOPIC_LOOKBACK_HOURS). Only treat posts inside the lookback window as hot-topic candidates.\n2. Surface up to ${hotTopicConfig.maxHotTopics} hot topics from those posts.\n3. For each topic, call research_hot_topics with focused keyword queries.\n4. Draft exactly ${hotTopicConfig.draft.count} distinct X post candidates (single tweets or short threads, 280 chars per post, different angles) from the researched topics. Cite originating posts as https://x.com/<handle>/status/<id> only with handles and ids returned by scan_x_profiles.\n5. Call preview_x_draft to review the drafts, post lengths, target social set, tag, and madeWithAi flag (defaults to true because the posts are drafted by an LLM).\n6. To create the drafts in Typefully, call create_x_drafts with confirmCreate=true and a stable, unique idempotencyKey per draft. The recommended scheme is x-draft-assistant-<windowStartUtc>-<n>, where <windowStartUtc> is the windowStart value returned by scan_x_profiles (RFC3339 UTC, e.g. 2026-06-26T08:00:00Z) and <n> is the 1-based candidate index in this run. Using the lookback window start makes the key unique per run even when the schedule fires more than once a day, and stable across retries of the same run. Reuse the same key if the step is retried so a replayed create does not duplicate the draft.\n\nIf any required environment variable is missing (X_BEARER_TOKEN, PARALLEL_API_KEY, TYPEFULLY_API_KEY, TYPEFULLY_SOCIAL_SET_ID), stop and report the missing configuration. Do not invent handles, topics, sources, or draft text. Never call create_x_drafts without confirmCreate=true and a unique idempotencyKey per draft. Do not publish or schedule the drafts; the agent only creates them. Do not disable the X \"made with AI\" disclosure (X_HOT_TOPIC_DRAFT_MADE_WITH_AI) unless a human rewrites the posts before publishing.`,\n});\n"
       },
       {
-        "path": "agent/skills/typefully-best-practices/SKILL.md",
-        "type": "registry:file",
-        "target": "~/agent/skills/typefully-best-practices/SKILL.md",
-        "content": "---\ndescription: Use when drafting or creating X (Twitter) posts through Typefully \u2014 X automation compliance, character limits, and exactly-once draft creation.\n---\n\nGuidance for drafting X posts and creating Typefully drafts without violating X's\nautomation rules or producing duplicate drafts. Apply these rules whenever an X\ndraft is being authored or created through Typefully.\n\n## X automation compliance\n\nX's automation rules apply to anything posted through the Typefully API on behalf\nof an account. The agent only creates drafts; it never publishes or schedules\nthem, but the same rules govern the content that lands in the queue.\n\n- **No duplicate content across drafts in the same run.** Each of the three draft\n  candidates must take a distinct angle on the same hot topic. Reusing the same\n  text across drafts risks an X duplicate-content flag.\n- **No unsolicited automated replies.** Never set a reply target on a draft\n  unless the user explicitly asked for a reply to a specific post. The agent\n  creates top-level posts only.\n- **No trending manipulation.** Do not stuff hashtags or pile onto a trending\n  topic to game visibility. The drafts react to a real signal from watched\n  profiles, not to the trending tab.\n- **No fake engagement.** The agent does not like, repost, follow, or reply. It\n  only creates drafts.\n- **Label AI-drafted posts.** X's content disclosure policy requires a \"made\n  with AI\" label on posts generated by an LLM. The agent drafts posts with a\n  model, so `X_HOT_TOPIC_DRAFT_MADE_WITH_AI` defaults to `true` and\n  `create_x_drafts` sets `made_with_ai: true` on every X post. Only disable the\n  label if a human rewrites the posts before publishing.\n- **Respect rate limits.** The Typefully API rate-limits draft creation per user\n  and per social set. One run produces at most three drafts; do not loop create\n  calls to retry a failed draft in the same step.\n\nSee [x-automation](./references/x-automation.md) for the full compliance model.\n\n## Exactly-once draft creation\n\nThe Typefully v2 API does not accept a server-side idempotency key, so a replayed\nEve step would normally create a second draft. The agent defends against that\nwith a per-draft `idempotencyKey` plus an in-process cache of successful\ncreates:\n\n- Derive each key from the run, not from `Date.now()` or a fresh random value.\n  A stable scheme is `x-draft-assistant-<windowStartUtc>-<n>`, where\n  `<windowStartUtc>` is the `windowStart` value returned by `scan_x_profiles`\n  (RFC3339 UTC start of this run's lookback window) and `n` is the 1-based index\n  of the draft candidate within the run. Anchoring to the lookback window start\n  makes the key unique per run even when the schedule fires more than once a\n  day, and stable across retries of the same run.\n- Each draft in a single `create_x_drafts` call must have a unique key. Duplicate\n  keys inside one call are rejected before any POST is issued.\n- A replayed step with the same key returns the recorded response instead of\n  issuing a second POST. Failures are not cached, so the same key can be retried.\n- `confirmCreate` must be `true` before any draft is created. Treat it as a\n  guardrail: always call `preview_x_draft` first, then create with the flag set.\n\nSee [exactly-once](./references/exactly-once.md) for the idempotency and retry\nmodel in detail.\n\n## Drafting for X\n\nX posts are short, single-purpose, and easy to read in a fast scroll.\n\n- Each post is at most 280 characters. `preview_x_draft` validates this; longer\n  posts are rejected before any network call.\n- A single-post draft is a tweet. A multi-post draft is a thread: order posts so\n  the thread reads top-to-bottom, lead with the takeaway, and let later posts add\n  evidence or nuance.\n- Keep drafts distinct: the three candidates should differ in angle, length, or\n  tone \u2014 not just rearranged words.\n- Cite the originating X post when its content anchors the draft. Link as\n  `https://x.com/<handle>/status/<id>` and only use handles and ids returned by\n  `scan_x_profiles`.\n- Do not fabricate URLs, post ids, or quotes. Every citation must come from a\n  tool result.\n- Every X post is labeled \"made with AI\" on create, because the posts are drafted\n  by an LLM. Do not disable the label unless a human rewrites the posts before\n  publishing.\n\n## Output discipline\n\nThe agent creates drafts only. It never schedules, publishes, or shares them.\nLeave the drafts in `draft` status for a human to review in Typefully.\n"
-      },
-      {
         "path": "agent/skills/typefully-best-practices/references/exactly-once.md",
         "type": "registry:file",
         "target": "~/agent/skills/typefully-best-practices/references/exactly-once.md",
@@ -1391,6 +947,12 @@ export const generatedRegistryItems = {
         "type": "registry:file",
         "target": "~/agent/skills/typefully-best-practices/references/x-automation.md",
         "content": "# X Automation Compliance\n\nX's automation rules govern anything posted through the Typefully API on behalf of\nan account. The agent only creates drafts \u2014 it never publishes or schedules \u2014 but\nthe same rules govern the content that lands in the queue.\n\n## Rules\n\n### No duplicate content across drafts in the same run\n\nEach of the three draft candidates must take a distinct angle on the same hot\ntopic. Reusing the same text across drafts risks an X duplicate-content flag and\nreduces the value of offering the user three options.\n\n### No unsolicited automated replies\n\nNever set a reply target on a draft unless the user explicitly asked for a reply\nto a specific post. The agent creates top-level posts only. Replying to\nunrelated accounts is one of the fastest ways to get an account flagged.\n\n### No trending manipulation\n\nDo not stuff hashtags or pile onto a trending topic to game visibility. The\ndrafts react to a real signal from watched profiles, not to the trending tab. If\na topic is genuinely trending, write about it for its substance, not for the\ntrend.\n\n### No fake engagement\n\nThe agent does not like, repost, follow, or reply. It only creates drafts. Do\nnot add engagement-style framing (\"boost this\", \"retweet if you agree\") to draft\ntext either.\n\n### Label AI-drafted posts\n\nX's content disclosure policy requires a \"made with AI\" label on posts generated\nby an LLM. The agent drafts posts with a model, so every X post is created with\n`made_with_ai: true` by default. `X_HOT_TOPIC_DRAFT_MADE_WITH_AI` controls the\nflag and defaults to `true`.\n\nOnly disable the label (`X_HOT_TOPIC_DRAFT_MADE_WITH_AI=false`) if a human\nrewrites the posts before publishing. Disabling it for AI-drafted content\nviolates X's content disclosure policy and risks account enforcement.\n\n### Respect rate limits\n\nThe Typefully API rate-limits draft creation per user and per social set. One\nrun produces at most three drafts; do not loop create calls to retry a failed\ndraft in the same step. If a draft fails, surface the error in the output and let\nthe user retry on a later run.\n\n## Priority order\n\nWhen you cannot satisfy every rule, fix in this order:\n\n1. Missing \"made with AI\" label on AI-drafted posts (policy violation, account\n   enforcement risk).\n2. Duplicate content across the three drafts in the same run.\n3. Unsolicited reply target on a draft.\n4. Hashtag stuffing or trending manipulation.\n5. Engagement-bait framing in the post text.\n6. Retrying a failed create in the same step.\n\n## Authoring checklist\n\n- [ ] `X_HOT_TOPIC_DRAFT_MADE_WITH_AI` is `true` (default) unless a human rewrites the posts before publishing\n- [ ] Each of the three draft candidates has distinct text and a distinct angle\n- [ ] No draft sets a reply target unless the user explicitly asked for a reply\n- [ ] No hashtag stuffing, no engagement bait, no trending manipulation\n- [ ] No retry loop on a failed `create_x_drafts` call inside one step\n\n## Related\n\n- [Exactly Once](./exactly-once.md) \u2014 idempotent draft creation and replay safety\n"
+      },
+      {
+        "path": "agent/skills/typefully-best-practices/SKILL.md",
+        "type": "registry:file",
+        "target": "~/agent/skills/typefully-best-practices/SKILL.md",
+        "content": "---\ndescription: Use when drafting or creating X (Twitter) posts through Typefully \u2014 X automation compliance, character limits, and exactly-once draft creation.\n---\n\nGuidance for drafting X posts and creating Typefully drafts without violating X's\nautomation rules or producing duplicate drafts. Apply these rules whenever an X\ndraft is being authored or created through Typefully.\n\n## X automation compliance\n\nX's automation rules apply to anything posted through the Typefully API on behalf\nof an account. The agent only creates drafts; it never publishes or schedules\nthem, but the same rules govern the content that lands in the queue.\n\n- **No duplicate content across drafts in the same run.** Each of the three draft\n  candidates must take a distinct angle on the same hot topic. Reusing the same\n  text across drafts risks an X duplicate-content flag.\n- **No unsolicited automated replies.** Never set a reply target on a draft\n  unless the user explicitly asked for a reply to a specific post. The agent\n  creates top-level posts only.\n- **No trending manipulation.** Do not stuff hashtags or pile onto a trending\n  topic to game visibility. The drafts react to a real signal from watched\n  profiles, not to the trending tab.\n- **No fake engagement.** The agent does not like, repost, follow, or reply. It\n  only creates drafts.\n- **Label AI-drafted posts.** X's content disclosure policy requires a \"made\n  with AI\" label on posts generated by an LLM. The agent drafts posts with a\n  model, so `X_HOT_TOPIC_DRAFT_MADE_WITH_AI` defaults to `true` and\n  `create_x_drafts` sets `made_with_ai: true` on every X post. Only disable the\n  label if a human rewrites the posts before publishing.\n- **Respect rate limits.** The Typefully API rate-limits draft creation per user\n  and per social set. One run produces at most three drafts; do not loop create\n  calls to retry a failed draft in the same step.\n\nSee [x-automation](./references/x-automation.md) for the full compliance model.\n\n## Exactly-once draft creation\n\nThe Typefully v2 API does not accept a server-side idempotency key, so a replayed\nEve step would normally create a second draft. The agent defends against that\nwith a per-draft `idempotencyKey` plus an in-process cache of successful\ncreates:\n\n- Derive each key from the run, not from `Date.now()` or a fresh random value.\n  A stable scheme is `x-draft-assistant-<windowStartUtc>-<n>`, where\n  `<windowStartUtc>` is the `windowStart` value returned by `scan_x_profiles`\n  (RFC3339 UTC start of this run's lookback window) and `n` is the 1-based index\n  of the draft candidate within the run. Anchoring to the lookback window start\n  makes the key unique per run even when the schedule fires more than once a\n  day, and stable across retries of the same run.\n- Each draft in a single `create_x_drafts` call must have a unique key. Duplicate\n  keys inside one call are rejected before any POST is issued.\n- A replayed step with the same key returns the recorded response instead of\n  issuing a second POST. Failures are not cached, so the same key can be retried.\n- `confirmCreate` must be `true` before any draft is created. Treat it as a\n  guardrail: always call `preview_x_draft` first, then create with the flag set.\n\nSee [exactly-once](./references/exactly-once.md) for the idempotency and retry\nmodel in detail.\n\n## Drafting for X\n\nX posts are short, single-purpose, and easy to read in a fast scroll.\n\n- Each post is at most 280 characters. `preview_x_draft` validates this; longer\n  posts are rejected before any network call.\n- A single-post draft is a tweet. A multi-post draft is a thread: order posts so\n  the thread reads top-to-bottom, lead with the takeaway, and let later posts add\n  evidence or nuance.\n- Keep drafts distinct: the three candidates should differ in angle, length, or\n  tone \u2014 not just rearranged words.\n- Cite the originating X post when its content anchors the draft. Link as\n  `https://x.com/<handle>/status/<id>` and only use handles and ids returned by\n  `scan_x_profiles`.\n- Do not fabricate URLs, post ids, or quotes. Every citation must come from a\n  tool result.\n- Every X post is labeled \"made with AI\" on create, because the posts are drafted\n  by an LLM. Do not disable the label unless a human rewrites the posts before\n  publishing.\n\n## Output discipline\n\nThe agent creates drafts only. It never schedules, publishes, or shares them.\nLeave the drafts in `draft` status for a human to review in Typefully.\n"
       },
       {
         "path": "agent/tools/create_x_drafts.ts",
@@ -1417,28 +979,28 @@ export const generatedRegistryItems = {
         "content": "import { defineTool } from \"eve/tools\";\nimport { z } from \"zod\";\n\nimport { getLookbackStartTime, hotTopicConfig } from \"../lib/hot-topic-config.js\";\n\nconst X_API_BASE = \"https://api.x.com/2\";\nconst TWEET_FIELDS = \"created_at,public_metrics,entities,lang\";\nconst EXCLUDE = \"retweets\";\nconst MIN_MAX_RESULTS = 5;\nconst MAX_MAX_RESULTS = 100;\n\ntype XPublicMetrics = {\n  readonly impression_count?: number;\n  readonly like_count?: number;\n  readonly reply_count?: number;\n  readonly retweet_count?: number;\n  readonly quote_count?: number;\n  readonly bookmark_count?: number;\n};\n\ntype XTweet = {\n  readonly id: string;\n  readonly text: string;\n  readonly created_at?: string;\n  readonly lang?: string;\n  readonly public_metrics?: XPublicMetrics;\n};\n\ntype XUserLookupResponse = {\n  readonly data?: { readonly id: string; readonly name: string; readonly username: string };\n};\n\ntype XTweetsResponse = {\n  readonly data?: readonly XTweet[];\n  readonly meta?: { readonly result_count?: number; readonly newest_id?: string };\n};\n\nconst userIdCache = new Map<string, string>();\n\nasync function xFetch<T>(path: string, searchParams?: URLSearchParams): Promise<T> {\n  const bearer = process.env.X_BEARER_TOKEN;\n  if (!bearer) {\n    throw new Error(\"Missing X_BEARER_TOKEN environment variable.\");\n  }\n\n  const url = searchParams ? `${path}?${searchParams.toString()}` : path;\n  const response = await fetch(`${X_API_BASE}${url}`, {\n    headers: { Authorization: `Bearer ${bearer}` },\n  });\n\n  if (!response.ok) {\n    const body = await response.text();\n    throw new Error(`X API ${response.status} for ${path}: ${body.slice(0, 500)}`);\n  }\n\n  return (await response.json()) as T;\n}\n\nasync function resolveUserId(handle: string): Promise<string> {\n  const normalized = handle.replace(/^@/, \"\");\n  const cached = userIdCache.get(normalized);\n  if (cached) return cached;\n\n  const lookup = await xFetch<XUserLookupResponse>(\n    `/users/by/username/${encodeURIComponent(normalized)}`,\n  );\n  if (!lookup.data?.id) {\n    throw new Error(`Could not resolve X user id for @${normalized}.`);\n  }\n\n  userIdCache.set(normalized, lookup.data.id);\n  return lookup.data.id;\n}\n\nasync function fetchUserTweets(handle: string, startTime: string): Promise<readonly XTweet[]> {\n  const userId = await resolveUserId(handle);\n  const maxResults = Math.min(\n    Math.max(hotTopicConfig.maxTweetsPerProfile, MIN_MAX_RESULTS),\n    MAX_MAX_RESULTS,\n  );\n  const params = new URLSearchParams({\n    max_results: maxResults.toString(),\n    \"tweet.fields\": TWEET_FIELDS,\n    exclude: EXCLUDE,\n    start_time: startTime,\n  });\n\n  const payload = await xFetch<XTweetsResponse>(`/users/${userId}/tweets`, params);\n  return payload.data ?? [];\n}\n\nfunction withinLookback(tweet: XTweet, startTimeMs: number): boolean {\n  if (!tweet.created_at) return false;\n  const createdAt = Date.parse(tweet.created_at);\n  return Number.isFinite(createdAt) && createdAt >= startTimeMs;\n}\n\nfunction summarizeTweet(tweet: XTweet) {\n  return {\n    id: tweet.id,\n    text: tweet.text,\n    createdAt: tweet.created_at,\n    lang: tweet.lang,\n    likes: tweet.public_metrics?.like_count ?? 0,\n    replies: tweet.public_metrics?.reply_count ?? 0,\n    reposts: tweet.public_metrics?.retweet_count ?? 0,\n    quotes: tweet.public_metrics?.quote_count ?? 0,\n    impressions: tweet.public_metrics?.impression_count ?? 0,\n  };\n}\n\nexport default defineTool({\n  description:\n    \"Scan configured X (Twitter) profiles for recent posts to surface hot topics. Uses X API v2 app-only bearer auth.\",\n  inputSchema: z.object({\n    handles: z\n      .array(z.string().min(1))\n      .optional()\n      .describe(\n        \"X handles to scan. Defaults to the X_HOT_TOPIC_HANDLES environment variable.\",\n      ),\n  }),\n  async execute({ handles }) {\n    const bearer = process.env.X_BEARER_TOKEN;\n    if (!bearer) {\n      return { authRequired: true, missingEnv: \"X_BEARER_TOKEN\" };\n    }\n\n    const targetHandles = handles?.length ? handles : hotTopicConfig.handles;\n    if (targetHandles.length === 0) {\n      return {\n        scannedProfiles: 0,\n        profiles: [],\n        note: \"No handles configured. Set X_HOT_TOPIC_HANDLES or pass handles explicitly.\",\n      };\n    }\n\n    const startTime = getLookbackStartTime();\n    const startTimeMs = Date.parse(startTime);\n\n    const profiles = [];\n    for (const handle of targetHandles) {\n      try {\n        const tweets = (await fetchUserTweets(handle, startTime)).filter((tweet) =>\n          withinLookback(tweet, startTimeMs),\n        );\n        profiles.push({\n          handle,\n          ok: true,\n          tweetCount: tweets.length,\n          tweets: tweets.map(summarizeTweet),\n        });\n      } catch (error) {\n        profiles.push({\n          handle,\n          ok: false,\n          error: error instanceof Error ? error.message : String(error),\n        });\n      }\n    }\n\n    const totalTweets = profiles.reduce(\n      (sum, profile) => sum + (profile.ok ? (profile.tweetCount ?? 0) : 0),\n      0,\n    );\n\n    return {\n      scannedProfiles: profiles.length,\n      totalTweets,\n      lookbackHours: hotTopicConfig.lookbackHours,\n      windowStart: startTime,\n      profiles,\n    };\n  },\n});\n"
       },
       {
-        "path": "evals/evals.config.ts",
-        "type": "registry:file",
-        "target": "~/evals/evals.config.ts",
-        "content": "import { defineEvalConfig } from \"eve/evals\";\n\nexport default defineEvalConfig({\n  timeoutMs: 120_000,\n});\n"
-      },
-      {
-        "path": "evals/x-draft-assistant.eval.ts",
-        "type": "registry:file",
-        "target": "~/evals/x-draft-assistant.eval.ts",
-        "content": "import { defineEval } from \"eve/evals\";\nimport { includes } from \"eve/evals/expect\";\n\nexport default defineEval({\n  description:\n    \"Scans a sample of X posts, researches hot topics with Parallel, and previews three X draft candidates without creating them in Typefully.\",\n  async test(t) {\n    await t.send(`\nRun the daily X hot topic Typefully drafts for the following sample posts.\n\nWatched handles: vercel, parallel_ai\n\nSample scan_x_profiles output:\n{\n  \"scannedProfiles\": 2,\n  \"totalTweets\": 2,\n  \"lookbackHours\": 24,\n  \"windowStart\": \"2026-06-25T08:00:00Z\",\n  \"profiles\": [\n    {\n      \"handle\": \"vercel\",\n      \"ok\": true,\n      \"tweetCount\": 1,\n      \"tweets\": [\n        {\n          \"id\": \"1700000000000000001\",\n          \"text\": \"We just shipped AI SDK 5 with native agent loops and durable execution.\",\n          \"createdAt\": \"2026-06-26T07:00:00.000Z\",\n          \"likes\": 320,\n          \"replies\": 22,\n          \"reposts\": 45,\n          \"quotes\": 8,\n          \"impressions\": 12000\n        }\n      ]\n    },\n    {\n      \"handle\": \"parallel_ai\",\n      \"ok\": true,\n      \"tweetCount\": 1,\n      \"tweets\": [\n        {\n          \"id\": \"1700000000000000002\",\n          \"text\": \"Parallel Monitor API is now GA: web change events streamed to proactive agents.\",\n          \"createdAt\": \"2026-06-26T07:30:00.000Z\",\n          \"likes\": 210,\n          \"replies\": 14,\n          \"reposts\": 33,\n          \"quotes\": 5,\n          \"impressions\": 9000\n        }\n      ]\n    }\n  ]\n}\n\nSurface up to 2 hot topics, research each with research_hot_topics, then draft exactly 3 distinct X post candidates and preview them with preview_x_draft. Do not call create_x_drafts in this run.\n`);\n\n    t.succeeded();\n    t.noFailedActions();\n    t.calledTool(\"research_hot_topics\").gate();\n    t.calledTool(\"preview_x_draft\").gate();\n    t.notCalledTool(\"create_x_drafts\").gate();\n    t.check(t.reply, includes(\"dryRun\").soft());\n    const replyLower = (t.reply ?? \"\").toLowerCase();\n    t.check(replyLower, includes(\"made with ai\").soft());\n  },\n});\n"
-      },
-      {
         "path": "evals/create-confirmation.eval.ts",
         "type": "registry:file",
         "target": "~/evals/create-confirmation.eval.ts",
         "content": "import { defineEval } from \"eve/evals\";\nimport { equals, includes } from \"eve/evals/expect\";\n\nexport default defineEval({\n  description:\n    \"Confirms the create path requires confirmCreate=true and a stable, unique idempotencyKey per draft, that madeWithAi/socialSetId/tag are never passed as tool input (they come from config), and that the reply mentions the X made-with-AI disclosure.\",\n  async test(t) {\n    const turn = await t.send(`\nThe three X draft candidates have been previewed with preview_x_draft and the user has approved creating them in Typefully. The scan_x_profiles run for this batch reported windowStart=2026-06-26T08:00:00Z.\n\nNow create the drafts with create_x_drafts. Use the lookback window start and the candidate index to build a stable, unique idempotencyKey per draft such as x-draft-assistant-2026-06-26T08:00:00Z-1, x-draft-assistant-2026-06-26T08:00:00Z-2, and x-draft-assistant-2026-06-26T08:00:00Z-3. Set confirmCreate=true. If you would otherwise create without confirmCreate=true, do not create and report that confirmation is required instead.\n`);\n\n    const call = turn.requireToolCall(\"create_x_drafts\");\n    t.check(call.input.confirmCreate, equals(true).gate());\n    const drafts = call.input.drafts as readonly { idempotencyKey?: string }[];\n    t.check(drafts.length === 3, equals(true).gate());\n    const keys = new Set<string>();\n    let allKeysUnique = true;\n    for (const draft of drafts) {\n      const key = draft.idempotencyKey;\n      if (typeof key !== \"string\" || key.length === 0 || keys.has(key)) {\n        allKeysUnique = false;\n      }\n      keys.add(key ?? \"\");\n    }\n    t.check(allKeysUnique, equals(true).gate());\n    t.check(call.input.socialSetId === undefined, equals(true).soft());\n    t.check(call.input.tag === undefined, equals(true).soft());\n    t.check(call.input.madeWithAi === undefined, equals(true).soft());\n    t.check(t.reply, includes(\"x-draft-assistant-2026-06-26T08:00:00Z-1\").soft());\n    const replyLower = (t.reply ?? \"\").toLowerCase();\n    t.check(replyLower, includes(\"made with ai\").soft());\n  },\n});\n"
       },
       {
+        "path": "evals/evals.config.ts",
+        "type": "registry:file",
+        "target": "~/evals/evals.config.ts",
+        "content": "import { defineEvalConfig } from \"eve/evals\";\n\nexport default defineEvalConfig({\n  timeoutMs: 120_000,\n});\n"
+      },
+      {
         "path": "evals/missing-config-does-not-create.eval.ts",
         "type": "registry:file",
         "target": "~/evals/missing-config-does-not-create.eval.ts",
         "content": "import { defineEval } from \"eve/evals\";\nimport { includes } from \"eve/evals/expect\";\n\nexport default defineEval({\n  description:\n    \"When required configuration is missing, the agent stops and reports it instead of creating any Typefully drafts.\",\n  async test(t) {\n    await t.send(`\nRun the daily X hot topic Typefully drafts.\n\nThe scan_x_profiles tool returned:\n\n{\n  \"authRequired\": true,\n  \"missingEnv\": \"X_BEARER_TOKEN\"\n}\n\nNo handles could be scanned because the X bearer token is not configured. Proceed according to the instructions: do not invent handles, topics, sources, or draft text, and do not call create_x_drafts or preview_x_draft. Report the missing configuration clearly.\n`);\n\n    t.succeeded();\n    t.noFailedActions();\n    t.notCalledTool(\"create_x_drafts\").gate();\n    t.notCalledTool(\"preview_x_draft\").gate();\n    t.check(t.reply, includes(\"X_BEARER_TOKEN\").gate());\n  },\n});\n"
+      },
+      {
+        "path": "evals/x-draft-assistant.eval.ts",
+        "type": "registry:file",
+        "target": "~/evals/x-draft-assistant.eval.ts",
+        "content": "import { defineEval } from \"eve/evals\";\nimport { includes } from \"eve/evals/expect\";\n\nexport default defineEval({\n  description:\n    \"Scans a sample of X posts, researches hot topics with Parallel, and previews three X draft candidates without creating them in Typefully.\",\n  async test(t) {\n    await t.send(`\nRun the daily X hot topic Typefully drafts for the following sample posts.\n\nWatched handles: vercel, parallel_ai\n\nSample scan_x_profiles output:\n{\n  \"scannedProfiles\": 2,\n  \"totalTweets\": 2,\n  \"lookbackHours\": 24,\n  \"windowStart\": \"2026-06-25T08:00:00Z\",\n  \"profiles\": [\n    {\n      \"handle\": \"vercel\",\n      \"ok\": true,\n      \"tweetCount\": 1,\n      \"tweets\": [\n        {\n          \"id\": \"1700000000000000001\",\n          \"text\": \"We just shipped AI SDK 5 with native agent loops and durable execution.\",\n          \"createdAt\": \"2026-06-26T07:00:00.000Z\",\n          \"likes\": 320,\n          \"replies\": 22,\n          \"reposts\": 45,\n          \"quotes\": 8,\n          \"impressions\": 12000\n        }\n      ]\n    },\n    {\n      \"handle\": \"parallel_ai\",\n      \"ok\": true,\n      \"tweetCount\": 1,\n      \"tweets\": [\n        {\n          \"id\": \"1700000000000000002\",\n          \"text\": \"Parallel Monitor API is now GA: web change events streamed to proactive agents.\",\n          \"createdAt\": \"2026-06-26T07:30:00.000Z\",\n          \"likes\": 210,\n          \"replies\": 14,\n          \"reposts\": 33,\n          \"quotes\": 5,\n          \"impressions\": 9000\n        }\n      ]\n    }\n  ]\n}\n\nSurface up to 2 hot topics, research each with research_hot_topics, then draft exactly 3 distinct X post candidates and preview them with preview_x_draft. Do not call create_x_drafts in this run.\n`);\n\n    t.succeeded();\n    t.noFailedActions();\n    t.calledTool(\"research_hot_topics\").gate();\n    t.calledTool(\"preview_x_draft\").gate();\n    t.notCalledTool(\"create_x_drafts\").gate();\n    t.check(t.reply, includes(\"dryRun\").soft());\n    const replyLower = (t.reply ?? \"\").toLowerCase();\n    t.check(replyLower, includes(\"made with ai\").soft());\n  },\n});\n"
       },
       {
         "path": "README.md",
