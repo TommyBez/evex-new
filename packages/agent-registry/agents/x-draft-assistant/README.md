@@ -1,4 +1,4 @@
-# X Hot Topic Typefully
+# X Draft Assistant
 
 A scheduled Eve agent that scans a configured set of X (Twitter) profiles every day, surfaces hot topics from their recent posts, researches each topic with the [Parallel](https://parallel.ai/) web search API, and creates **three draft candidates** for X in [Typefully](https://typefully.com) so a human can review and publish them.
 
@@ -15,7 +15,7 @@ It runs on a cron schedule, reads only public posts via the X API v2, previews e
 ## Installation
 
 ```bash
-npx shadcn@latest add https://evex.sh/r/x-hot-topic-typefully
+npx shadcn@latest add https://evex.sh/r/x-draft-assistant
 ```
 
 ## Configuration
@@ -61,7 +61,7 @@ When `X_HOT_TOPIC_DRAFT_MADE_WITH_AI` is `true` (the default), every X post in e
 2. Trigger the schedule while iterating in dev:
 
    ```bash
-   curl -X POST http://localhost:3000/eve/v1/dev/schedules/daily-hot-topic-x-drafts
+   curl -X POST http://localhost:3000/eve/v1/dev/schedules/daily-x-drafts
    ```
 
 3. The agent should call `preview_x_draft` to review the three candidates. Creating is gated on `create_x_drafts` being called with `confirmCreate: true` and a unique `idempotencyKey` per draft, so a preview-only run creates nothing.
@@ -75,7 +75,7 @@ When `X_HOT_TOPIC_DRAFT_MADE_WITH_AI` is `true` (the default), every X post in e
 - **`authRequired: missingEnv TYPEFULLY_API_KEY`** — the Typefully API key is missing.
 - **`notConfigured: missingEnv TYPEFULLY_SOCIAL_SET_ID`** — no social set configured. Set `TYPEFULLY_SOCIAL_SET_ID` to the Typefully account id you want to create drafts under.
 - **`notConfirmed: true`** — `create_x_drafts` was called without `confirmCreate: true`. Review the preview first, then call it with the flag set.
-- **`Duplicate idempotencyKey`** — two drafts in one `create_x_drafts` call shared a key. Each draft needs its own key (e.g. `x-hot-topic-typefully-YYYY-MM-DD-1`, `-2`, `-3`).
+- **`Duplicate idempotencyKey`** — two drafts in one `create_x_drafts` call shared a key. Each draft needs its own key (e.g. `x-draft-assistant-YYYY-MM-DD-1`, `-2`, `-3`).
 - **`Typefully API 404` for the social set** — `TYPEFULLY_SOCIAL_SET_ID` points at a social set the API key cannot access. Confirm the id and that the key belongs to the same user or team.
 - **`Typefully API 429`** — draft creation rate limit hit. Do not retry inside the same step; defer to a later run and reuse the same idempotency keys so a successful retry does not duplicate the drafts.
 - **No drafts appear in Typefully** — the agent only creates drafts when `create_x_drafts` is called with `confirmCreate: true` and a unique `idempotencyKey` per draft. Confirm the run reached the create step and that `TYPEFULLY_SOCIAL_SET_ID` matches the account you are looking at.

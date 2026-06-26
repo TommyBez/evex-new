@@ -42,7 +42,7 @@ with a per-draft `idempotencyKey` plus an in-process cache of successful
 creates:
 
 - Derive each key from the run, not from `Date.now()` or a fresh random value.
-  A stable scheme is `x-hot-topic-typefully-<run-date>-<n>`, where `n` is the
+  A stable scheme is `x-draft-assistant-<run-date>-<n>`, where `n` is the
   1-based index of the draft candidate within the run.
 - Each draft in a single `create_x_drafts` call must have a unique key. Duplicate
   keys inside one call are rejected before any POST is issued.

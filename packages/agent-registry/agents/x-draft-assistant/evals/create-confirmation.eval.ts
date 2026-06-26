@@ -8,7 +8,7 @@ export default defineEval({
     const turn = await t.send(`
 The three X draft candidates have been previewed with preview_x_draft and the user has approved creating them in Typefully for today (2026-06-26).
 
-Now create the drafts with create_x_drafts. Use today's date and the candidate index to build a stable, unique idempotencyKey per draft such as x-hot-topic-typefully-2026-06-26-1, x-hot-topic-typefully-2026-06-26-2, and x-hot-topic-typefully-2026-06-26-3. Set confirmCreate=true. If you would otherwise create without confirmCreate=true, do not create and report that confirmation is required instead.
+Now create the drafts with create_x_drafts. Use today's date and the candidate index to build a stable, unique idempotencyKey per draft such as x-draft-assistant-2026-06-26-1, x-draft-assistant-2026-06-26-2, and x-draft-assistant-2026-06-26-3. Set confirmCreate=true. If you would otherwise create without confirmCreate=true, do not create and report that confirmation is required instead.
 `);
 
     const call = turn.requireToolCall("create_x_drafts");
@@ -28,7 +28,7 @@ Now create the drafts with create_x_drafts. Use today's date and the candidate i
     t.check(call.input.socialSetId === undefined, equals(true).soft());
     t.check(call.input.tag === undefined, equals(true).soft());
     t.check(call.input.madeWithAi === undefined, equals(true).soft());
-    t.check(t.reply, includes("x-hot-topic-typefully-2026-06-26-1").soft());
+    t.check(t.reply, includes("x-draft-assistant-2026-06-26-1").soft());
     const replyLower = (t.reply ?? "").toLowerCase();
     t.check(replyLower, includes("made with ai").soft());
   },

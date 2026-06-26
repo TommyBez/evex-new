@@ -27,8 +27,8 @@ issuing a POST, the tool checks the cache:
 
 | Strategy | Example | Use when |
 |----------|---------|----------|
-| Run-indexed (recommended) | `x-hot-topic-typefully-2026-06-26-1` | One draft per candidate per run |
-| Run + topic slug | `x-hot-topic-typefully-2026-06-26-ai-sdk-5` | Stable across topic reordering |
+| Run-indexed (recommended) | `x-draft-assistant-2026-06-26-1` | One draft per candidate per run |
+| Run + topic slug | `x-draft-assistant-2026-06-26-ai-sdk-5` | Stable across topic reordering |
 | UUID | `crypto.randomUUID()` | No natural key (generate once, reuse on retry) |
 
 **Best practice:** use deterministic keys based on the run date and the candidate

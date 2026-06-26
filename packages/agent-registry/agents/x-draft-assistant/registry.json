@@ -2,9 +2,9 @@
   "$schema": "https://ui.shadcn.com/schema/registry.json",
   "items": [
     {
-      "name": "x-hot-topic-typefully",
+      "name": "x-draft-assistant",
       "type": "registry:item",
-      "title": "X Hot Topic Typefully",
+      "title": "X Draft Assistant",
       "description": "A scheduled Eve agent that scans a configured set of X (Twitter) profiles every day, surfaces hot topics from their recent posts, researches each topic with the Parallel web search API, and creates three draft candidates for X in Typefully so a human can review and publish them.",
       "categories": [
         "research"
@@ -36,9 +36,9 @@
           "target": "~/agent/lib/typefully-client.ts"
         },
         {
-          "path": "agent/schedules/daily-hot-topic-x-drafts.ts",
+          "path": "agent/schedules/daily-x-drafts.ts",
           "type": "registry:file",
-          "target": "~/agent/schedules/daily-hot-topic-x-drafts.ts"
+          "target": "~/agent/schedules/daily-x-drafts.ts"
         },
         {
           "path": "agent/skills/typefully-best-practices/SKILL.md",
@@ -81,9 +81,9 @@
           "target": "~/evals/evals.config.ts"
         },
         {
-          "path": "evals/hot-topic-typefully.eval.ts",
+          "path": "evals/x-draft-assistant.eval.ts",
           "type": "registry:file",
-          "target": "~/evals/hot-topic-typefully.eval.ts"
+          "target": "~/evals/x-draft-assistant.eval.ts"
         },
         {
           "path": "evals/create-confirmation.eval.ts",
@@ -107,10 +107,10 @@
         }
       ],
       "meta": {
-        "slug": "x-hot-topic-typefully",
+        "slug": "x-draft-assistant",
         "category": "research",
         "createdAt": "2026-06-26T15:22:15.793Z",
-        "updatedAt": "2026-06-26T15:22:15.793Z"
+        "updatedAt": "2026-06-26T15:40:00.000Z"
       },
       "author": "TommyBez"
     }

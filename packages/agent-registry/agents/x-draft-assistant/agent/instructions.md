@@ -35,7 +35,7 @@ as drafts in Typefully for a human to review and publish.
    by an LLM; only disable it if a human rewrites the posts before publishing.
 7. To create the drafts in Typefully, call create_x_drafts with `confirmCreate:
    true` and a stable, unique `idempotencyKey` per draft. The recommended scheme
-   is `x-hot-topic-typefully-YYYY-MM-DD-<n>`, where `<n>` is the 1-based index of
+   is `x-draft-assistant-YYYY-MM-DD-<n>`, where `<n>` is the 1-based index of
    the draft candidate within the run. Reuse the same key if the step is retried
    so a replayed create does not duplicate the draft. Never call create_x_drafts
    without an idempotencyKey per draft, and never reuse the same key across two
