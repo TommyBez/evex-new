@@ -510,6 +510,115 @@ export const generatedRegistry = {
           "target": "~/.env.example"
         }
       ]
+    },
+    {
+      "name": "x-hot-topic-digest",
+      "type": "registry:item",
+      "title": "X Hot Topic Digest",
+      "description": "A scheduled Eve agent that scans a configured set of X (Twitter) profiles every day, surfaces hot topics from their recent posts, researches each topic with the Parallel web search API, and delivers an HTML digest by email through Resend.",
+      "categories": [
+        "research"
+      ],
+      "dependencies": [
+        "eve@^0.15.1",
+        "parallel-web@^1.1.0",
+        "resend@^6.14.0",
+        "zod@4.3.6"
+      ],
+      "meta": {
+        "slug": "x-hot-topic-digest",
+        "category": "research",
+        "createdAt": "2026-06-26T09:40:22.348Z",
+        "updatedAt": "2026-06-26T10:40:00.000Z"
+      },
+      "author": "TommyBez",
+      "files": [
+        {
+          "path": "agent/agent.ts",
+          "type": "registry:file",
+          "target": "~/agent/agent.ts"
+        },
+        {
+          "path": "agent/instructions.md",
+          "type": "registry:file",
+          "target": "~/agent/instructions.md"
+        },
+        {
+          "path": "agent/lib/hot-topic-config.ts",
+          "type": "registry:file",
+          "target": "~/agent/lib/hot-topic-config.ts"
+        },
+        {
+          "path": "agent/schedules/daily-hot-topic-digest.ts",
+          "type": "registry:file",
+          "target": "~/agent/schedules/daily-hot-topic-digest.ts"
+        },
+        {
+          "path": "agent/skills/email-best-practices/SKILL.md",
+          "type": "registry:file",
+          "target": "~/agent/skills/email-best-practices/SKILL.md"
+        },
+        {
+          "path": "agent/skills/email-best-practices/references/accessibility.md",
+          "type": "registry:file",
+          "target": "~/agent/skills/email-best-practices/references/accessibility.md"
+        },
+        {
+          "path": "agent/skills/email-best-practices/references/sending-reliability.md",
+          "type": "registry:file",
+          "target": "~/agent/skills/email-best-practices/references/sending-reliability.md"
+        },
+        {
+          "path": "agent/tools/preview_digest_email.ts",
+          "type": "registry:file",
+          "target": "~/agent/tools/preview_digest_email.ts"
+        },
+        {
+          "path": "agent/tools/research_hot_topics.ts",
+          "type": "registry:file",
+          "target": "~/agent/tools/research_hot_topics.ts"
+        },
+        {
+          "path": "agent/tools/scan_x_profiles.ts",
+          "type": "registry:file",
+          "target": "~/agent/tools/scan_x_profiles.ts"
+        },
+        {
+          "path": "agent/tools/send_digest_email.ts",
+          "type": "registry:file",
+          "target": "~/agent/tools/send_digest_email.ts"
+        },
+        {
+          "path": "evals/evals.config.ts",
+          "type": "registry:file",
+          "target": "~/evals/evals.config.ts"
+        },
+        {
+          "path": "evals/hot-topic-digest.eval.ts",
+          "type": "registry:file",
+          "target": "~/evals/hot-topic-digest.eval.ts"
+        },
+        {
+          "path": "evals/missing-config-does-not-send.eval.ts",
+          "type": "registry:file",
+          "target": "~/evals/missing-config-does-not-send.eval.ts"
+        },
+        {
+          "path": "evals/send-confirmation.eval.ts",
+          "type": "registry:file",
+          "target": "~/evals/send-confirmation.eval.ts"
+        },
+        {
+          "path": "README.md",
+          "type": "registry:file",
+          "target": "~/agent/README.md"
+        },
+        {
+          "path": ".env.example",
+          "type": "registry:file",
+          "target": "~/.env.example"
+        }
+      ]
     }
   ]
 } as const satisfies RegistryCatalog
@@ -1097,6 +1206,133 @@ export const generatedRegistryItems = {
         "type": "registry:file",
         "target": "~/.env.example",
         "content": "RESEND_API_KEY=\n"
+      }
+    ]
+  },
+  "x-hot-topic-digest": {
+    "$schema": "https://ui.shadcn.com/schema/registry.json",
+    "name": "x-hot-topic-digest",
+    "type": "registry:item",
+    "title": "X Hot Topic Digest",
+    "description": "A scheduled Eve agent that scans a configured set of X (Twitter) profiles every day, surfaces hot topics from their recent posts, researches each topic with the Parallel web search API, and delivers an HTML digest by email through Resend.",
+    "categories": [
+      "research"
+    ],
+    "dependencies": [
+      "eve@^0.15.1",
+      "parallel-web@^1.1.0",
+      "resend@^6.14.0",
+      "zod@4.3.6"
+    ],
+    "meta": {
+      "slug": "x-hot-topic-digest",
+      "category": "research",
+      "createdAt": "2026-06-26T09:40:22.348Z",
+      "updatedAt": "2026-06-26T10:40:00.000Z"
+    },
+    "author": "TommyBez",
+    "files": [
+      {
+        "path": "agent/agent.ts",
+        "type": "registry:file",
+        "target": "~/agent/agent.ts",
+        "content": "import { defineAgent } from \"eve\";\n\nexport default defineAgent({\n  model: \"openai/gpt-5.4-mini\",\n});\n"
+      },
+      {
+        "path": "agent/instructions.md",
+        "type": "registry:file",
+        "target": "~/agent/instructions.md",
+        "content": "# Mission\nProduce a daily digest of hot topics from a watched set of X (Twitter) profiles, researched with the Parallel web search API, and delivered by email through Resend.\n\n# Workflow\n1. Load the email-best-practices skill before drafting or sending the digest email.\n2. Use scan_x_profiles to pull recent posts from every configured handle, scoped to the last `X_HOT_TOPIC_LOOKBACK_HOURS` (default 24). If no handles are configured, stop and report the missing configuration instead of inventing profiles. Only treat posts inside the lookback window as hot-topic candidates, so the digest does not repeat the same topics day over day.\n3. From the returned posts, surface up to `X_HOT_TOPIC_MAX_TOPICS` hot topics. A hot topic is a recurring theme, announcement, launch, debate, or signal that appears across posts or that carries outsized engagement for a profile. Cluster near-duplicates into a single topic.\n4. For each hot topic, use research_hot_topics with 2-3 focused keyword queries to gather ranked web sources with provenance. Skip research for topics that are too vague to query.\n5. Compose a single digest email in HTML following the email-best-practices accessibility rules:\n   - a short intro naming the date and watched handles\n   - one section per hot topic with: a one-line takeaway, the originating X posts (handle, snippet, link `https://x.com/<handle>/status/<id>`), and the Parallel research sources (title, url, short excerpt)\n   - a closing note distinguishing observed X signal from web research\n6. Always call preview_digest_email first to review the exact recipients, sender, subject, and HTML.\n7. To send for real, call send_digest_email with `confirmSend: true` and a stable `idempotencyKey` derived from the digest date (for example `x-hot-topic-digest-YYYY-MM-DD`). Never call send_digest_email without an idempotencyKey. The idempotency key makes a replayed step safe, so reuse the same key if the step is retried.\n\n# Output contract\nReturn:\n- the list of hot topics with origin posts and research sources\n- the email preview from preview_digest_email\n- the send result from send_digest_email when it was called, including the idempotencyKey\n- any missing configuration that blocked a step\n\n# Guardrails\n- Do not post on X. This agent only reads public posts and sends email.\n- Do not fabricate URLs, excerpts, or post ids. Every citation must come from a tool result.\n- If a tool reports `authRequired` or `notConfigured`, stop and report it instead of proceeding.\n"
+      },
+      {
+        "path": "agent/lib/hot-topic-config.ts",
+        "type": "registry:file",
+        "target": "~/agent/lib/hot-topic-config.ts",
+        "content": "export type HotTopicConfig = {\n  readonly handles: readonly string[];\n  readonly dailyCron: string;\n  readonly lookbackHours: number;\n  readonly maxTweetsPerProfile: number;\n  readonly maxHotTopics: number;\n  readonly searchMaxResults: number;\n  readonly searchMode: \"turbo\" | \"basic\" | \"advanced\";\n  readonly digest: {\n    readonly from?: string;\n    readonly to: readonly string[];\n    readonly subject: string;\n  };\n};\n\nconst DEFAULT_MAX_TWEETS_PER_PROFILE = 20;\nconst DEFAULT_MAX_HOT_TOPICS = 5;\nconst DEFAULT_SEARCH_MAX_RESULTS = 5;\nconst DEFAULT_SEARCH_MODE = \"basic\";\nconst DEFAULT_DAILY_CRON = \"0 8 * * *\";\nconst DEFAULT_LOOKBACK_HOURS = 24;\nconst DEFAULT_SUBJECT = \"X Hot Topic Digest\";\n\nconst compactCsv = (value: string | undefined): string[] =>\n  (value ?? \"\")\n    .split(\",\")\n    .map((item) => item.trim())\n    .filter(Boolean);\n\nconst optional = (value: string | undefined): string | undefined => {\n  const trimmed = value?.trim();\n  return trimmed ? trimmed : undefined;\n};\n\nconst parsePositiveInteger = (value: string | undefined, fallback: number): number => {\n  const parsed = Number.parseInt(value ?? \"\", 10);\n  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;\n};\n\nconst parseSearchMode = (value: string | undefined): \"turbo\" | \"basic\" | \"advanced\" => {\n  const trimmed = value?.trim().toLowerCase();\n  if (trimmed === \"turbo\" || trimmed === \"basic\" || trimmed === \"advanced\") {\n    return trimmed;\n  }\n  return DEFAULT_SEARCH_MODE;\n};\n\nconst parseEmailList = (value: string | undefined): string[] => compactCsv(value);\n\nconst toRfc3339Utc = (date: Date): string =>\n  date.toISOString().replace(/\\.\\d{3}Z$/, \"Z\");\n\nexport const getLookbackStartTime = (now: Date = new Date()): string =>\n  toRfc3339Utc(new Date(now.getTime() - hotTopicConfig.lookbackHours * 60 * 60 * 1000));\n\nexport const hotTopicConfig = {\n  handles: compactCsv(process.env.X_HOT_TOPIC_HANDLES),\n  dailyCron: optional(process.env.X_HOT_TOPIC_DAILY_CRON) ?? DEFAULT_DAILY_CRON,\n  lookbackHours: parsePositiveInteger(\n    process.env.X_HOT_TOPIC_LOOKBACK_HOURS,\n    DEFAULT_LOOKBACK_HOURS,\n  ),\n  maxTweetsPerProfile: parsePositiveInteger(\n    process.env.X_HOT_TOPIC_MAX_TWEETS_PER_PROFILE,\n    DEFAULT_MAX_TWEETS_PER_PROFILE,\n  ),\n  maxHotTopics: parsePositiveInteger(\n    process.env.X_HOT_TOPIC_MAX_TOPICS,\n    DEFAULT_MAX_HOT_TOPICS,\n  ),\n  searchMaxResults: parsePositiveInteger(\n    process.env.X_HOT_TOPIC_SEARCH_MAX_RESULTS,\n    DEFAULT_SEARCH_MAX_RESULTS,\n  ),\n  searchMode: parseSearchMode(process.env.X_HOT_TOPIC_SEARCH_MODE),\n  digest: {\n    from: optional(process.env.X_HOT_TOPIC_DIGEST_FROM),\n    to: parseEmailList(process.env.X_HOT_TOPIC_DIGEST_TO),\n    subject: optional(process.env.X_HOT_TOPIC_DIGEST_SUBJECT) ?? DEFAULT_SUBJECT,\n  },\n} satisfies HotTopicConfig;\n\nexport const formatConfigSummary = (): string => {\n  const handles = hotTopicConfig.handles.join(\", \") || \"none configured\";\n  const recipients = hotTopicConfig.digest.to.join(\", \") || \"none configured\";\n  return [\n    `Watched handles: ${handles}`,\n    `Daily cron: ${hotTopicConfig.dailyCron}`,\n    `Lookback window: last ${hotTopicConfig.lookbackHours} hours`,\n    `Max tweets per profile: ${hotTopicConfig.maxTweetsPerProfile}`,\n    `Max hot topics: ${hotTopicConfig.maxHotTopics}`,\n    `Search mode: ${hotTopicConfig.searchMode}`,\n    `Digest recipients: ${recipients}`,\n  ].join(\"\\n\");\n};\n"
+      },
+      {
+        "path": "agent/schedules/daily-hot-topic-digest.ts",
+        "type": "registry:file",
+        "target": "~/agent/schedules/daily-hot-topic-digest.ts",
+        "content": "import { defineSchedule } from \"eve/schedules\";\n\nimport { hotTopicConfig } from \"../lib/hot-topic-config.js\";\n\nexport default defineSchedule({\n  cron: hotTopicConfig.dailyCron,\n  markdown: `Run the daily X hot topic digest.\n\n1. Use scan_x_profiles to scan every handle configured in X_HOT_TOPIC_HANDLES, scoped to the last ${hotTopicConfig.lookbackHours} hours (X_HOT_TOPIC_LOOKBACK_HOURS). Only treat posts inside the lookback window as hot-topic candidates.\n2. Surface up to ${hotTopicConfig.maxHotTopics} hot topics from those posts.\n3. For each topic, call research_hot_topics with focused keyword queries.\n4. Compose an HTML digest and call preview_digest_email to review the exact recipients, sender, subject, and HTML.\n5. To send for real, call send_digest_email with confirmSend=true and a stable idempotencyKey derived from today's date (for example x-hot-topic-digest-YYYY-MM-DD). Reuse the same idempotencyKey if the step is retried so a replayed send never duplicates the email.\n\nIf any required environment variable is missing (X_BEARER_TOKEN, PARALLEL_API_KEY, RESEND_API_KEY, X_HOT_TOPIC_DIGEST_FROM, X_HOT_TOPIC_DIGEST_TO), stop and report the missing configuration. Do not invent handles, topics, sources, or recipients. Never call send_digest_email without confirmSend=true and an idempotencyKey.`,\n});\n"
+      },
+      {
+        "path": "agent/skills/email-best-practices/SKILL.md",
+        "type": "registry:file",
+        "target": "~/agent/skills/email-best-practices/SKILL.md",
+        "content": "---\ndescription: Use when composing or sending the X hot topic digest email through Resend \u2014 idempotent sends, deliverability, and accessible HTML for the digest.\n---\n\nApply email best practices to every digest produced by this agent. The digest is a\ntransactional, scheduled email sent through `send_digest_email` (Resend). It must be\ndelivered once, readable by assistive tech and AI clients, and traceable to real\nsources.\n\nLoad this skill before calling `send_digest_email` or whenever the digest HTML is being\ndrafted.\n\n## Sending the digest\n\n- Always call `preview_digest_email` first to review recipients, sender, subject, and HTML.\n- Send only through `send_digest_email` with `confirmSend: true` and a stable\n  `idempotencyKey` derived from the digest date (for example\n  `x-hot-topic-digest-2026-06-26`). Never reuse a key across different digests, and never\n  generate a fresh random key per retry attempt \u2014 the same logical send must reuse the\n  same key so a replayed step does not duplicate the email.\n- The `X_HOT_TOPIC_DIGEST_FROM` sender must be a Resend-verified domain. Unverified\n  senders are the most common cause of bounces and spam filtering.\n- Do not invent recipients. `X_HOT_TOPIC_DIGEST_TO` is the source of truth; if it is\n  empty, stop and report the missing configuration instead of sending.\n\nSee [sending-reliability](./references/sending-reliability.md) for the full idempotency\nand retry model.\n\n## Composing the digest HTML\n\n- Set `lang` and `dir` on `<html>` and on `<body>`'s direct children.\n- Include a `<title>` that names the digest (for example \"X Hot Topic Digest \u2014 2026-06-26\").\n- Use one `<h1>` for the digest title, then nest `<h2>`/`<h3>` in order per topic and\n  section. Never skip heading levels or fake headings with bold text.\n- Layout tables must carry `role=\"presentation\"`.\n- Every link must have discernible text that describes its destination. X post links use\n  the handle and a short snippet (for example \"vercel on X: We just shipped AI SDK 5\");\n  Parallel source links use the source title. Never use \"click here\", bare URLs, or\n  linked images with empty alt.\n- Body text must pass 4.5:1 contrast and stay readable in dark mode.\n- Keep a plain-text alternative alongside the HTML.\n\nSee [accessibility](./references/accessibility.md) for the full checklist.\n\n## Source integrity\n\nEvery citation in the digest (X post, Parallel result) must come from a tool result.\nDo not fabricate URLs, excerpts, or post ids. If a topic cannot be researched, omit it\nrather than invent sources.\n"
+      },
+      {
+        "path": "agent/skills/email-best-practices/references/accessibility.md",
+        "type": "registry:file",
+        "target": "~/agent/skills/email-best-practices/references/accessibility.md",
+        "content": "# Accessibility\n\nThe digest must be readable by screen readers, dark-mode clients, translation tools, and\nAI clients \u2014 not just sighted readers on a default inbox. Apply these rules every time\nthe digest HTML is composed.\n\n## Rules\n\n### Set `lang` and `dir` on `<html>` and on `<body>`'s direct children\n\nSeveral email clients strip these attributes from `<html>`, so duplicate them on the\nbody's direct children.\n\n```html\n<html lang=\"en\" dir=\"ltr\">\n  <head>\n    <title>X Hot Topic Digest \u2014 2026-06-26</title>\n  </head>\n  <body>\n    <div lang=\"en\" dir=\"ltr\">\n      <!-- digest content -->\n    </div>\n  </body>\n</html>\n```\n\n- `lang`: a BCP 47 language tag (`en`, `it`, `ja`, `ar`).\n- `dir`: `ltr`, `rtl`, or `auto`.\n\nFor multi-locale digests, pass the locale through; do not hardcode `en`.\n\n### Mark layout tables as presentational\n\nAny `<table>` used for layout must have `role=\"presentation\"` (or `role=\"none\"`).\nOtherwise screen readers announce \"table, row 1 of N\" for every layout row.\n\n```html\n<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n  <tr>\n    <td>...</td>\n  </tr>\n</table>\n```\n\n### Use a single `<h1>` and nest headings in order\n\nOne `<h1>` names the digest (\"X Hot Topic Digest \u2014 2026-06-26\"). Each hot topic is an\n`<h2>`; sub-sections (origin posts, research sources) are `<h3>`. Never skip levels or\nfake a heading with bold `<p>`.\n\n```html\n<h1>X Hot Topic Digest \u2014 2026-06-26</h1>\n  <h2>AI SDK 5 ships with agent loops</h2>\n    <h3>Origin posts</h3>\n    <h3>Research sources</h3>\n```\n\n### Every link must have discernible text\n\nEvery `<a>` must contain text a screen reader can announce. X post links should use the\nhandle and a short snippet; Parallel source links should use the source title.\n\n```html\n<!-- Wrong -->\n<a href=\"https://x.com/vercel/status/1700000000000000001\">click here</a>\n<a href=\"https://x.com/vercel/status/1700000000000000001\">\n  https://x.com/vercel/status/1700000000000000001\n</a>\n\n<!-- Right -->\n<a href=\"https://x.com/vercel/status/1700000000000000001\">\n  vercel on X: We just shipped AI SDK 5 with native agent loops\n</a>\n```\n\nNever use \"click here\", \"learn more\", bare URLs, or a linked image with empty alt.\n\n### Meaningful alt text, and `alt=\"\"` for decorative images\n\n- Meaningful images (charts, screenshots): describe purpose and key details in context.\n- Decorative images (spacers, dividers): use an explicit `alt=\"\"` so screen readers skip\n  them. Never omit the attribute entirely.\n- A linked image is never decorative \u2014 its `alt` must describe the action.\n\n### Include a `<title>` tag\n\nMany clients and assistive technologies read `<title>` before anything else. Treat it\nlike the subject line, not the brand name:\n\n```html\n<title>X Hot Topic Digest \u2014 2026-06-26</title>\n```\n\n### Color contrast and dark mode\n\n- Body text and links: 4.5:1 minimum against the background (WCAG AA).\n- Large text (\u226518pt, or \u226514pt bold): 3:1 minimum.\n- Never rely on color alone to convey meaning.\n- Outlook and Apple Mail force dark mode; preview the digest in dark mode before sending.\n\n## Priority order\n\nWhen you cannot fix everything, fix in this order:\n\n1. Missing or misused `alt` on images.\n2. `lang`/`dir` on `<html>` and body children, `role=\"presentation\"` on layout tables,\n   links without discernible text, missing `<title>`, color contrast.\n3. Non-descriptive link text (\"click here\").\n4. Missing `<h1>`.\n\n## Authoring checklist\n\n- [ ] `<html>` has `lang` and `dir`; direct children of `<body>` also have `lang` and `dir`\n- [ ] `<title>` is set and specific to this digest\n- [ ] Layout `<table>` elements have `role=\"presentation\"`\n- [ ] One `<h1>`; `<h2>`/`<h3>` nested in order\n- [ ] Every `<a>` has discernible text that describes its destination\n- [ ] No \"click here\", bare URLs, or linked images with empty alt\n- [ ] Meaningful images have descriptive `alt`; decorative images have explicit `alt=\"\"`\n- [ ] Body text passes 4.5:1 contrast and stays readable in dark mode\n- [ ] A plain-text alternative is sent alongside the HTML\n\n## Related\n\n- [Sending Reliability](./sending-reliability.md) \u2014 idempotent sends and error handling\n"
+      },
+      {
+        "path": "agent/skills/email-best-practices/references/sending-reliability.md",
+        "type": "registry:file",
+        "target": "~/agent/skills/email-best-practices/references/sending-reliability.md",
+        "content": "# Sending Reliability\n\nEnsuring the digest is sent exactly once and that failures are handled gracefully.\n\n## Idempotency\n\n`send_digest_email` accepts a `confirmSend` flag and an `idempotencyKey`. The key is\nforwarded to Resend as the `Idempotency-Key` header, and the tool also keeps an\nin-process map of sent keys so a replayed Eve step returns the recorded result instead\nof issuing a second send.\n\n### Why it matters\n\nEve replays a tool step that did not complete. Without idempotency, a retried send\nafter a timeout would duplicate the digest. With idempotency, the same logical send\nreuses the same key and the duplicate is suppressed.\n\n### Key generation\n\nUse a deterministic key based on the digest event. The recommended shape is:\n\n```\nx-hot-topic-digest-YYYY-MM-DD\n```\n\n| Strategy | Example | Use when |\n|----------|---------|----------|\n| Digest-date-based (recommended) | `x-hot-topic-digest-2026-06-26` | One digest per day |\n| Date + recipient | `x-hot-topic-digest-2026-06-26-ops@example.com` | Per-recipient dedup |\n\n**Do not** generate a fresh random key per retry attempt, and do not use `Date.now()`\nor a new UUID on each call. The same logical send must produce the same key.\n\n### Key expiration\n\nIdempotency keys are typically cached for 24 hours. Replays within this window return\nthe original response. After expiration the same key triggers a new send, so complete\nretries well within 24 hours.\n\n## The two-step send\n\n1. `preview_digest_email` \u2014 no side effect. Resolves `from`/`to`/`subject` from\n   configuration and returns the exact payload plus an HTML preview. Use it to review\n   before any send.\n2. `send_digest_email` \u2014 the only path that calls Resend. Requires `confirmSend: true`\n   and a stable `idempotencyKey`. If `confirmSend` is omitted or false, the tool returns\n   `notConfirmed: true` and sends nothing.\n\nNever skip the preview. Never call `send_digest_email` without `confirmSend` and an\nidempotency key.\n\n## Error handling\n\nCommon Resend error codes when sending:\n\n| Code | Meaning | Action |\n|------|---------|--------|\n| 400 | Bad request | Fix the payload (invalid email, missing field) |\n| 401 | Unauthorized | Check `RESEND_API_KEY` |\n| 403 | Forbidden | Check permissions and domain verification |\n| 422 | Validation error | Fix request data |\n| 429 | Rate limited | Back off and retry |\n| 500 / 503 | Server error | Retry with backoff; the idempotency key makes retry safe |\n\nIf `send_digest_email` returns `authRequired: missingEnv RESEND_API_KEY`, stop and\nreport the missing configuration instead of retrying.\n\n## Related\n\n- [Accessibility](./accessibility.md) \u2014 composing the HTML body\n"
+      },
+      {
+        "path": "agent/tools/preview_digest_email.ts",
+        "type": "registry:file",
+        "target": "~/agent/tools/preview_digest_email.ts",
+        "content": "import { defineTool } from \"eve/tools\";\nimport { z } from \"zod\";\n\nimport { hotTopicConfig } from \"../lib/hot-topic-config.js\";\n\nexport default defineTool({\n  description:\n    \"Preview the X hot topic digest email without sending it. Resolves recipients and sender from configuration and returns the exact payload that send_digest_email would send.\",\n  inputSchema: z.object({\n    from: z.email().optional(),\n    to: z.array(z.email()).min(1).max(50).optional(),\n    subject: z.string().min(1).optional(),\n    html: z.string().min(1),\n  }),\n  async execute({ from, to, subject, html }) {\n    const resolvedFrom = from ?? hotTopicConfig.digest.from;\n    if (!resolvedFrom) {\n      return { notConfigured: true, missingEnv: \"X_HOT_TOPIC_DIGEST_FROM\" };\n    }\n\n    const resolvedTo = to?.length ? to : hotTopicConfig.digest.to;\n    if (resolvedTo.length === 0) {\n      return { notConfigured: true, missingEnv: \"X_HOT_TOPIC_DIGEST_TO\" };\n    }\n\n    return {\n      dryRun: true,\n      from: resolvedFrom,\n      to: resolvedTo,\n      subject: subject ?? hotTopicConfig.digest.subject,\n      htmlPreview: html.slice(0, 500),\n      htmlLength: html.length,\n    };\n  },\n});\n"
+      },
+      {
+        "path": "agent/tools/research_hot_topics.ts",
+        "type": "registry:file",
+        "target": "~/agent/tools/research_hot_topics.ts",
+        "content": "import Parallel from \"parallel-web\";\nimport { defineTool } from \"eve/tools\";\nimport { z } from \"zod\";\n\nimport { hotTopicConfig } from \"../lib/hot-topic-config.js\";\n\ntype ParallelSearchResult = {\n  readonly url: string;\n  readonly title?: string | null;\n  readonly publish_date?: string | null;\n  readonly excerpts: readonly string[];\n};\n\ntype ParallelSearchResponse = {\n  readonly results: readonly ParallelSearchResult[];\n};\n\nexport default defineTool({\n  description:\n    \"Research a hot topic with the Parallel web search API and return ranked excerpts with provenance.\",\n  inputSchema: z.object({\n    topic: z.string().min(1).describe(\"The hot topic to research, in natural language.\"),\n    searchQueries: z\n      .array(z.string().min(1))\n      .min(1)\n      .max(5)\n      .describe(\"2-3 concise keyword queries (3-6 words each) to focus the search.\"),\n    maxResults: z\n      .number()\n      .int()\n      .min(1)\n      .max(10)\n      .optional()\n      .describe(\"Upper bound on returned results. Defaults to the agent config.\"),\n  }),\n  async execute({ topic, searchQueries, maxResults }) {\n    const apiKey = process.env.PARALLEL_API_KEY;\n    if (!apiKey) {\n      return { authRequired: true, missingEnv: \"PARALLEL_API_KEY\", topic };\n    }\n\n    const client = new Parallel({ apiKey });\n    const result = (await client.search({\n      objective: `Research the following hot topic surfaced from X: ${topic}`,\n      search_queries: searchQueries,\n      mode: hotTopicConfig.searchMode,\n      advanced_settings: {\n        max_results: maxResults ?? hotTopicConfig.searchMaxResults,\n      },\n    })) as ParallelSearchResponse;\n\n    const results = result.results.map((entry) => ({\n      url: entry.url,\n      title: entry.title ?? null,\n      publishDate: entry.publish_date ?? null,\n      excerpts: entry.excerpts,\n    }));\n\n    return { topic, resultCount: results.length, results };\n  },\n});\n"
+      },
+      {
+        "path": "agent/tools/scan_x_profiles.ts",
+        "type": "registry:file",
+        "target": "~/agent/tools/scan_x_profiles.ts",
+        "content": "import { defineTool } from \"eve/tools\";\nimport { z } from \"zod\";\n\nimport { getLookbackStartTime, hotTopicConfig } from \"../lib/hot-topic-config.js\";\n\nconst X_API_BASE = \"https://api.x.com/2\";\nconst TWEET_FIELDS = \"created_at,public_metrics,entities,lang\";\nconst EXCLUDE = \"retweets\";\nconst MIN_MAX_RESULTS = 5;\n\ntype XPublicMetrics = {\n  readonly impression_count?: number;\n  readonly like_count?: number;\n  readonly reply_count?: number;\n  readonly retweet_count?: number;\n  readonly quote_count?: number;\n  readonly bookmark_count?: number;\n};\n\ntype XTweet = {\n  readonly id: string;\n  readonly text: string;\n  readonly created_at?: string;\n  readonly lang?: string;\n  readonly public_metrics?: XPublicMetrics;\n};\n\ntype XUserLookupResponse = {\n  readonly data?: { readonly id: string; readonly name: string; readonly username: string };\n};\n\ntype XTweetsResponse = {\n  readonly data?: readonly XTweet[];\n  readonly meta?: { readonly result_count?: number; readonly newest_id?: string };\n};\n\nconst userIdCache = new Map<string, string>();\n\nasync function xFetch<T>(path: string, searchParams?: URLSearchParams): Promise<T> {\n  const bearer = process.env.X_BEARER_TOKEN;\n  if (!bearer) {\n    throw new Error(\"Missing X_BEARER_TOKEN environment variable.\");\n  }\n\n  const url = searchParams ? `${path}?${searchParams.toString()}` : path;\n  const response = await fetch(`${X_API_BASE}${url}`, {\n    headers: { Authorization: `Bearer ${bearer}` },\n  });\n\n  if (!response.ok) {\n    const body = await response.text();\n    throw new Error(`X API ${response.status} for ${path}: ${body.slice(0, 500)}`);\n  }\n\n  return (await response.json()) as T;\n}\n\nasync function resolveUserId(handle: string): Promise<string> {\n  const normalized = handle.replace(/^@/, \"\");\n  const cached = userIdCache.get(normalized);\n  if (cached) return cached;\n\n  const lookup = await xFetch<XUserLookupResponse>(\n    `/users/by/username/${encodeURIComponent(normalized)}`,\n  );\n  if (!lookup.data?.id) {\n    throw new Error(`Could not resolve X user id for @${normalized}.`);\n  }\n\n  userIdCache.set(normalized, lookup.data.id);\n  return lookup.data.id;\n}\n\nasync function fetchUserTweets(handle: string, startTime: string): Promise<readonly XTweet[]> {\n  const userId = await resolveUserId(handle);\n  const maxResults = Math.max(hotTopicConfig.maxTweetsPerProfile, MIN_MAX_RESULTS);\n  const params = new URLSearchParams({\n    max_results: maxResults.toString(),\n    \"tweet.fields\": TWEET_FIELDS,\n    exclude: EXCLUDE,\n    start_time: startTime,\n  });\n\n  const payload = await xFetch<XTweetsResponse>(`/users/${userId}/tweets`, params);\n  return payload.data ?? [];\n}\n\nfunction withinLookback(tweet: XTweet, startTimeMs: number): boolean {\n  if (!tweet.created_at) return true;\n  const createdAt = Date.parse(tweet.created_at);\n  return Number.isFinite(createdAt) && createdAt >= startTimeMs;\n}\n\nfunction summarizeTweet(tweet: XTweet) {\n  return {\n    id: tweet.id,\n    text: tweet.text,\n    createdAt: tweet.created_at,\n    lang: tweet.lang,\n    likes: tweet.public_metrics?.like_count ?? 0,\n    replies: tweet.public_metrics?.reply_count ?? 0,\n    reposts: tweet.public_metrics?.retweet_count ?? 0,\n    quotes: tweet.public_metrics?.quote_count ?? 0,\n    impressions: tweet.public_metrics?.impression_count ?? 0,\n  };\n}\n\nexport default defineTool({\n  description:\n    \"Scan configured X (Twitter) profiles for recent posts to surface hot topics. Uses X API v2 app-only bearer auth.\",\n  inputSchema: z.object({\n    handles: z\n      .array(z.string().min(1))\n      .optional()\n      .describe(\n        \"X handles to scan. Defaults to the X_HOT_TOPIC_HANDLES environment variable.\",\n      ),\n  }),\n  async execute({ handles }) {\n    const bearer = process.env.X_BEARER_TOKEN;\n    if (!bearer) {\n      return { authRequired: true, missingEnv: \"X_BEARER_TOKEN\" };\n    }\n\n    const targetHandles = handles?.length ? handles : hotTopicConfig.handles;\n    if (targetHandles.length === 0) {\n      return {\n        scannedProfiles: 0,\n        profiles: [],\n        note: \"No handles configured. Set X_HOT_TOPIC_HANDLES or pass handles explicitly.\",\n      };\n    }\n\n    const startTime = getLookbackStartTime();\n    const startTimeMs = Date.parse(startTime);\n\n    const profiles = [];\n    for (const handle of targetHandles) {\n      try {\n        const tweets = (await fetchUserTweets(handle, startTime)).filter((tweet) =>\n          withinLookback(tweet, startTimeMs),\n        );\n        profiles.push({\n          handle,\n          ok: true,\n          tweetCount: tweets.length,\n          tweets: tweets.map(summarizeTweet),\n        });\n      } catch (error) {\n        profiles.push({\n          handle,\n          ok: false,\n          error: error instanceof Error ? error.message : String(error),\n        });\n      }\n    }\n\n    const totalTweets = profiles\n      .filter((profile) => profile.ok)\n      .reduce((sum, profile) => sum + (profile.tweetCount ?? 0), 0);\n\n    return {\n      scannedProfiles: profiles.length,\n      totalTweets,\n      lookbackHours: hotTopicConfig.lookbackHours,\n      windowStart: startTime,\n      profiles,\n    };\n  },\n});\n"
+      },
+      {
+        "path": "agent/tools/send_digest_email.ts",
+        "type": "registry:file",
+        "target": "~/agent/tools/send_digest_email.ts",
+        "content": "import { Resend } from \"resend\";\nimport { defineTool } from \"eve/tools\";\nimport { z } from \"zod\";\n\nimport { hotTopicConfig } from \"../lib/hot-topic-config.js\";\n\n// Eve replays a tool step that did not complete. The Resend Idempotency-Key\n// header makes a retried send safe, and this in-process map lets a replayed\n// step return the recorded result instead of issuing a second send.\nconst sentKeys = new Map<string, unknown>();\n\nconst payloadSchema = z.object({\n  from: z.email().optional(),\n  to: z.array(z.email()).min(1).max(50).optional(),\n  subject: z.string().min(1).optional(),\n  html: z.string().min(1),\n  confirmSend: z\n    .boolean()\n    .describe(\n      \"Must be true to send. Acts as an explicit guard against accidental sends.\",\n    ),\n  idempotencyKey: z\n    .string()\n    .min(1)\n    .max(255)\n    .describe(\n      \"Stable unique key for this digest. Reused across retries of the same step so a replayed send does not duplicate the email.\",\n    ),\n});\n\nexport default defineTool({\n  description:\n    \"Send the X hot topic digest email through Resend. Requires an explicit confirmSend flag and a stable idempotencyKey so a replayed step never duplicates the email. Always call preview_digest_email first.\",\n  inputSchema: payloadSchema,\n  async execute({ from, to, subject, html, confirmSend, idempotencyKey }) {\n    const apiKey = process.env.RESEND_API_KEY;\n    if (!apiKey) {\n      return { authRequired: true, missingEnv: \"RESEND_API_KEY\" };\n    }\n\n    if (!confirmSend) {\n      return {\n        notConfirmed: true,\n        note: \"confirmSend must be true to send. Call preview_digest_email to review the email first.\",\n      };\n    }\n\n    const resolvedFrom = from ?? hotTopicConfig.digest.from;\n    if (!resolvedFrom) {\n      return { notConfigured: true, missingEnv: \"X_HOT_TOPIC_DIGEST_FROM\" };\n    }\n\n    const resolvedTo = to?.length ? to : hotTopicConfig.digest.to;\n    if (resolvedTo.length === 0) {\n      return { notConfigured: true, missingEnv: \"X_HOT_TOPIC_DIGEST_TO\" };\n    }\n\n    const cached = sentKeys.get(idempotencyKey);\n    if (cached) {\n      return { replayed: true, idempotencyKey, result: cached };\n    }\n\n    const resend = new Resend(apiKey);\n    const result = await resend.emails.send(\n      {\n        from: resolvedFrom,\n        to: resolvedTo,\n        subject: subject ?? hotTopicConfig.digest.subject,\n        html,\n      },\n      { idempotencyKey },\n    );\n\n    sentKeys.set(idempotencyKey, result);\n    return { sent: true, idempotencyKey, result };\n  },\n});\n"
+      },
+      {
+        "path": "evals/evals.config.ts",
+        "type": "registry:file",
+        "target": "~/evals/evals.config.ts",
+        "content": "import { defineEvalConfig } from \"eve/evals\";\n\nexport default defineEvalConfig({\n  timeoutMs: 120_000,\n});\n"
+      },
+      {
+        "path": "evals/hot-topic-digest.eval.ts",
+        "type": "registry:file",
+        "target": "~/evals/hot-topic-digest.eval.ts",
+        "content": "import { defineEval } from \"eve/evals\";\nimport { includes } from \"eve/evals/expect\";\n\nexport default defineEval({\n  description:\n    \"Scans a sample of X posts, researches hot topics with Parallel, and previews the digest email without sending.\",\n  async test(t) {\n    await t.send(`\nRun the daily X hot topic digest for the following sample posts.\n\nWatched handles: vercel, parallel_ai\n\nSample scan_x_profiles output:\n{\n  \"scannedProfiles\": 2,\n  \"totalTweets\": 2,\n  \"lookbackHours\": 24,\n  \"windowStart\": \"2026-06-25T08:00:00Z\",\n  \"profiles\": [\n    {\n      \"handle\": \"vercel\",\n      \"ok\": true,\n      \"tweetCount\": 1,\n      \"tweets\": [\n        {\n          \"id\": \"1700000000000000001\",\n          \"text\": \"We just shipped AI SDK 5 with native agent loops and durable execution.\",\n          \"createdAt\": \"2026-06-26T07:00:00.000Z\",\n          \"likes\": 320,\n          \"replies\": 22,\n          \"reposts\": 45,\n          \"quotes\": 8,\n          \"impressions\": 12000\n        }\n      ]\n    },\n    {\n      \"handle\": \"parallel_ai\",\n      \"ok\": true,\n      \"tweetCount\": 1,\n      \"tweets\": [\n        {\n          \"id\": \"1700000000000000002\",\n          \"text\": \"Parallel Monitor API is now GA: web change events streamed to proactive agents.\",\n          \"createdAt\": \"2026-06-26T07:30:00.000Z\",\n          \"likes\": 210,\n          \"replies\": 14,\n          \"reposts\": 33,\n          \"quotes\": 5,\n          \"impressions\": 9000\n        }\n      ]\n    }\n  ]\n}\n\nSurface up to 2 hot topics, research each with research_hot_topics, then preview the digest with preview_digest_email. Do not call send_digest_email in this run.\n`);\n\n    t.succeeded();\n    t.noFailedActions();\n    t.calledTool(\"research_hot_topics\").gate();\n    t.calledTool(\"preview_digest_email\").gate();\n    t.notCalledTool(\"send_digest_email\").gate();\n    t.check(t.reply, includes(\"dryRun\").soft());\n  },\n});\n"
+      },
+      {
+        "path": "evals/missing-config-does-not-send.eval.ts",
+        "type": "registry:file",
+        "target": "~/evals/missing-config-does-not-send.eval.ts",
+        "content": "import { defineEval } from \"eve/evals\";\nimport { includes } from \"eve/evals/expect\";\n\nexport default defineEval({\n  description:\n    \"When required configuration is missing, the agent stops and reports it instead of sending the digest.\",\n  async test(t) {\n    await t.send(`\nRun the daily X hot topic digest.\n\nThe scan_x_profiles tool returned:\n\n{\n  \"authRequired\": true,\n  \"missingEnv\": \"X_BEARER_TOKEN\"\n}\n\nNo handles could be scanned because the X bearer token is not configured. Proceed according to the instructions: do not invent handles, topics, sources, or recipients, and do not call send_digest_email. Report the missing configuration clearly.\n`);\n\n    t.succeeded();\n    t.noFailedActions();\n    t.notCalledTool(\"send_digest_email\").gate();\n    t.notCalledTool(\"preview_digest_email\").gate();\n    t.check(t.reply, includes(\"X_BEARER_TOKEN\").gate());\n  },\n});\n"
+      },
+      {
+        "path": "evals/send-confirmation.eval.ts",
+        "type": "registry:file",
+        "target": "~/evals/send-confirmation.eval.ts",
+        "content": "import { defineEval } from \"eve/evals\";\nimport { equals, includes } from \"eve/evals/expect\";\n\nexport default defineEval({\n  description:\n    \"Confirms the send path requires confirmSend=true and a stable idempotencyKey, and does not send when the flag is omitted.\",\n  async test(t) {\n    const turn = await t.send(`\nThe digest has been previewed with preview_digest_email and the user has approved sending it for today (2026-06-26).\n\nNow send the digest with send_digest_email. Use today's date to build a stable idempotencyKey such as x-hot-topic-digest-2026-06-26, and set confirmSend=true. If you would otherwise send without confirmSend=true, do not send and report that confirmation is required instead.\n`);\n\n    const call = turn.requireToolCall(\"send_digest_email\");\n    t.check(call.input.confirmSend, equals(true).gate());\n    t.check(\n      typeof call.input.idempotencyKey === \"string\" && call.input.idempotencyKey.length > 0,\n      equals(true).gate(),\n    );\n    t.check(t.reply, includes(\"x-hot-topic-digest-2026-06-26\").soft());\n  },\n});\n"
+      },
+      {
+        "path": "README.md",
+        "type": "registry:file",
+        "target": "~/agent/README.md",
+        "content": "# X Hot Topic Digest\n\nA scheduled Eve agent that scans a configured set of X (Twitter) profiles every day, surfaces hot topics from their recent posts, researches each topic with the [Parallel](https://parallel.ai/) web search API, and delivers an HTML digest by email through [Resend](https://resend.com).\n\nIt runs on a cron schedule, reads only public posts via the X API v2, and previews every email in dry-run mode before sending anything for real.\n\n## What it does\n\n1. **Scan X profiles** \u2014 pulls recent posts (excluding retweets) from each handle in `X_HOT_TOPIC_HANDLES` using X API v2 app-only bearer auth.\n2. **Surface hot topics** \u2014 clusters the posts into up to `X_HOT_TOPIC_MAX_TOPICS` themes based on recurrence and engagement.\n3. **Research with Parallel** \u2014 for each topic, calls the Parallel Search API with focused keyword queries and returns ranked web sources with provenance.\n4. **Send a digest email** \u2014 composes a single HTML email with origin posts and research sources, previews it with `preview_digest_email`, then sends it through Resend only when `send_digest_email` is called with `confirmSend: true` and a stable `idempotencyKey` (so a replayed step never duplicates the email).\n\n## Installation\n\n```bash\nnpx shadcn@latest add https://evex.sh/r/x-hot-topic-digest\n```\n\n## Configuration\n\nCopy `.env.example` into your Eve app environment and fill in the values.\n\n### X credentials\n\n- `X_BEARER_TOKEN` \u2014 app-only bearer token from the X Developer Console. Required to read public posts.\n\n### Watched profiles and schedule\n\n- `X_HOT_TOPIC_HANDLES` \u2014 comma-separated X handles to scan (with or without `@`). Example: `vercel,parallel_ai,anthropicai`.\n- `X_HOT_TOPIC_DAILY_CRON` \u2014 5-field cron expression (UTC on Vercel). Defaults to `0 8 * * *` (daily at 08:00 UTC).\n- `X_HOT_TOPIC_LOOKBACK_HOURS` \u2014 lookback window in hours for posts to scan. Defaults to `24`, so each daily digest only sees posts from the last 24 hours and does not repeat the same topics day over day. Set it lower for more frequent runs or higher for low-volume handles.\n- `X_HOT_TOPIC_MAX_TWEETS_PER_PROFILE` \u2014 max posts fetched per profile. Defaults to `20`.\n- `X_HOT_TOPIC_MAX_TOPICS` \u2014 max hot topics surfaced per run. Defaults to `5`.\n- `X_HOT_TOPIC_SEARCH_MAX_RESULTS` \u2014 max Parallel search results per topic. Defaults to `5`.\n- `X_HOT_TOPIC_SEARCH_MODE` \u2014 Parallel search mode: `turbo`, `basic`, or `advanced`. Defaults to `basic`.\n\n### Digest delivery (Resend)\n\n- `RESEND_API_KEY` \u2014 Resend API key.\n- `X_HOT_TOPIC_DIGEST_FROM` \u2014 sender email address verified in Resend.\n- `X_HOT_TOPIC_DIGEST_TO` \u2014 comma-separated recipient email addresses.\n- `X_HOT_TOPIC_DIGEST_SUBJECT` \u2014 email subject. Defaults to `X Hot Topic Digest`.\n\nSending is a two-step, non-idempotent-safe operation by design: the agent calls `preview_digest_email` first, then `send_digest_email` with `confirmSend: true` and a stable `idempotencyKey`. The idempotency key is forwarded to Resend as the `Idempotency-Key` header and reused if Eve replays the step, so a retried send never produces a duplicate email.\n\n### Parallel credentials\n\n- `PARALLEL_API_KEY` \u2014 Parallel API key from [platform.parallel.ai](https://platform.parallel.ai).\n\n## Smoke test\n\n1. Set `X_BEARER_TOKEN`, `PARALLEL_API_KEY`, `RESEND_API_KEY`, `X_HOT_TOPIC_DIGEST_FROM`, `X_HOT_TOPIC_DIGEST_TO`, and at least one handle in `X_HOT_TOPIC_HANDLES`.\n2. Trigger the schedule while iterating in dev:\n\n   ```bash\n   curl -X POST http://localhost:3000/eve/v1/dev/schedules/daily-hot-topic-digest\n   ```\n\n3. The agent should call `preview_digest_email` to review the digest. Sending is gated on `send_digest_email` being called with `confirmSend: true` and an `idempotencyKey`, so a preview-only run sends nothing.\n\n## Troubleshooting\n\n- **`authRequired: missingEnv X_BEARER_TOKEN`** \u2014 the X bearer token is missing or empty.\n- **`Could not resolve X user id`** \u2014 a handle is wrong, suspended, or the app does not have access to user lookup.\n- **`authRequired: missingEnv PARALLEL_API_KEY`** \u2014 the Parallel API key is missing.\n- **`notConfigured: missingEnv X_HOT_TOPIC_DIGEST_TO`** \u2014 no recipients configured. Add at least one email to `X_HOT_TOPIC_DIGEST_TO`.\n- **`notConfirmed: true`** \u2014 `send_digest_email` was called without `confirmSend: true`. Review the preview first, then call it with the flag set.\n- **No email arrives** \u2014 the agent only sends when `send_digest_email` is called with `confirmSend: true` and an `idempotencyKey`. Confirm `X_HOT_TOPIC_DIGEST_FROM` is a verified Resend sender.\n\n## Development\n\n```bash\npnpm install\npnpm dev\n```\n\nRun `pnpm info` to inspect the Eve surface and `pnpm build` before opening a PR.\n"
+      },
+      {
+        "path": ".env.example",
+        "type": "registry:file",
+        "target": "~/.env.example",
+        "content": "X_BEARER_TOKEN=\n\nX_HOT_TOPIC_HANDLES=\n\nX_HOT_TOPIC_DAILY_CRON=\"0 8 * * *\"\nX_HOT_TOPIC_LOOKBACK_HOURS=24\nX_HOT_TOPIC_MAX_TWEETS_PER_PROFILE=20\nX_HOT_TOPIC_MAX_TOPICS=5\nX_HOT_TOPIC_SEARCH_MAX_RESULTS=5\nX_HOT_TOPIC_SEARCH_MODE=basic\n\nX_HOT_TOPIC_DIGEST_FROM=\nX_HOT_TOPIC_DIGEST_TO=\nX_HOT_TOPIC_DIGEST_SUBJECT=\"X Hot Topic Digest\"\n\nPARALLEL_API_KEY=\nRESEND_API_KEY=\n"
       }
     ]
   }
