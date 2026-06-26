@@ -84,7 +84,7 @@ favorites, profiles, and auth — lives in the web app's Postgres database.
   <img alt="shadcn/ui" src="https://shieldcn.dev/badge/-shadcn-000000.svg?logo=shadcnui&variant=branded" />
   <img alt="Eve" src="https://shieldcn.dev/badge/-Eve-006bff.svg?variant=branded" />
   <img alt="Drizzle ORM" src="https://shieldcn.dev/badge/-Drizzle-C5F74F.svg?logo=drizzle&variant=branded" />
-  <img alt="PostgreSQL" src="https://shieldcn.dev/badge/-PostgreSQL-4169E1.svg?logo=postgresql&variant=branded" />
+  <img alt="Neon" src="https://shieldcn.dev/badge/-Neon-00E599.svg?logo=neon&variant=branded" />
   <img alt="Better Auth" src="https://shieldcn.dev/badge/-Better_Auth-000000.svg?logo=betterauth&variant=branded" />
   <img alt="Vercel" src="https://shieldcn.dev/badge/-Vercel-000000.svg?logo=vercel&variant=branded" />
 </p>
