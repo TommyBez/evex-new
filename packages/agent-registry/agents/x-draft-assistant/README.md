@@ -12,6 +12,11 @@ It runs on a cron schedule, reads only public posts via the X API v2, previews e
 4. **Draft three X post candidates** — writes exactly `X_HOT_TOPIC_DRAFT_COUNT` (default 3) distinct candidates from the researched topics. Each candidate is either a single tweet or a short thread (1-5 posts), each post at most 280 characters, each candidate a different angle on the same signal.
 5. **Create drafts in Typefully** — previews every candidate with `preview_x_draft`, then creates them in Typefully through `create_x_drafts` only when `confirmCreate: true` and a stable, unique `idempotencyKey` per draft are provided. The idempotency key is held in an in-process cache and reused if Eve replays the step, so a retried create never produces a duplicate draft. If `X_HOT_TOPIC_DRAFT_TAG` references a tag that does not exist in the social set, the agent can list tags with `list_typefully_tags` and create it first with `create_typefully_tag` (gated on `confirmCreate: true`).
 
+## Skills
+
+- **typefully-best-practices** — X automation compliance, character limits, and the exactly-once draft creation model. Loaded before creating any X draft.
+- **social** — social media content strategy: hook formulas, post templates, platform limits, short-form video structure, and social listening. Loaded before authoring X draft candidates so drafts follow engagement best practices.
+
 ## Installation
 
 ```bash
