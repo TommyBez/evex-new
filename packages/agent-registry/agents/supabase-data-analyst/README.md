@@ -1,10 +1,9 @@
 # Supabase Data Analyst
 
 An Eve-native Slack analyst for a single Supabase project. It answers Slack
-mentions and DMs, inspects schema metadata, and runs read-only SQL through the
-hosted Supabase MCP server. There is no custom query tool: every database
-operation flows through Eve's MCP client connection to
-`https://mcp.supabase.com/mcp`.
+mentions and DMs with schema inspection and read-only SQL through the hosted
+Supabase MCP server. The agent can only run read-only SQL queries: it exposes
+just `supabase__list_tables` and `supabase__execute_sql`, and nothing else.
 
 ## Install
 
@@ -20,21 +19,30 @@ Then install the public runtime dependencies listed by the registry item.
 
 The agent uses Eve's MCP client connection (`agent/connections/supabase.ts`) to
 talk to the Supabase remote MCP server. The model discovers Supabase tools
-through the built-in `connection_search` and calls them by their qualified name,
-such as `supabase__list_tables` or `supabase__execute_sql`.
+through the built-in `connection_search` and calls them by their qualified name.
+
+This agent only runs read-only SQL queries. The only tools it exposes are:
+
+- `supabase__list_tables` — list tables in the database, for schema inspection.
+- `supabase__execute_sql` — run a read-only SQL query.
+
+No other Supabase MCP tools are available. Write tools, migrations, Edge
+Functions, branches, storage, logs, advisors, account management, project
+URL/key helpers, and docs search are all excluded.
 
 The connection URL is built from env vars and always sets:
 
 - `project_ref` to scope the server to one Supabase project,
 - `read_only=true` so the server executes every query as a read-only Postgres
   user,
-- `features=database,docs` (override with `SUPABASE_DATA_ANALYST_FEATURES`) to
-  limit which tool groups the server exposes.
+- `features=database` so the server only publishes the database tool group.
 
-A client-side `tools.allow` list in `agent/connections/supabase.ts` drops any
-write tool the server still advertises, so the model never sees
-`apply_migration`, `deploy_edge_function`, `create_project`, `create_branch`,
-`update_storage_config`, and similar mutating tools.
+A client-side `tools.allow` list in `agent/connections/supabase.ts` further
+restricts discovery to `list_tables` and `execute_sql`, so even if the server
+advertises other database tools (such as `apply_migration`, `list_extensions`,
+`list_migrations`) the model never sees them. `SUPABASE_DATA_ANALYST_READ_ONLY`
+cannot be set to `false` and `SUPABASE_DATA_ANALYST_FEATURES` only accepts
+`database`; the config loader rejects anything else at startup.
 
 ## Start using it in Slack
 
@@ -133,24 +141,22 @@ access token (PAT) sent as `Authorization: Bearer <token>` on every MCP request.
 SUPABASE_DATA_ANALYST_ACCESS_TOKEN=<supabase-pat>
 SUPABASE_DATA_ANALYST_PROJECT_REF=<project-ref>
 SUPABASE_DATA_ANALYST_READ_ONLY=true
-SUPABASE_DATA_ANALYST_FEATURES=database,docs
+SUPABASE_DATA_ANALYST_FEATURES=database
 SUPABASE_DATA_ANALYST_MCP_URL=https://mcp.supabase.com/mcp
 SUPABASE_DATA_ANALYST_SLACK_CONNECT_UID=slack/supabase-data-analyst
 ```
 
-`SUPABASE_DATA_ANALYST_READ_ONLY=true` is the enforcement boundary: the Supabase
-MCP server runs every query as a read-only Postgres user. The client-side
-`tools.allow` list in `agent/connections/supabase.ts` is defense in depth; keep
-both.
+`SUPABASE_DATA_ANALYST_READ_ONLY` must be `true` (the default). The config
+loader rejects `false` at startup because this agent only runs read-only SQL
+queries.
 
-`SUPABASE_DATA_ANALYST_FEATURES` accepts a comma-separated subset of
-`account-management`, `branching`, `database`, `debugging`, `development`,
-`edge-functions`, `storage`, `docs`. The default `database,docs` keeps the
-surface small. Add `debugging` to let the agent read service logs and advisors,
-or `development` to allow `generate_typescript_types`. Avoid
-`account-management`, `branching`, `edge-functions`, and `storage` unless the
-Slack audience is allowed to see that surface; even in read-only mode those
-groups expose non-analytical metadata.
+`SUPABASE_DATA_ANALYST_FEATURES` must be `database` (the default). The config
+loader rejects any other feature group, because every other group exposes
+non-query operations (migrations, Edge Functions, branches, storage, logs,
+advisors, account management, project URL/key helpers, docs search). Keeping
+`features=database` makes the Supabase MCP server publish only database tools,
+and the client-side `tools.allow` list in `agent/connections/supabase.ts`
+further narrows that to `list_tables` and `execute_sql`.
 
 `SUPABASE_DATA_ANALYST_MCP_URL` defaults to the hosted endpoint. Override it to
 point at a local Supabase CLI MCP server (`http://localhost:54321/mcp`) during
@@ -163,3 +169,7 @@ project with PII unless the Slack workspace and channel audience are allowed to
 see that data. The agent's instructions tell the model never to paste
 publishable keys, service role keys, or personal access tokens into Slack, even
 if a tool returns them.
+
+The agent cannot write, migrate, deploy, branch, or configure anything. If a
+Slack request needs one of those operations, the agent says it cannot be done
+and proposes a read-only SQL alternative.

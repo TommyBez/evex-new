@@ -1,22 +1,6 @@
 const DEFAULT_SUPABASE_MCP_URL = 'https://mcp.supabase.com/mcp'
-const DEFAULT_FEATURES: readonly string[] = ['database', 'docs']
-const ALLOWED_FEATURES = new Set([
-  'account-management',
-  'branching',
-  'database',
-  'debugging',
-  'development',
-  'edge-functions',
-  'storage',
-  'docs',
-])
+const ALLOWED_FEATURES = new Set(['database'])
 const PROJECT_REF_PATTERN = /^[A-Za-z0-9_-]{6,}$/
-const READ_ONLY_FEATURES = new Set([
-  'database',
-  'docs',
-  'development',
-  'debugging',
-])
 
 export interface SupabaseDataAnalystConfig {
   readonly accessToken: string | null
@@ -38,16 +22,14 @@ const parseFeatures = (raw: string | undefined): readonly string[] => {
     .filter((part) => part.length > 0)
 
   if (requested.length === 0) {
-    return DEFAULT_FEATURES
+    return ['database']
   }
 
   const unique = [...new Set(requested.map((feature) => feature.toLowerCase()))]
   for (const feature of unique) {
     if (!ALLOWED_FEATURES.has(feature)) {
       throw new Error(
-        `SUPABASE_DATA_ANALYST_FEATURES contains unknown feature "${feature}". Allowed: ${[
-          ...ALLOWED_FEATURES,
-        ].join(', ')}.`,
+        `SUPABASE_DATA_ANALYST_FEATURES may only include "database" for this read-only query agent. Received "${feature}".`,
       )
     }
   }
@@ -98,12 +80,8 @@ const buildMcpUrl = (
   if (config.projectRef) {
     url.searchParams.set('project_ref', config.projectRef)
   }
-  if (config.readOnly) {
-    url.searchParams.set('read_only', 'true')
-  }
-  if (config.features.length > 0) {
-    url.searchParams.set('features', config.features.join(','))
-  }
+  url.searchParams.set('read_only', 'true')
+  url.searchParams.set('features', config.features.join(','))
   return url.toString()
 }
 
@@ -117,6 +95,12 @@ export function getSupabaseDataAnalystConfig(): SupabaseDataAnalystConfig {
     process.env.SUPABASE_DATA_ANALYST_READ_ONLY,
     true,
   )
+
+  if (!readOnly) {
+    throw new Error(
+      'SUPABASE_DATA_ANALYST_READ_ONLY cannot be false. This agent only runs read-only SQL queries.',
+    )
+  }
 
   const baseConfig = { features, projectRef, readOnly }
   const mcpUrl = buildMcpUrl(baseUrl, baseConfig)
@@ -139,49 +123,4 @@ export function getRequiredAccessToken(
   return config.accessToken
 }
 
-export const READ_ONLY_ALLOWED_TOOLS = [
-  'list_tables',
-  'list_extensions',
-  'list_migrations',
-  'execute_sql',
-  'get_logs',
-  'get_advisors',
-  'generate_typescript_types',
-  'list_edge_functions',
-  'get_edge_function',
-  'list_branches',
-  'list_storage_buckets',
-  'get_storage_config',
-  'search_docs',
-] as const
-
-export const READ_ONLY_BLOCKED_TOOLS = [
-  'apply_migration',
-  'deploy_edge_function',
-  'create_project',
-  'pause_project',
-  'restore_project',
-  'create_branch',
-  'delete_branch',
-  'merge_branch',
-  'reset_branch',
-  'rebase_branch',
-  'update_storage_config',
-] as const
-
-export const assertReadOnlyFeatureSurface = (
-  features: readonly string[],
-): void => {
-  const disallowed = features.filter(
-    (feature) => !READ_ONLY_FEATURES.has(feature),
-  )
-  if (disallowed.length > 0) {
-    throw new Error(
-      `SUPABASE_DATA_ANALYST_FEATURES includes write-capable feature groups (${disallowed.join(
-        ', ',
-      )}). Remove them or set SUPABASE_DATA_ANALYST_READ_ONLY=true with features limited to ${[
-        ...READ_ONLY_FEATURES,
-      ].join(', ')}.`,
-    )
-  }
-}
+export const QUERY_TOOLS = ['list_tables', 'execute_sql'] as const

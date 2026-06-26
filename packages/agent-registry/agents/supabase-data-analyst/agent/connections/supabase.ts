@@ -3,7 +3,7 @@ import { defineMcpClientConnection } from 'eve/connections'
 import {
   getRequiredAccessToken,
   getSupabaseDataAnalystConfig,
-  READ_ONLY_ALLOWED_TOOLS,
+  QUERY_TOOLS,
 } from '../lib/supabase-config.js'
 
 const connectionConfig = getSupabaseDataAnalystConfig()
@@ -11,7 +11,7 @@ const connectionConfig = getSupabaseDataAnalystConfig()
 export default defineMcpClientConnection({
   url: connectionConfig.mcpUrl,
   description:
-    'Supabase project analytics: list tables and extensions, execute read-only SQL, inspect migrations, logs, advisors, Edge Functions, project URLs and publishable keys, and search Supabase docs. Use connection_search to discover supabase__ tools, then call them by qualified name (e.g. supabase__list_tables, supabase__execute_sql).',
+    'Read-only SQL analytics for a single Supabase project. The only available tools are supabase__list_tables (schema inspection) and supabase__execute_sql (read-only SELECT). No write, migration, Edge Function, branch, storage, logs, advisors, account, or docs tools are exposed. Use connection_search to discover these tools, then call them by qualified name.',
   auth: {
     principalType: 'app',
     getToken: async () => ({
@@ -19,6 +19,6 @@ export default defineMcpClientConnection({
     }),
   },
   tools: {
-    allow: [...READ_ONLY_ALLOWED_TOOLS],
+    allow: [...QUERY_TOOLS],
   },
 })
