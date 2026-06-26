@@ -1,6 +1,6 @@
 ---
 name: evex-agent-authoring
-description: Use when creating, modifying, or reviewing installable Eve agents in the evex repository under packages/agent-registry/agents/<slug>. Guides repo-specific standards for package layout, registry.json, README/install surface, env examples, validation, and alignment with the code-reviewer and postgres-data-analyst reference agents.
+description: Use when creating, modifying, or reviewing installable Eve agents in the evex repository under packages/agent-registry/agents/<slug>. Guides repo-specific standards for package layout, registry.json, README/install surface, env examples, registry generate/check/build gates, and alignment with the code-reviewer and postgres-data-analyst reference agents.
 ---
 
 # Evex Agent Authoring
@@ -94,6 +94,10 @@ pnpm --filter @evex/agent-registry registry:scaffold <slug>
 
 Then edit `registry.json` manually. Treat it as source of truth.
 
+**Scaffold does not update `src/generated/registry.ts`.** After scaffold or any
+`registry.json` edit, always run generate (see [Build gates](#build-gates)).
+Committing without generate makes `pnpm build` fail.
+
 ## README Standards
 
 The README is installed into the consumer's Eve app, so write it for the user
@@ -116,45 +120,85 @@ Include:
 Do not describe installing a full app from scratch. Do not rely on the app's
 `components.json` or any root registry path as the public install command.
 
-## Generated Registry
+## Build Gates
 
-The catalog is embedded in `packages/agent-registry/src/generated/registry.ts`,
-generated from the agent sources by `scripts/generate-registry.mjs`. The
-`@evex/agent-registry` build runs the generator with `--check`, so any change
-to an agent's `registry.json`, installed files, or dependency list leaves the
-generated file out of date and **fails the build**:
+The monorepo build and lint pipelines both depend on the agent registry being
+valid and in sync. Treat these as hard gates before opening or updating a PR.
+
+### What root commands run
+
+| Command | Registry package | Web app |
+| --- | --- | --- |
+| `pnpm build` | `generate-registry.mjs --check` | `next build` (after registry build) |
+| `pnpm check` | `generate-registry.mjs --check` | `ultracite check` (after registry check) |
+| `pnpm typecheck` | `tsc --noEmit` (after registry build) | `tsc --noEmit` |
+
+`@evex/agent-registry` `build` and `check` are the same gate: they do not write
+files; they only verify that `src/generated/registry.ts` matches the agent
+sources. Agent packages under `agents/<slug>/` are **not** Turbo workspace
+packages — run their scripts with `pnpm --dir
+packages/agent-registry/agents/<slug> …`.
+
+### Generator validations
+
+`pnpm --filter @evex/agent-registry generate` (write) and `… run check`
+(verify) both execute `scripts/generate-registry.mjs`. Besides syncing
+`src/generated/registry.ts`, the script fails when:
+
+- `registry.json` does not define exactly one item of type `registry:item`.
+- Item `name` does not match the folder slug.
+- `dependencies` is present but not an array of non-empty strings.
+- A declared `files[].path` is not a relative POSIX path under the agent
+  (`README.md`, `.env.example`, `agent/**`, or `evals/**` only).
+- A declared file is missing on disk.
+- Installed `agent/**` source reads `process.env.*` but `.env.example` is
+  absent from `files`, or `.env.example` omits any used variable (`CI` and
+  `NODE_ENV` are exempt).
+
+Fix the source (`registry.json`, missing files, `.env.example`) then regenerate.
+Do not hand-edit `src/generated/registry.ts`.
+
+### Mandatory sequence after registry changes
+
+Run in this order whenever you scaffold, edit `registry.json`, add/remove
+installed files, or change file content referenced by the registry:
+
+```bash
+# 1. Regenerate the embedded catalog (writes src/generated/registry.ts)
+pnpm --filter @evex/agent-registry generate
+
+# 2. Agent-local Eve and TypeScript gates
+pnpm --dir packages/agent-registry/agents/<slug> typecheck
+pnpm --dir packages/agent-registry/agents/<slug> build    # eve build
+pnpm --dir packages/agent-registry/agents/<slug> check    # eve info --json
+
+# 3. Monorepo gates (match CI / pre-merge expectations)
+pnpm --filter @evex/agent-registry run check              # same as registry build --check
+pnpm check                                                # ultracite + registry check
+pnpm build                                                # registry check + next build
+```
+
+Step 1 is **required** for every registry-affecting change. Steps 2–3 catch
+issues the generator does not cover (Eve surface, TypeScript, lint, Next.js).
+
+If `generate` or `check` prints:
 
 ```text
 src/generated/registry.ts is out of date. Run "pnpm --filter @evex/agent-registry generate".
 ```
 
-After editing an agent, regenerate before committing:
-
-```bash
-pnpm --filter @evex/agent-registry generate
-```
-
-Do not hand-edit `src/generated/registry.ts`; regenerate it from sources.
+run `generate`, commit the updated `src/generated/registry.ts`, and rerun
+`pnpm --filter @evex/agent-registry run check` or `pnpm build`.
 
 ## Evals And Tests
 
 Add evals when behavior is easy to regress or when the agent publishes external
 artifacts. Follow `code-reviewer/evals/` for structure.
 
-At minimum, validate a new or changed agent with:
+When evals exist, also run:
 
 ```bash
-pnpm --filter @evex/agent-registry generate   # required: build --check fails otherwise
-pnpm --filter @evex/agent-registry run check
-pnpm --dir packages/agent-registry/agents/<slug> typecheck
-pnpm --dir packages/agent-registry/agents/<slug> info
-```
-
-For broader changes, also run:
-
-```bash
-pnpm check
-pnpm build
+pnpm --dir packages/agent-registry/agents/<slug> eval -- --skip-report
 ```
 
 If root validation is blocked by unrelated local state, report that explicitly
@@ -170,7 +214,11 @@ or build succeeded when it did not.
 - Ensure env vars used in installed files are declared in `.env.example`.
 - Ensure `registry.json.files` includes every publishable file and excludes
   app-level or generated files.
-- Regenerate `packages/agent-registry/src/generated/registry.ts`.
+- After scaffold or any `registry.json` / installed-file change: run
+  `pnpm --filter @evex/agent-registry generate` and commit
+  `packages/agent-registry/src/generated/registry.ts`.
+- Run the [mandatory validation sequence](#mandatory-sequence-after-registry-changes);
+  `pnpm build` must pass before merge.
 - Verify README setup steps match the actual channel/connection code.
 - Keep user-facing install copy on the `https://evex.sh/r/<slug>` path.
 - Preserve unrelated working-tree changes.
