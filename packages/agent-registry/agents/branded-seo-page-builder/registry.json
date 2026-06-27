@@ -2,9 +2,9 @@
   "$schema": "https://ui.shadcn.com/schema/registry.json",
   "items": [
     {
-      "name": "context-seo-page-builder",
+      "name": "branded-seo-page-builder",
       "type": "registry:item",
-      "title": "Context SEO Page Builder",
+      "title": "Branded SEO Page Builder",
       "description": "Generate an on-brand, SEO-optimized HTML page from a domain using Context.dev brand, content, and styleguide data.",
       "categories": [
         "marketing"
@@ -81,7 +81,7 @@
         }
       ],
       "meta": {
-        "slug": "context-seo-page-builder",
+        "slug": "branded-seo-page-builder",
         "category": "marketing",
         "createdAt": "2026-06-27T07:44:00.000Z",
         "updatedAt": "2026-06-27T07:44:00.000Z"

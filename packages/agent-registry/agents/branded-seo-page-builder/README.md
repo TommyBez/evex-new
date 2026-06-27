@@ -1,4 +1,4 @@
-# Context SEO Page Builder
+# Branded SEO Page Builder
 
 An on-demand Eve agent that turns a domain into a complete SEO-optimized HTML
 page. It uses Context.dev to resolve brand metadata, scrape homepage content, and
@@ -32,7 +32,7 @@ Both skills are vendored from
 ## Installation
 
 ```bash
-npx shadcn@latest add https://evex.sh/r/context-seo-page-builder
+npx shadcn@latest add https://evex.sh/r/branded-seo-page-builder
 ```
 
 Install the public runtime dependencies listed by the registry item if your Eve
