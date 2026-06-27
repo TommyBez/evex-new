@@ -1,22 +1,25 @@
 # Branded SEO Page Builder
 
 An on-demand Eve agent that turns a domain into a complete SEO-optimized HTML
-page. It uses Context.dev to resolve brand metadata, scrape homepage content, and
-extract design-system signals, then applies the bundled `seo-audit` and `ai-seo`
-skills to produce search-ready static HTML.
+page. It connects to Context.dev's hosted MCP server to resolve brand metadata,
+scrape homepage content, and extract design-system signals, then applies the
+bundled `seo-audit` and `ai-seo` skills to produce search-ready static HTML.
 
 ## What it does
 
-1. **Resolves brand data with Context.dev** — pulls company name, description,
+1. **Connects to Context.dev MCP** — uses the hosted MCP server at
+   `https://context-dev.stlmcp.com`, authenticated with the
+   `x-context-dev-api-key` header.
+2. **Resolves brand data with Context.dev** — pulls company name, description,
    colors, logos, industry labels, and related metadata from a domain.
-2. **Scrapes source content** — reads the homepage or a user-provided page URL as
+3. **Scrapes source content** — reads the homepage or a user-provided page URL as
    clean markdown so the generated copy is grounded in existing brand language.
-3. **Extracts style cues** — optionally pulls Context.dev styleguide data for
+4. **Extracts style cues** — optionally pulls Context.dev styleguide data for
    colors, typography, spacing, shadows, and component cues.
-4. **Generates SEO HTML** — returns one complete HTML document with semantic
+5. **Generates SEO HTML** — returns one complete HTML document with semantic
    sections, metadata, Open Graph tags, Twitter card tags, accessible image alt
    text, and JSON-LD schema.
-5. **Optimizes for AI search** — loads the bundled `ai-seo` skill so the page is
+6. **Optimizes for AI search** — loads the bundled `ai-seo` skill so the page is
    extractable and citable by answer engines while staying people-first.
 
 ## Skills
@@ -48,10 +51,11 @@ CONTEXT_DEV_API_KEY=ctxt_secret_...
 ```
 
 `CONTEXT_API_KEY` is also supported as a fallback for projects that already use
-that name, but `CONTEXT_DEV_API_KEY` is the documented Context.dev standard.
+that name, but `CONTEXT_DEV_API_KEY` is the documented Context.dev standard. The
+Eve MCP connection sends the resolved key as the `x-context-dev-api-key` header.
 
-Never expose the Context.dev key to browser-side code. This agent calls
-Context.dev from the Eve tool runtime only.
+Never expose the Context.dev key to browser-side code. This agent sends it only
+from the Eve MCP connection runtime.
 
 ## Usage
 
@@ -89,7 +93,7 @@ The agent returns:
    Generate an SEO HTML homepage for stripe.com.
    ```
 
-4. Confirm the agent calls `retrieve_brand_page_context`, then returns a full
+4. Confirm the agent uses the `context-dev` MCP connection, then returns a full
    `<!doctype html>` document with metadata, JSON-LD, semantic sections, and SEO
    notes listing Context.dev source URLs.
 
@@ -98,9 +102,8 @@ The agent returns:
 - **`CONTEXT_DEV_API_KEY is required`** — set `CONTEXT_DEV_API_KEY` in the Eve app
   environment and restart the server.
 - **`Context.dev API 401`** — the key is missing, revoked, or copied incorrectly.
-- **`Context.dev API 408` or `429`** — the tool retries cold-hit timeouts and rate
-  limits. If the final response still fails, retry later or lower concurrent
-  usage.
+- **`Context.dev API 408` or `429`** — the MCP call hit a cold-start timeout or
+  rate limit. Retry later or lower concurrent usage.
 - **No brand facts in the HTML** — Context.dev did not return enough brand data
   and the agent refused to invent claims. Provide more source copy or a specific
   page URL.
@@ -115,4 +118,4 @@ pnpm info
 pnpm build
 ```
 
-Run `pnpm typecheck` while editing the Context tool.
+Run `pnpm typecheck` while editing the Context MCP connection.

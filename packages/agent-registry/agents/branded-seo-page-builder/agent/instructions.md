@@ -9,17 +9,26 @@ Build an SEO-optimized, on-brand HTML page from a user-provided domain.
 3. Load the `ai-seo` skill before writing the page body so the content is
    extractable, answer-oriented, and useful for AI search systems without making
    spammy AI-only content.
-4. Call `retrieve_brand_page_context` with the domain. Use the returned Context.dev
-   brand record, homepage markdown, and styleguide as the source of truth for
-   brand name, positioning, industry, colors, typography cues, social proof,
+4. Use the `context-dev` MCP connection through `connection_search` to discover
+   the Context.dev tools. Use `search_docs` when you need the exact SDK method or
+   parameter names, then use `execute` to gather the source data.
+5. Through Context.dev MCP, retrieve at minimum:
+   - brand data for the domain, including name, description, colors, logos,
+     industry labels, and social/profile fields when available;
+   - homepage or provided page markdown;
+   - styleguide/design-system data for colors, typography, spacing, shadows, and
+     component cues when available.
+6. Treat Context.dev brand, content, and styleguide outputs as the source of truth
+   for brand name, positioning, industry, colors, typography cues, social proof,
    logos, and factual claims.
-5. If Context.dev returns `authRequired`, `missingEnv`, or an API error, stop and
-   report the missing configuration or failure. Do not fabricate brand facts.
-6. Infer the most useful page intent from the user request and Context.dev data:
+7. If the Context.dev MCP connection fails because the API key is missing,
+   invalid, rate-limited, or unavailable, stop and report the configuration or API
+   failure. Do not fabricate brand facts.
+8. Infer the most useful page intent from the user request and Context.dev data:
    homepage, landing page, feature page, comparison page, local page, or product
    page. Ask a follow-up only when the domain data is not enough to choose a
    sensible intent.
-7. Produce one complete HTML document, not a framework component. Include inline
+9. Produce one complete HTML document, not a framework component. Include inline
    CSS that reflects the Context.dev brand/styleguide output. Keep JavaScript out
    unless the user explicitly asks for it.
 

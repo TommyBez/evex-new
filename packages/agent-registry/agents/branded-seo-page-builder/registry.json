@@ -10,14 +10,18 @@
         "marketing"
       ],
       "dependencies": [
-        "eve@^0.15.1",
-        "zod@4.3.6"
+        "eve@^0.15.1"
       ],
       "files": [
         {
           "path": "agent/agent.ts",
           "type": "registry:file",
           "target": "~/agent/agent.ts"
+        },
+        {
+          "path": "agent/connections/context-dev.ts",
+          "type": "registry:file",
+          "target": "~/agent/connections/context-dev.ts"
         },
         {
           "path": "agent/instructions.md",
@@ -65,11 +69,6 @@
           "target": "~/agent/skills/seo-audit/SKILL.md"
         },
         {
-          "path": "agent/tools/retrieve_brand_page_context.ts",
-          "type": "registry:file",
-          "target": "~/agent/tools/retrieve_brand_page_context.ts"
-        },
-        {
           "path": "README.md",
           "type": "registry:file",
           "target": "~/agent/README.md"
@@ -84,7 +83,7 @@
         "slug": "branded-seo-page-builder",
         "category": "marketing",
         "createdAt": "2026-06-27T07:44:00.000Z",
-        "updatedAt": "2026-06-27T07:44:00.000Z"
+        "updatedAt": "2026-06-27T08:08:00.000Z"
       },
       "author": "TommyBez"
     }
