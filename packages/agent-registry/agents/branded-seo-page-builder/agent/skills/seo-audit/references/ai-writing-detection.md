@@ -29,6 +29,7 @@ Em dashes are longer than hyphens (-) and are used for emphasis, interruptions, 
 - The overuse is so consistent that it has become the unofficial signature of ChatGPT writing
 
 ### What To Do Instead
+
 | Instead of | Use |
 |------------|-----|
 | The results—which were surprising—showed... | The results, which were surprising, showed... |

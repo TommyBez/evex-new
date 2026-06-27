@@ -43,7 +43,7 @@ For the cross-cutting strategy, see [SKILL.md](../SKILL.md).
 - Fair and balanced (AI penalizes obviously biased comparisons)
 - Specific criteria with ratings or scores
 - Updated pricing and feature data
-- Cite the `competitors` skill for building these pages
+- Ground every comparison in current source data and cite each source inline
 
 ---
 

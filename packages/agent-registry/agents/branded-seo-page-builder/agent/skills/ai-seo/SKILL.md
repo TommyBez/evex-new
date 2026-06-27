@@ -479,11 +479,8 @@ For implementation, see the [tools registry](../../tools/REGISTRY.md).
 
 ---
 
-## Related Skills
+## Related Workflows
 
-- **seo-audit**: For traditional technical and on-page SEO audits
-- **schema**: For implementing structured data that helps AI understand your content
-- **content-strategy**: For planning what content to create
-- **competitors**: For building comparison pages that get cited
-- **programmatic-seo**: For building SEO pages at scale
-- **copywriting**: For writing content that's both human-readable and AI-extractable
+- Load **seo-audit** for traditional technical and on-page SEO checks.
+- Add schema markup when the generated page needs structured data that AI systems can parse.
+- Use content strategy, comparison research, programmatic SEO, and copywriting workflows as needed, but do not cite a skill unless it is installed in this agent.

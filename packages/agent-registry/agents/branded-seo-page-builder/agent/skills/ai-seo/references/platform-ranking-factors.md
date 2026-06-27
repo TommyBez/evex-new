@@ -117,7 +117,7 @@ Claude uses Brave Search as its search backend when web search is enabled — no
 
 If your robots.txt blocks an AI bot, that platform can't cite your content. Here are the user agents to allow:
 
-```
+```text
 User-agent: GPTBot           # OpenAI — powers ChatGPT search
 User-agent: ChatGPT-User     # ChatGPT browsing mode
 User-agent: PerplexityBot    # Perplexity AI search

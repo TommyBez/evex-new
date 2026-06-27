@@ -7,8 +7,8 @@ Google's v0.1 markdown spec for representing site content as an agent-readable b
 OKF is a directory of cross-linked markdown files. Each file has:
 
 - A YAML frontmatter block (`type` required; `title`, `description`, `resource`, `tags`, `timestamp` recommended)
-- A standard markdown body
-- Standard markdown links to other files in the bundle (which the spec treats as concept relationships)
+- A standard Markdown body
+- Standard Markdown links to other files in the bundle (which the spec treats as concept relationships)
 
 An optional `index.md` lists the files for progressive disclosure. The bundle can be distributed as a git repo (recommended), a tarball/zip, or a subdirectory of a larger repo.
 
@@ -27,7 +27,7 @@ tags: [mcp, ahrefs]
 
 # How to Connect the Ahrefs MCP Server to Manus
 
-The body of the post, as clean markdown.
+The body of the post, as clean Markdown.
 ```
 
 Add an `index.md` that lists all files so an agent can see the bundle's shape before opening each file, and that is the entire format.
@@ -40,7 +40,7 @@ Pointing OKF at a marketing site is a **clever repurposing** popularized by [Sug
 
 ## What it does for AI search today
 
-Nothing immediate. Nothing crawls the web for OKF bundles yet — the spec is weeks old, no AI engine has announced integration, and Knowledge Catalog ingests bundles only for paying enterprise customers' data teams.
+As of 2026-06-27, there is no known broad web crawling support for OKF bundles: the spec is still new, no major AI engine has announced public integration, and Knowledge Catalog ingests bundles only for paying enterprise customers' data teams.
 
 Treat OKF as **protocol-layer registration** — the same shape of bet as early `schema.org` adoption was a decade ago. Schema took the better part of ten years to pay off; people who shipped it early are still glad they did.
 

@@ -5,10 +5,22 @@ export default defineMcpClientConnection({
   description:
     "Context.dev hosted MCP for resolving brand data, scraping webpages, crawling sites, and extracting styleguides from domains. Use it to gather the brand, content, and design context needed before generating SEO HTML.",
   headers: {
-    "x-context-dev-api-key": () =>
-      process.env.CONTEXT_DEV_API_KEY ?? process.env.CONTEXT_API_KEY ?? "",
+    "x-context-dev-api-key": readContextDevApiKey,
   },
   tools: {
     allow: ["search_docs", "execute"],
   },
 });
+
+function readContextDevApiKey(): string {
+  const apiKey =
+    process.env.CONTEXT_DEV_API_KEY?.trim() || process.env.CONTEXT_API_KEY?.trim();
+
+  if (!apiKey) {
+    throw new Error(
+      "Missing CONTEXT_DEV_API_KEY or CONTEXT_API_KEY for Context.dev MCP access.",
+    );
+  }
+
+  return apiKey;
+}
