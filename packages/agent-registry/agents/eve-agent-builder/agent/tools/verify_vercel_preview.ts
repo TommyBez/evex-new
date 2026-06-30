@@ -161,12 +161,5 @@ async function applyPreviewBypassBroker(
 async function clearPreviewBypassBroker(
   sandbox: SandboxSession,
 ): Promise<void> {
-  await sandbox.setNetworkPolicy({
-    allow: {
-      "*": [],
-    },
-    subnets: {
-      deny: ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16"],
-    },
-  });
+  await sandbox.setNetworkPolicy("allow-all");
 }

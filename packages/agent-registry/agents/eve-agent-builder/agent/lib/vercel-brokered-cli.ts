@@ -94,15 +94,6 @@ export async function runBrokeredVercelCommand(
   }
 }
 
-const NON_BROKERED_NETWORK_POLICY = {
-  allow: {
-    "*": [],
-  },
-  subnets: {
-    deny: ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16"],
-  },
-} satisfies SandboxNetworkPolicy;
-
 async function applyVercelCredentialBroker(
   sandbox: SandboxSession,
 ): Promise<void> {
@@ -153,7 +144,7 @@ async function applyVercelCredentialBroker(
 async function clearVercelCredentialBroker(
   sandbox: SandboxSession,
 ): Promise<void> {
-  await sandbox.setNetworkPolicy(NON_BROKERED_NETWORK_POLICY);
+  await sandbox.setNetworkPolicy("allow-all");
 }
 
 function readVercelToken(): string | undefined {
