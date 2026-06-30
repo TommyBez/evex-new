@@ -1,5 +1,4 @@
 import { defineTool } from "eve/tools";
-import { always } from "eve/tools/approval";
 import { z } from "zod";
 import {
   BROKERED_VERCEL_TOKEN_PLACEHOLDER,
@@ -42,15 +41,25 @@ const inputSchema = z.object({
 
 export default defineTool({
   description:
-    "Run approved Vercel CLI operations with Vercel authentication brokered through the sandbox network policy. Use it for Vercel Connect setup, project linking, preview deploys, and production deploys. Project linking runs vercel link, which can retrieve VERCEL_OIDC_TOKEN for local model calls.",
+    "Run Vercel CLI operations with Vercel authentication brokered through the sandbox network policy. whoami is a read-only auth check and does not require approval. Vercel Connect setup, project linking, preview deploys, and production deploys require approval. Project linking runs vercel link, which can retrieve VERCEL_OIDC_TOKEN for local model calls.",
   inputSchema,
-  approval: always<z.infer<typeof inputSchema>>(),
+  approval: ({ toolInput }) => approvalForVercelAction(toolInput),
   async execute(input, ctx) {
     const command = buildVercelCommand(input);
     return await runBrokeredVercelCommand(ctx, inAppRoot(input.appRoot, command));
   },
   toModelOutput: toCliModelOutput,
 });
+
+function approvalForVercelAction(
+  input: z.infer<typeof inputSchema> | undefined,
+) {
+  if (input?.action === "whoami") {
+    return "not-applicable";
+  }
+
+  return "user-approval";
+}
 
 function buildVercelCommand(input: z.infer<typeof inputSchema>): string {
   switch (input.action) {

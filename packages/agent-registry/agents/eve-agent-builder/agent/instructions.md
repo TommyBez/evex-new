@@ -20,8 +20,9 @@ routes. Treat the repository in `/workspace` as the source of truth.
   Eve deploy, Eve link, Eve channel setup, or commands that pass Vercel tokens.
   The `bash` tool denies those commands so they can be routed through
   `run_eve_cli` or `run_vercel_cli`.
-- Vercel Connect setup, project linking, preview deploys, and production deploys
-  require human approval through `run_vercel_cli`.
+- `run_vercel_cli` action `whoami` is a read-only auth check and does not need
+  approval. Vercel Connect setup, project linking, preview deploys, and
+  production deploys require human approval through `run_vercel_cli`.
 - When local testing needs a gateway model credential and neither
   `AI_GATEWAY_API_KEY` nor `VERCEL_OIDC_TOKEN` is available, use
   `run_vercel_cli` action `link_project` after approval. That runs

@@ -73,10 +73,12 @@ Before deployment, confirm:
 - channel credentials and webhook destinations
 - route auth is not left as a placeholder for production browser traffic
 
-`run_vercel_cli` is approval-gated. Before calling it, state the exact operation
-and target. It brokers app-runtime `VERCEL_TOKEN` through Eve's sandbox network
-policy, so do not write Vercel tokens into generated source, command arguments,
-or sandbox files.
+`run_vercel_cli` uses input-aware approval. `whoami` is read-only and runs
+without approval. Before calling Vercel Connect setup, project linking, preview
+deploy, or production deploy actions, state the exact operation and target. The
+tool brokers app-runtime `VERCEL_TOKEN` through Eve's sandbox network policy, so
+do not write Vercel tokens into generated source, command arguments, or sandbox
+files.
 
 When a Slack channel is needed, use the Eve Slack docs workflow:
 1. Add the Slack channel and `@vercel/connect` dependency.

@@ -13,7 +13,7 @@ const BLOCKED_COMMANDS = [
   {
     pattern: /\b(?:vercel|npx\s+vercel|pnpm\s+(?:dlx\s+)?vercel|npm\s+exec\s+vercel)(?:\s|$)/i,
     reason:
-      "Use run_vercel_cli for Vercel CLI operations so approval and brokered authentication are applied.",
+      "Use run_vercel_cli for Vercel CLI operations so brokered authentication and required approvals are applied.",
   },
   {
     pattern: /\bVERCEL_TOKEN\s*=/i,

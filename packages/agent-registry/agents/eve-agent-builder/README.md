@@ -43,9 +43,9 @@ Slack channel.
 
 The `bash` tool stays available for ordinary shell work. It denies Vercel CLI,
 Eve deploy/link, Eve channel setup, and Vercel token commands, so those actions
-must use `run_eve_cli` or `run_vercel_cli`. Vercel Connect setup, project
-linking, preview deploys, and production deploys run through `run_vercel_cli`,
-which always requires human approval before execution.
+must use `run_eve_cli` or `run_vercel_cli`. `run_vercel_cli` allows read-only
+`whoami` checks without approval. Vercel Connect setup, project linking, preview
+deploys, and production deploys require human approval before execution.
 
 ## Environment
 
@@ -83,7 +83,8 @@ follows the Eve Slack docs:
 4. Attach that UID to `/eve/v1/slack` with triggers enabled.
 5. Deploy and smoke-test Slack delivery.
 
-Every Vercel Connect or deploy action pauses for approval first.
+Vercel Connect setup, project linking, and deploy actions pause for approval
+first. `whoami` does not.
 
 ## Local testing before preview
 
