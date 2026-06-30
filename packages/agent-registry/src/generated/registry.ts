@@ -1008,7 +1008,7 @@ export const generatedRegistryItems = {
         "path": "agent/agent.ts",
         "type": "registry:file",
         "target": "~/agent/agent.ts",
-        "content": "import { defineAgent } from \"eve\";\n\nexport default defineAgent({\n  model: \"openai/gpt-5.4\",\n  reasoning: \"high\",\n});\n"
+        "content": "import { defineAgent } from \"eve\";\n\nexport default defineAgent({\n  model: \"zai/glm-5.2\",\n  reasoning: \"high\",\n});\n"
       },
       {
         "path": "agent/instructions.md",
