@@ -41,7 +41,7 @@ const inputSchema = z.object({
 
 export default defineTool({
   description:
-    "Run approved Vercel CLI operations with Vercel authentication brokered through the sandbox network policy. Use it for Vercel Connect setup, project linking, preview deploys, and production deploys.",
+    "Run approved Vercel CLI operations with Vercel authentication brokered through the sandbox network policy. Use it for Vercel Connect setup, project linking, preview deploys, and production deploys. Project linking runs vercel link, which can retrieve VERCEL_OIDC_TOKEN for local model calls.",
   inputSchema,
   approval: always<z.infer<typeof inputSchema>>(),
   async execute(input, ctx) {
@@ -83,7 +83,9 @@ function buildVercelCommand(input: z.infer<typeof inputSchema>): string {
 
 function buildLinkCommand(input: z.infer<typeof inputSchema>): string {
   if (!input.projectName) {
-    throw new Error("projectName is required when action is link_project.");
+    throw new Error(
+      "projectName is required when action is link_project.",
+    );
   }
 
   return `npx vercel link --project ${shellQuote(input.projectName)} --yes --non-interactive`;

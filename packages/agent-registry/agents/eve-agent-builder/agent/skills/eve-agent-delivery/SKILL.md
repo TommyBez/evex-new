@@ -21,6 +21,10 @@ existing Eve agent, tests for an agent, or a Vercel deployment.
 5. Confirm local runs use a real sandbox backend. This agent is configured for
    Vercel Sandbox with Node 24 so generated Eve apps can install dependencies,
    build, and run evals.
+6. If local model-backed testing needs an AI Gateway credential and neither
+   `AI_GATEWAY_API_KEY` nor `VERCEL_OIDC_TOKEN` is present, use `run_vercel_cli`
+   action `link_project` after approval. This runs `vercel link` for the target
+   project and retrieves a fresh `VERCEL_OIDC_TOKEN` into `.env.local`.
 
 ## Implementation
 - Keep the authored surface small. Add only the files needed for the requested
@@ -46,12 +50,14 @@ deployment.
 
 Preferred local sequence:
 1. install dependencies
-2. typecheck or repo check
-3. `eve info --json`
-4. `eve build`
-5. `eve eval --skip-report` when evals exist
-6. local session or channel smoke test that exercises the created agent
-7. channel smoke test when the channel is part of the change
+2. run `run_vercel_cli` action `link_project` when local model calls need
+   `VERCEL_OIDC_TOKEN`
+3. typecheck or repo check
+4. `eve info --json`
+5. `eve build`
+6. `eve eval --skip-report` when evals exist
+7. local session or channel smoke test that exercises the created agent
+8. channel smoke test when the channel is part of the change
 
 When a check fails, inspect the artifact or log, fix the root cause, and rerun
 the failed check. Do not treat a build-only pass as proof of behavior when an

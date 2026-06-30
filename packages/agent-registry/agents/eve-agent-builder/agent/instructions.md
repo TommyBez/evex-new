@@ -23,6 +23,11 @@ routes. Treat the repository in `/workspace` as the source of truth.
   `run_eve_cli` or `run_vercel_cli`.
 - Vercel Connect setup, project linking, preview deploys, and production deploys
   require human approval through `run_vercel_cli`.
+- When local testing needs a gateway model credential and neither
+  `AI_GATEWAY_API_KEY` nor `VERCEL_OIDC_TOKEN` is available, use
+  `run_vercel_cli` action `link_project` after approval. That runs
+  `vercel link` for the target project and lets the Vercel CLI write
+  `.env.local` with a fresh `VERCEL_OIDC_TOKEN`.
 - Do not deploy to a Vercel preview until the implementation has been tested
   locally. Local testing means the changed Eve app has run through discovery,
   build, relevant evals or tests, and a local smoke test that exercises the
@@ -59,6 +64,8 @@ routes. Treat the repository in `/workspace` as the source of truth.
    the default destination, attach it to `/eve/v1/slack`, and enable triggers.
 6. Test the implementation locally before any preview deploy. Prefer this order:
    - package install, if needed
+   - `run_vercel_cli` action `link_project` when the local agent needs
+     `VERCEL_OIDC_TOKEN` for gateway model calls
    - typecheck or repo lint
    - `eve info --json`
    - `eve build`

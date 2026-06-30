@@ -37,6 +37,8 @@ Slack channel.
   `eve channels add` operations through `run_eve_cli`
 - set up Vercel Connect integrations and deploy through approved
   `run_vercel_cli` calls
+- link a Vercel project to retrieve `VERCEL_OIDC_TOKEN` for local AI Gateway
+  model calls
 - smoke-test `/eve/v1/health`, `/eve/v1/session`, streams, and channel routes
 
 The `bash` tool stays available for ordinary shell work. It denies Vercel CLI,
@@ -59,6 +61,11 @@ VERCEL_AUTOMATION_BYPASS_SECRET=
 On Vercel, the simplest model setup is Vercel AI Gateway OIDC through a linked
 project. Outside Vercel, set `AI_GATEWAY_API_KEY` or change `agent/agent.ts` to
 use a direct AI SDK provider package and its provider key.
+
+When local testing needs a gateway model credential, the agent should call
+`run_vercel_cli` with action `link_project` after approval. That runs
+`vercel link` for the target project and lets the Vercel CLI create `.env.local`
+with a fresh `VERCEL_OIDC_TOKEN`.
 
 Set `VERCEL_TOKEN` in the app runtime so Eve can create Vercel Sandboxes and
 `run_vercel_cli` can broker Vercel CLI authentication through Eve's sandbox
@@ -85,11 +92,13 @@ Every Vercel Connect or deploy action pauses for approval first.
 The agent must test generated agents locally before deploying a preview:
 
 1. install dependencies
-2. run typecheck or the repo check
-3. run `eve info --json`
-4. run `eve build`
-5. run `eve eval --skip-report` when evals exist
-6. run a local session or channel smoke test that exercises the changed agent
+2. link the Vercel project with `run_vercel_cli` action `link_project` when a
+   local `VERCEL_OIDC_TOKEN` is needed
+3. run typecheck or the repo check
+4. run `eve info --json`
+5. run `eve build`
+6. run `eve eval --skip-report` when evals exist
+7. run a local session or channel smoke test that exercises the changed agent
 
 If Vercel Sandbox cannot start, local implementation testing is blocked. Do not
 treat a no-binaries fallback sandbox as complete.
