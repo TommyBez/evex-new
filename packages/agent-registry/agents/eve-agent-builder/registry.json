@@ -29,6 +29,11 @@
           "target": "~/agent/skills/eve-agent-delivery/SKILL.md"
         },
         {
+          "path": "agent/skills/eve/SKILL.md",
+          "type": "registry:file",
+          "target": "~/agent/skills/eve/SKILL.md"
+        },
+        {
           "path": "agent/tools/bash.ts",
           "type": "registry:file",
           "target": "~/agent/tools/bash.ts"

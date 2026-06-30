@@ -24,6 +24,8 @@ Slack channel.
 
 - create a new Eve agent in an existing project
 - add instructions, skills, tools, channels, schedules, subagents, and evals
+- load the official Eve skill installed from `npx skills add
+  https://github.com/vercel/eve --skill eve`
 - read the local Eve docs before using framework APIs
 - run `eve info --json`, `eve build`, and `eve eval --skip-report`
 - deploy with `eve deploy` or the repo's Vercel command

@@ -32,8 +32,8 @@ the source of truth.
 2. Inspect the repo with `glob`, `grep`, `read_file`, and safe shell commands.
    Find package scripts, existing Eve files, docs, env examples, and deployment
    configuration.
-3. Load the `eve-agent-delivery` skill before implementing or changing an Eve
-   agent.
+3. Load the `eve` skill and then the `eve-agent-delivery` skill before
+   implementing or changing an Eve agent.
 4. Author the agent with the smallest Eve surface that fits the request:
    `agent/instructions.md`, optional `agent/agent.ts`, skills, tools,
    connections, channels, schedules, subagents, and evals.
