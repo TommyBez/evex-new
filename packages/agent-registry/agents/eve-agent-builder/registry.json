@@ -10,7 +10,8 @@
         "coding"
       ],
       "dependencies": [
-        "eve@^0.15.1"
+        "eve@^0.15.1",
+        "zod@^4.4.3"
       ],
       "files": [
         {
@@ -34,9 +35,29 @@
           "target": "~/agent/skills/eve/SKILL.md"
         },
         {
+          "path": "agent/lib/vercel-brokered-cli.ts",
+          "type": "registry:file",
+          "target": "~/agent/lib/vercel-brokered-cli.ts"
+        },
+        {
           "path": "agent/tools/bash.ts",
           "type": "registry:file",
           "target": "~/agent/tools/bash.ts"
+        },
+        {
+          "path": "agent/tools/run_eve_cli.ts",
+          "type": "registry:file",
+          "target": "~/agent/tools/run_eve_cli.ts"
+        },
+        {
+          "path": "agent/tools/run_project_command.ts",
+          "type": "registry:file",
+          "target": "~/agent/tools/run_project_command.ts"
+        },
+        {
+          "path": "agent/tools/run_vercel_cli.ts",
+          "type": "registry:file",
+          "target": "~/agent/tools/run_vercel_cli.ts"
         },
         {
           "path": "README.md",
@@ -53,7 +74,7 @@
         "slug": "eve-agent-builder",
         "category": "coding",
         "createdAt": "2026-06-30T10:23:00.000Z",
-        "updatedAt": "2026-06-30T10:23:00.000Z"
+        "updatedAt": "2026-06-30T12:05:00.000Z"
       },
       "author": "TommyBez"
     }

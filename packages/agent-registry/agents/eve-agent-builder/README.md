@@ -4,9 +4,10 @@ Build, test, and deploy Eve agents from an existing Eve app. This agent works
 through whatever channel your app already exposes: web chat, the Eve session
 API, Slack, GitHub, or another channel.
 
-It reads the repository, writes the smallest Eve surface needed for the request,
-runs local Eve checks, deploys to Vercel after approval, and verifies the live
-routes.
+It reads the repository and the local Eve docs, writes the smallest Eve surface
+needed for the request, runs local Eve checks, installs Vercel-managed
+integrations after approval, deploys to Vercel after approval, and verifies the
+live routes.
 
 ## Install
 
@@ -27,14 +28,18 @@ Slack channel.
 - load the official Eve skill installed from `npx skills add
   https://github.com/vercel/eve --skill eve`
 - read the local Eve docs before using framework APIs
-- run `eve info --json`, `eve build`, and `eve eval --skip-report`
-- deploy with `eve deploy` or the repo's Vercel command
+- run normal repo commands through `run_project_command`
+- run `eve info --json`, `eve build`, `eve eval --skip-report`, and
+  `eve channels add` through `run_eve_cli`
+- set up Vercel Connect integrations and deploy through approved
+  `run_vercel_cli` calls
 - smoke-test `/eve/v1/health`, `/eve/v1/session`, streams, and channel routes
 
-The installed `bash` tool requires human approval for Eve and Vercel deploy
-commands, including `eve deploy`, `vercel deploy`, and production deploy flags.
-Normal install, inspect, build, and test commands can run without that deploy
-approval.
+The raw `bash` tool is disabled. Normal install, inspect, build, and test work
+runs through `run_project_command`. Eve local operations run through
+`run_eve_cli`. Vercel Connect setup, project linking, preview deploys, and
+production deploys run through `run_vercel_cli`, which always requires human
+approval before execution.
 
 ## Environment
 
@@ -42,9 +47,7 @@ The registry installs `.env.example` with optional deployment helpers:
 
 ```bash
 AI_GATEWAY_API_KEY=
-VERCEL_TOKEN=
-VERCEL_ORG_ID=
-VERCEL_PROJECT_ID=
+VERCEL_BROKER_TOKEN=
 VERCEL_AUTOMATION_BYPASS_SECRET=
 ```
 
@@ -52,9 +55,25 @@ On Vercel, the simplest model setup is Vercel AI Gateway OIDC through a linked
 project. Outside Vercel, set `AI_GATEWAY_API_KEY` or change `agent/agent.ts` to
 use a direct AI SDK provider package and its provider key.
 
-For non-interactive deploys, set the Vercel CLI variables in the deployment or
-local environment. If your project is already linked and the CLI is logged in,
-the agent can use that existing Vercel setup.
+Set `VERCEL_BROKER_TOKEN` in the app runtime, not in sandbox files. The
+`run_vercel_cli` tool reads it from `process.env` and applies it through Eve's
+sandbox network-policy transform so Vercel authentication is injected at the
+firewall. The token is not placed in command text, shell environment variables,
+or generated files.
+
+## Vercel integrations
+
+Use `run_vercel_cli` for Vercel-managed integrations. For Slack, the agent
+follows the Eve Slack docs:
+
+1. Add the Slack channel with `run_eve_cli`.
+2. Create a Slack Connect client with `run_vercel_cli` action
+   `connect_create_slack`.
+3. Detach the returned Connect UID from its default destination.
+4. Attach that UID to `/eve/v1/slack` with triggers enabled.
+5. Deploy and smoke-test Slack delivery.
+
+Every Vercel Connect or deploy action pauses for approval first.
 
 ## Example prompts
 
@@ -103,8 +122,8 @@ If the app uses a channel, test that route too. Common routes:
   rerun `eve info --json`.
 - `eve build` fails on docs or discovery: read `.eve/discovery/diagnostics.json`
   and fix the authored file path or config.
-- Vercel deploy asks for login: set `VERCEL_TOKEN` or run `vercel login` outside
-  the agent.
+- Vercel CLI reports unauthenticated: set `VERCEL_BROKER_TOKEN` in the app
+  runtime. Do not pass it as a command argument or sandbox env var.
 - Model calls fail locally: set `AI_GATEWAY_API_KEY` or use a direct provider
   model with the matching provider key.
 - Preview smoke tests return auth HTML: set `VERCEL_AUTOMATION_BYPASS_SECRET`

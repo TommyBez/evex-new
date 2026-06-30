@@ -13,9 +13,11 @@ existing Eve agent, tests for an agent, or a Vercel deployment.
    examples, Vercel config, and README setup notes.
 3. Read `node_modules/eve/docs/README.md`, then the pages for the slots you will
    touch. For most tasks, read project layout, `agent.ts`, instructions, tools,
-   channels, sandbox, evals, CLI, and deployment.
-4. Identify required credentials, channel routes, webhook URLs, model routing,
-   and whether deploy should be preview or production.
+   human-in-the-loop, sandbox credential brokering, channels, evals, CLI, and
+   deployment.
+4. Identify required credentials, channel routes, webhook URLs, Vercel Connect
+   clients, model routing, route auth, and whether deploy should be preview or
+   production.
 
 ## Implementation
 - Keep the authored surface small. Add only the files needed for the requested
@@ -27,6 +29,9 @@ existing Eve agent, tests for an agent, or a Vercel deployment.
   the sandbox workspace.
 - Declare every environment variable in `.env.example` or the app's existing env
   documentation.
+- Use `run_eve_cli` for Eve CLI operations. Use `run_vercel_cli` for Vercel
+  Connect setup, linking, and deploys. Do not route those through ordinary shell
+  commands.
 - For channels, document the route and setup:
   - GitHub: `/eve/v1/github`
   - Slack: `/eve/v1/slack`
@@ -57,8 +62,18 @@ Before deployment, confirm:
 - channel credentials and webhook destinations
 - route auth is not left as a placeholder for production browser traffic
 
-Use `eve deploy` for standalone Eve apps. Use the repository's Vercel command
-when Eve is mounted in a host app. After deployment, verify:
+`run_vercel_cli` is approval-gated. Before calling it, state the exact operation
+and target. It brokers `VERCEL_BROKER_TOKEN` through Eve's sandbox network policy,
+so do not write Vercel tokens into `.env`, command arguments, or sandbox files.
+
+When a Slack channel is needed, use the Eve Slack docs workflow:
+1. Add the Slack channel and `@vercel/connect` dependency.
+2. Call `run_vercel_cli` with `connect_create_slack`.
+3. Detach the returned Connect UID from the default destination.
+4. Attach the Connect UID to `/eve/v1/slack` with triggers enabled.
+5. Deploy and verify Slack events reach the route.
+
+Use `run_vercel_cli` for preview or production deploys. After deployment, verify:
 
 ```bash
 curl https://<deployment>/eve/v1/health
