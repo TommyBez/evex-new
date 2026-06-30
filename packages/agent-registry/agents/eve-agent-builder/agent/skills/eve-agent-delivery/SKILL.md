@@ -18,6 +18,9 @@ existing Eve agent, tests for an agent, or a Vercel deployment.
 4. Identify required credentials, channel routes, webhook URLs, Vercel Connect
    clients, model routing, route auth, and whether deploy should be preview or
    production.
+5. Confirm local runs use a real sandbox backend. This agent is configured for
+   Vercel Sandbox with Node 24 so generated Eve apps can install dependencies,
+   build, and run evals.
 
 ## Implementation
 - Keep the authored surface small. Add only the files needed for the requested
@@ -47,11 +50,13 @@ Preferred local sequence:
 3. `eve info --json`
 4. `eve build`
 5. `eve eval --skip-report` when evals exist
-6. channel smoke test when the channel is part of the change
+6. local session or channel smoke test that exercises the created agent
+7. channel smoke test when the channel is part of the change
 
 When a check fails, inspect the artifact or log, fix the root cause, and rerun
 the failed check. Do not treat a build-only pass as proof of behavior when an
 eval or channel smoke test is available.
+Do not deploy to preview until these local checks pass.
 
 ## Vercel deployment
 Before deployment, confirm:
@@ -63,8 +68,9 @@ Before deployment, confirm:
 - route auth is not left as a placeholder for production browser traffic
 
 `run_vercel_cli` is approval-gated. Before calling it, state the exact operation
-and target. It brokers `VERCEL_BROKER_TOKEN` through Eve's sandbox network policy,
-so do not write Vercel tokens into `.env`, command arguments, or sandbox files.
+and target. It brokers app-runtime `VERCEL_TOKEN` or `VERCEL_BROKER_TOKEN`
+through Eve's sandbox network policy, so do not write Vercel tokens into
+generated source, command arguments, or sandbox files.
 
 When a Slack channel is needed, use the Eve Slack docs workflow:
 1. Add the Slack channel and `@vercel/connect` dependency.

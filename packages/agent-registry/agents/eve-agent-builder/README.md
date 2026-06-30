@@ -9,6 +9,10 @@ needed for the request, runs local Eve checks, installs Vercel-managed
 integrations after approval, deploys to Vercel after approval, and verifies the
 live routes.
 
+The agent pins Eve's Vercel Sandbox backend with Node 24. That gives local runs a
+real Node environment, so generated agents can install dependencies, build, and
+run evals before any preview deploy.
+
 ## Install
 
 Run this in an existing Eve app:
@@ -47,6 +51,7 @@ The registry installs `.env.example` with optional deployment helpers:
 
 ```bash
 AI_GATEWAY_API_KEY=
+VERCEL_TOKEN=
 VERCEL_BROKER_TOKEN=
 VERCEL_AUTOMATION_BYPASS_SECRET=
 ```
@@ -55,11 +60,11 @@ On Vercel, the simplest model setup is Vercel AI Gateway OIDC through a linked
 project. Outside Vercel, set `AI_GATEWAY_API_KEY` or change `agent/agent.ts` to
 use a direct AI SDK provider package and its provider key.
 
-Set `VERCEL_BROKER_TOKEN` in the app runtime, not in sandbox files. The
-`run_vercel_cli` tool reads it from `process.env` and applies it through Eve's
-sandbox network-policy transform so Vercel authentication is injected at the
-firewall. The token is not placed in command text, shell environment variables,
-or generated files.
+Set `VERCEL_TOKEN` in the app runtime so Eve can create Vercel Sandboxes and
+`run_vercel_cli` can broker Vercel CLI authentication through Eve's sandbox
+network-policy transform. Set `VERCEL_BROKER_TOKEN` only when the CLI broker
+should use a different token. Tokens are not placed in command text, shell
+environment variables inside the sandbox, or generated files.
 
 ## Vercel integrations
 
@@ -74,6 +79,20 @@ follows the Eve Slack docs:
 5. Deploy and smoke-test Slack delivery.
 
 Every Vercel Connect or deploy action pauses for approval first.
+
+## Local testing before preview
+
+The agent must test generated agents locally before deploying a preview:
+
+1. install dependencies
+2. run typecheck or the repo check
+3. run `eve info --json`
+4. run `eve build`
+5. run `eve eval --skip-report` when evals exist
+6. run a local session or channel smoke test that exercises the changed agent
+
+If Vercel Sandbox cannot start, local implementation testing is blocked. Do not
+treat a no-binaries fallback sandbox as complete.
 
 ## Example prompts
 
@@ -122,8 +141,8 @@ If the app uses a channel, test that route too. Common routes:
   rerun `eve info --json`.
 - `eve build` fails on docs or discovery: read `.eve/discovery/diagnostics.json`
   and fix the authored file path or config.
-- Vercel CLI reports unauthenticated: set `VERCEL_BROKER_TOKEN` in the app
-  runtime. Do not pass it as a command argument or sandbox env var.
+- Vercel Sandbox or Vercel CLI reports unauthenticated: set `VERCEL_TOKEN` in
+  the app runtime. Do not pass it as a command argument or sandbox env var.
 - Model calls fail locally: set `AI_GATEWAY_API_KEY` or use a direct provider
   model with the matching provider key.
 - Preview smoke tests return auth HTML: set `VERCEL_AUTOMATION_BYPASS_SECRET`

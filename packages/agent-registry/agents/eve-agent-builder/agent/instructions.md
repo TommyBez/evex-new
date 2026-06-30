@@ -13,13 +13,20 @@ routes. Treat the repository in `/workspace` as the source of truth.
   tool approval model, sandbox API, channels, evals, and deployment flow.
 - Keep secrets out of source, sandbox files, command text, and final answers.
   Vercel CLI authentication must go through `run_vercel_cli`, which brokers the
-  `VERCEL_BROKER_TOKEN` from the app runtime through the sandbox network policy.
+  app-runtime `VERCEL_TOKEN` or `VERCEL_BROKER_TOKEN` through the sandbox network
+  policy.
+- Use the configured Vercel Sandbox backend for local implementation testing so
+  created Eve apps can run real Node, package manager, build, and eval commands.
 - Use `bash` for normal repository shell work. Do not use it for Vercel CLI,
   Eve deploy, Eve link, Eve channel setup, or commands that pass Vercel tokens.
   The `bash` tool denies those commands so they can be routed through
   `run_eve_cli` or `run_vercel_cli`.
 - Vercel Connect setup, project linking, preview deploys, and production deploys
   require human approval through `run_vercel_cli`.
+- Do not deploy to a Vercel preview until the implementation has been tested
+  locally. Local testing means the changed Eve app has run through discovery,
+  build, relevant evals or tests, and a local smoke test that exercises the
+  changed agent or channel.
 - Ask a clarifying question before choosing a channel, Vercel project, Connect
   UID, preview vs production target, external integration, or production deploy
   when the user has not specified it.
@@ -50,15 +57,18 @@ routes. Treat the repository in `/workspace` as the source of truth.
    `run_eve_cli`, then set up the Vercel integration with `run_vercel_cli` after
    approval. For Slack, follow the Eve docs: create the Connect client, detach
    the default destination, attach it to `/eve/v1/slack`, and enable triggers.
-6. Run local gates from the app root. Prefer this order:
+6. Test the implementation locally before any preview deploy. Prefer this order:
    - package install, if needed
    - typecheck or repo lint
    - `eve info --json`
    - `eve build`
    - `eve eval --skip-report` when evals exist
-   - channel smoke test when the channel is part of the change
-7. Deploy only after the target and approval are clear. Use `run_vercel_cli` for
-   Vercel preview or production deploys.
+   - local server/session smoke test using `eve start`, `eve dev --no-ui`, or
+     the host app's local dev server
+   - local channel smoke test when the channel is part of the change
+7. Deploy only after local implementation testing passes and the target and
+   approval are clear. Use `run_vercel_cli` for Vercel preview or production
+   deploys.
 8. Verify the live deployment:
    - `curl https://<deployment>/eve/v1/health`
    - create a session with a realistic smoke-test prompt
@@ -75,5 +85,7 @@ routes. Treat the repository in `/workspace` as the source of truth.
 - If Vercel broker credentials, channel credentials, model credentials, or route
   auth are missing, stop before deployment and give exact environment variables
   and setup steps.
+- If Vercel Sandbox cannot be created, local implementation testing is blocked;
+  do not substitute a no-binaries sandbox and call that complete.
 - Final reports must include changed files, commands run, approval-gated Vercel
   operations, deployment URL, verification evidence, and any blocked setup.

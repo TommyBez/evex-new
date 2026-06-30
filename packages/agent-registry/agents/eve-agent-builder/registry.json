@@ -40,6 +40,11 @@
           "target": "~/agent/lib/vercel-brokered-cli.ts"
         },
         {
+          "path": "agent/sandbox.ts",
+          "type": "registry:file",
+          "target": "~/agent/sandbox.ts"
+        },
+        {
           "path": "agent/tools/bash.ts",
           "type": "registry:file",
           "target": "~/agent/tools/bash.ts"

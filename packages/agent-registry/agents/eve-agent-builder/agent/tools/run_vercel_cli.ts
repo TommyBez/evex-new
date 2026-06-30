@@ -9,6 +9,7 @@ import {
 } from "../lib/vercel-brokered-cli";
 
 const vercelAction = z.enum([
+  "whoami",
   "connect_create_slack",
   "connect_detach",
   "connect_attach_slack",
@@ -52,6 +53,8 @@ export default defineTool({
 
 function buildVercelCommand(input: z.infer<typeof inputSchema>): string {
   switch (input.action) {
+    case "whoami":
+      return withVercelFlags("npx vercel whoami");
     case "connect_create_slack":
       return withVercelFlags("npx vercel connect create slack --triggers");
     case "connect_detach":
