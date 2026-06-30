@@ -60,6 +60,11 @@
           "target": "~/agent/tools/run_vercel_cli.ts"
         },
         {
+          "path": "agent/tools/verify_vercel_preview.ts",
+          "type": "registry:file",
+          "target": "~/agent/tools/verify_vercel_preview.ts"
+        },
+        {
           "path": "README.md",
           "type": "registry:file",
           "target": "~/agent/README.md"

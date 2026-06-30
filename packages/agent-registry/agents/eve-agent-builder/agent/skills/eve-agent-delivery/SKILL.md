@@ -58,6 +58,8 @@ Preferred local sequence:
 6. `eve eval --skip-report` when evals exist
 7. local session or channel smoke test that exercises the created agent
 8. channel smoke test when the channel is part of the change
+9. for protected Vercel previews, verify with `verify_vercel_preview` so the
+   bypass secret is brokered and then cleared
 
 When a check fails, inspect the artifact or log, fix the root cause, and rerun
 the failed check. Do not treat a build-only pass as proof of behavior when an
@@ -87,7 +89,8 @@ When a Slack channel is needed, use the Eve Slack docs workflow:
 4. Attach the Connect UID to `/eve/v1/slack` with triggers enabled.
 5. Deploy and verify Slack events reach the route.
 
-Use `run_vercel_cli` for preview or production deploys. After deployment, verify:
+Use `run_vercel_cli` for preview or production deploys. After deployment, verify
+public deployments with curl or `eve dev`:
 
 ```bash
 curl https://<deployment>/eve/v1/health
@@ -96,8 +99,10 @@ curl -X POST https://<deployment>/eve/v1/session \
   -d '{"message":"Smoke test the new agent."}'
 ```
 
-If preview protection is enabled, configure `VERCEL_AUTOMATION_BYPASS_SECRET`
-locally before remote smoke tests.
+If preview protection is enabled, use `verify_vercel_preview` instead of raw
+curl. It reads app-runtime `VERCEL_AUTOMATION_BYPASS_SECRET`, brokers it through
+the sandbox network policy as `x-vercel-protection-bypass`, creates a smoke-test
+session, attaches to the stream, and clears the transform before returning.
 
 ## Final report
 Return:

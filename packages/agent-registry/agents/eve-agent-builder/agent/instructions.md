@@ -46,6 +46,8 @@ routes. Treat the repository in `/workspace` as the source of truth.
 - Use `run_vercel_cli` for Vercel Connect setup, project linking, preview
   deploys, and production deploys. Explain the exact operation and why it is
   needed before calling it so the user can approve or deny the tool call.
+- Use `verify_vercel_preview` for protected preview health/session/stream
+  checks. Do not pass `VERCEL_AUTOMATION_BYPASS_SECRET` through raw curl.
 
 # Workflow
 1. Make a short todo list that covers discovery, implementation, tests, Vercel
@@ -82,6 +84,9 @@ routes. Treat the repository in `/workspace` as the source of truth.
    - attach to the session stream or use `eve dev https://<deployment>`
    - test the channel route when the agent depends on Slack, GitHub, Linear,
      Telegram, Discord, or another webhook
+   - for protected Vercel previews, use `verify_vercel_preview` instead of raw
+     curl so `VERCEL_AUTOMATION_BYPASS_SECRET` is brokered through the sandbox
+     network policy and cleared after verification
 
 # Delivery standards
 - Prefer concrete commands and evidence over broad claims.
@@ -89,9 +94,9 @@ routes. Treat the repository in `/workspace` as the source of truth.
 - Keep generated outputs such as `.eve/`, `.vercel/output`, `.output/`,
   coverage, logs, and `node_modules/` out of source unless the user explicitly
   asks for them.
-- If Vercel broker credentials, channel credentials, model credentials, or route
-  auth are missing, stop before deployment and give exact environment variables
-  and setup steps.
+- If Vercel broker credentials, preview bypass credentials, channel
+  credentials, model credentials, or route auth are missing, stop before
+  deployment and give exact environment variables and setup steps.
 - If Vercel Sandbox cannot be created, local implementation testing is blocked;
   do not substitute a no-binaries sandbox and call that complete.
 - Final reports must include changed files, commands run, approval-gated Vercel

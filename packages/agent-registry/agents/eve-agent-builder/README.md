@@ -39,6 +39,8 @@ Slack channel.
   `run_vercel_cli` calls
 - link a Vercel project to retrieve `VERCEL_OIDC_TOKEN` for local AI Gateway
   model calls
+- verify protected Vercel previews through `verify_vercel_preview` without
+  exposing `VERCEL_AUTOMATION_BYPASS_SECRET`
 - smoke-test `/eve/v1/health`, `/eve/v1/session`, streams, and channel routes
 
 The `bash` tool stays available for ordinary shell work. It denies Vercel CLI,
@@ -85,6 +87,22 @@ follows the Eve Slack docs:
 
 Vercel Connect setup, project linking, and deploy actions pause for approval
 first. `whoami` does not.
+
+## Protected preview verification
+
+Use `verify_vercel_preview` when the deployment is protected by Vercel
+Deployment Protection. The tool reads `VERCEL_AUTOMATION_BYPASS_SECRET` from the
+app runtime, injects it at the sandbox firewall as
+`x-vercel-protection-bypass`, and clears that transform after verification.
+
+It verifies:
+
+1. `GET /eve/v1/health`
+2. `POST /eve/v1/session` with a smoke-test message
+3. `GET /eve/v1/session/<sessionId>/stream`
+
+Do not put `VERCEL_AUTOMATION_BYPASS_SECRET` in command text, generated files, or
+sandbox environment variables.
 
 ## Local testing before preview
 
@@ -154,4 +172,4 @@ If the app uses a channel, test that route too. Common routes:
 - Model calls fail locally: set `AI_GATEWAY_API_KEY` or use a direct provider
   model with the matching provider key.
 - Preview smoke tests return auth HTML: set `VERCEL_AUTOMATION_BYPASS_SECRET`
-  before testing protected previews.
+  in the app runtime and use `verify_vercel_preview` instead of raw curl.
