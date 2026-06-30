@@ -25,6 +25,9 @@ existing Eve agent, tests for an agent, or a Vercel deployment.
    `AI_GATEWAY_API_KEY` nor `VERCEL_OIDC_TOKEN` is present, use `run_vercel_cli`
    action `link_project` after approval. This runs `vercel link` for the target
    project and retrieves a fresh `VERCEL_OIDC_TOKEN` into `.env.local`.
+7. Use the Vercel MCP connection through `connection_search` for Vercel
+   inspection, deployment metadata, logs, Agent Runs, docs, and protected URL
+   fetches when those tools cover the task.
 
 ## Implementation
 - Keep the authored surface small. Add only the files needed for the requested
@@ -39,6 +42,9 @@ existing Eve agent, tests for an agent, or a Vercel deployment.
 - Use `run_eve_cli` for Eve CLI operations. Use `run_vercel_cli` for Vercel
   Connect setup, linking, and deploys. Do not route those through ordinary shell
   commands.
+- Prefer the Vercel MCP connection for read-only project/deployment/log work.
+  Keep Vercel CLI for local `vercel link` and Connect commands that MCP does
+  not expose.
 - For channels, document the route and setup:
   - GitHub: `/eve/v1/github`
   - Slack: `/eve/v1/slack`

@@ -32,6 +32,8 @@ Slack channel.
 - load the official Eve skill installed from `npx skills add
   https://github.com/vercel/eve --skill eve`
 - read the local Eve docs before using framework APIs
+- inspect Vercel projects, deployments, logs, Agent Runs, docs, and protected
+  Vercel URLs through the `vercel` MCP connection
 - run normal repo commands through Eve's `bash` tool
 - run structured `eve info --json`, `eve build`, `eve eval --skip-report`, and
   `eve channels add` operations through `run_eve_cli`
@@ -56,6 +58,7 @@ The registry installs `.env.example` with optional deployment helpers:
 ```bash
 AI_GATEWAY_API_KEY=
 VERCEL_TOKEN=
+VERCEL_MCP_URL=https://mcp.vercel.com
 VERCEL_AUTOMATION_BYPASS_SECRET=
 ```
 
@@ -72,6 +75,25 @@ Set `VERCEL_TOKEN` in the app runtime so Eve can create Vercel Sandboxes and
 `run_vercel_cli` can broker Vercel CLI authentication through Eve's sandbox
 network-policy transform. Tokens are not placed in command text, shell
 environment variables inside the sandbox, or generated files.
+
+`VERCEL_TOKEN` also authorizes the Vercel MCP connection. `VERCEL_MCP_URL`
+defaults to `https://mcp.vercel.com`; override it only when Vercel publishes or
+you operate a different compatible MCP endpoint.
+
+## Vercel MCP
+
+The registry installs `agent/connections/vercel.ts`. Use `connection_search` to
+discover Vercel MCP tools for:
+
+- project and deployment inspection
+- build logs, runtime logs, and runtime errors
+- Agent Runs observability
+- Vercel documentation search
+- protected preview URL fetching
+
+Use MCP before falling back to the Vercel CLI for read/diagnostic work. Keep
+`run_vercel_cli` for local `vercel link`, Vercel Connect setup, and deploy
+actions that require local filesystem state or are not exposed by the MCP server.
 
 ## Vercel integrations
 

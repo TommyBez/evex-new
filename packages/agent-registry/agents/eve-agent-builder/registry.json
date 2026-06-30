@@ -35,6 +35,11 @@
           "target": "~/agent/skills/eve/SKILL.md"
         },
         {
+          "path": "agent/connections/vercel.ts",
+          "type": "registry:file",
+          "target": "~/agent/connections/vercel.ts"
+        },
+        {
           "path": "agent/lib/vercel-brokered-cli.ts",
           "type": "registry:file",
           "target": "~/agent/lib/vercel-brokered-cli.ts"

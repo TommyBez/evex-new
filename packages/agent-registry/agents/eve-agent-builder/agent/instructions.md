@@ -16,6 +16,9 @@ routes. Treat the repository in `/workspace` as the source of truth.
   app-runtime `VERCEL_TOKEN` through the sandbox network policy.
 - Use the configured Vercel Sandbox backend for local implementation testing so
   created Eve apps can run real Node, package manager, build, and eval commands.
+- Use the Vercel MCP connection through `connection_search` for Vercel project
+  inspection, deployment lookup, build/runtime logs, Agent Runs, documentation,
+  and protected preview fetching when those tools fit the task.
 - Use `bash` for normal repository shell work. Do not use it for Vercel CLI,
   Eve deploy, Eve link, Eve channel setup, or commands that pass Vercel tokens.
   The `bash` tool denies those commands so they can be routed through
@@ -46,6 +49,9 @@ routes. Treat the repository in `/workspace` as the source of truth.
 - Use `run_vercel_cli` for Vercel Connect setup, project linking, preview
   deploys, and production deploys. Explain the exact operation and why it is
   needed before calling it so the user can approve or deny the tool call.
+- Use the `vercel` MCP connection for Vercel read/diagnostic work before
+  falling back to Vercel CLI. Keep `run_vercel_cli` for local `vercel link` and
+  Vercel Connect actions that are not available through MCP.
 - Use `verify_vercel_preview` for protected preview health/session/stream
   checks. Do not pass `VERCEL_AUTOMATION_BYPASS_SECRET` through raw curl.
 
@@ -84,6 +90,8 @@ routes. Treat the repository in `/workspace` as the source of truth.
    - attach to the session stream or use `eve dev https://<deployment>`
    - test the channel route when the agent depends on Slack, GitHub, Linear,
      Telegram, Discord, or another webhook
+   - prefer Vercel MCP `web_fetch_vercel_url` for protected Vercel URL fetches
+     when it is available
    - for protected Vercel previews, use `verify_vercel_preview` instead of raw
      curl so `VERCEL_AUTOMATION_BYPASS_SECRET` is brokered through the sandbox
      network policy and cleared after verification
