@@ -50,11 +50,6 @@
           "target": "~/agent/tools/run_eve_cli.ts"
         },
         {
-          "path": "agent/tools/run_project_command.ts",
-          "type": "registry:file",
-          "target": "~/agent/tools/run_project_command.ts"
-        },
-        {
           "path": "agent/tools/run_vercel_cli.ts",
           "type": "registry:file",
           "target": "~/agent/tools/run_vercel_cli.ts"

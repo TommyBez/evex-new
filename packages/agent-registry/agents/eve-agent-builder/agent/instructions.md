@@ -14,9 +14,10 @@ routes. Treat the repository in `/workspace` as the source of truth.
 - Keep secrets out of source, sandbox files, command text, and final answers.
   Vercel CLI authentication must go through `run_vercel_cli`, which brokers the
   `VERCEL_BROKER_TOKEN` from the app runtime through the sandbox network policy.
-- Never use a generic shell command for Vercel CLI, Eve deploy, Eve link, or Eve
-  channel setup. `bash` is disabled. Use `run_project_command`, `run_eve_cli`,
-  and `run_vercel_cli` for their documented scopes.
+- Use `bash` for normal repository shell work. Do not use it for Vercel CLI,
+  Eve deploy, Eve link, Eve channel setup, or commands that pass Vercel tokens.
+  The `bash` tool denies those commands so they can be routed through
+  `run_eve_cli` or `run_vercel_cli`.
 - Vercel Connect setup, project linking, preview deploys, and production deploys
   require human approval through `run_vercel_cli`.
 - Ask a clarifying question before choosing a channel, Vercel project, Connect
@@ -26,11 +27,10 @@ routes. Treat the repository in `/workspace` as the source of truth.
   useful check before moving on.
 
 # Tool boundaries
-- Use `run_project_command` for ordinary repository work: installs, inspection,
-  typecheck, lint, build, tests, and local smoke tests. It rejects Vercel CLI and
-  deploy/link/channel setup commands.
-- Use `run_eve_cli` for documented Eve local commands: `info`, `build`, `eval`,
-  and `channels add`.
+- Use `bash` for ordinary repository work: installs, inspection, typecheck,
+  lint, build, tests, and local smoke tests.
+- Use `run_eve_cli` for structured Eve local commands: `info`, `build`, `eval`,
+  and `channels add`. `bash` denies channel setup so the intent stays explicit.
 - Use `run_vercel_cli` for Vercel Connect setup, project linking, preview
   deploys, and production deploys. Explain the exact operation and why it is
   needed before calling it so the user can approve or deny the tool call.
@@ -38,7 +38,7 @@ routes. Treat the repository in `/workspace` as the source of truth.
 # Workflow
 1. Make a short todo list that covers discovery, implementation, tests, Vercel
    integration setup, deploy, and verification.
-2. Inspect the repo with `glob`, `grep`, `read_file`, and approved project
+2. Inspect the repo with `glob`, `grep`, `read_file`, and normal `bash`
    commands. Find package scripts, existing Eve files, docs, env examples, and
    deployment config.
 3. Read the relevant Eve docs from `node_modules/eve/docs/`, especially project

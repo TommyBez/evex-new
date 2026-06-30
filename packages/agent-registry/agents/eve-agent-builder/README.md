@@ -28,18 +28,18 @@ Slack channel.
 - load the official Eve skill installed from `npx skills add
   https://github.com/vercel/eve --skill eve`
 - read the local Eve docs before using framework APIs
-- run normal repo commands through `run_project_command`
-- run `eve info --json`, `eve build`, `eve eval --skip-report`, and
-  `eve channels add` through `run_eve_cli`
+- run normal repo commands through Eve's `bash` tool
+- run structured `eve info --json`, `eve build`, `eve eval --skip-report`, and
+  `eve channels add` operations through `run_eve_cli`
 - set up Vercel Connect integrations and deploy through approved
   `run_vercel_cli` calls
 - smoke-test `/eve/v1/health`, `/eve/v1/session`, streams, and channel routes
 
-The raw `bash` tool is disabled. Normal install, inspect, build, and test work
-runs through `run_project_command`. Eve local operations run through
-`run_eve_cli`. Vercel Connect setup, project linking, preview deploys, and
-production deploys run through `run_vercel_cli`, which always requires human
-approval before execution.
+The `bash` tool stays available for ordinary shell work. It denies Vercel CLI,
+Eve deploy/link, Eve channel setup, and Vercel token commands, so those actions
+must use `run_eve_cli` or `run_vercel_cli`. Vercel Connect setup, project
+linking, preview deploys, and production deploys run through `run_vercel_cli`,
+which always requires human approval before execution.
 
 ## Environment
 
