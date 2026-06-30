@@ -48,7 +48,11 @@ existing Eve agent, tests for an agent, or a Vercel deployment.
 - Prefer the Vercel MCP connection for read-only project/deployment/log work.
   Keep Vercel CLI for local `vercel link` and Connect commands that MCP does
   not expose.
-- For channels, see [channel-routes](./references/channel-routes.md).
+- For channels, read [channel-routes](./references/channel-routes.md) and the
+  matching setup reference for every channel you add:
+  - [GitHub](./references/github-channel-setup.md)
+  - [Linear](./references/linear-channel-setup.md)
+  - [Slack](./references/slack-channel-setup.md)
 
 ## Testing
 
@@ -72,7 +76,8 @@ tool brokers app-runtime `VERCEL_TOKEN` through Eve's sandbox network policy, so
 do not write Vercel tokens into generated source, command arguments, or sandbox
 files.
 
-For Slack setup, see [slack-channel-setup](./references/slack-channel-setup.md).
+For channel setup, see [channel-routes](./references/channel-routes.md) and the
+per-channel references for GitHub, Linear, and Slack.
 
 Use `run_vercel_cli` for preview or production deploys. After deployment, verify
 using [channel-routes](./references/channel-routes.md).
