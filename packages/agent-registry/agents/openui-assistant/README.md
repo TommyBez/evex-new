@@ -8,15 +8,16 @@ reference app: the model streams structured UI instead of markdown, and a React
 
 ## What it does
 
-1. **Injects the OpenUI system prompt** — `agent/instructions/openui-prompt.ts`
+1. **Injects the OpenUI system prompt** - `agent/instructions/openui-prompt.ts`
    calls `openuiChatLibrary.prompt(openuiChatPromptOptions)` at build time, the
    same library and prompt options used by the GitHub example.
-2. **Answers with OpenUI Lang only** — cards, grids, charts, tables, and buttons
+2. **Answers with OpenUI Lang only** - cards, grids, charts, tables, and buttons
    instead of plain text replies.
-3. **Calls demo data tools** — `get_weather`, `get_stock_price`, and `search_web`
+3. **Calls demo data tools** - `get_weather`, `get_stock_price`, and `search_web`
    mirror the sample tools from `examples/openui-chat/src/app/api/chat/route.ts`.
-4. **Ships a frontend reference** — `agent/frontend/openui-eve-chat.tsx` shows
-   how to connect `useEveAgent()` to `@openuidev/react-lang` `Renderer`.
+4. **Ships a frontend reference** -
+   `agent/skills/openui/references/openui-eve-chat.tsx` shows how to connect
+   `useEveAgent()` to `@openuidev/react-lang` `Renderer`.
 
 ## Installation
 
@@ -62,11 +63,13 @@ results for factual values.
 To render generative UI in the browser:
 
 1. Ensure your Next.js app uses `withEve()` from `eve/next`.
-2. Copy `agent/frontend/openui-eve-chat.tsx` into your app components folder.
+2. Copy `agent/skills/openui/references/openui-eve-chat.tsx` into your app
+   components folder.
 3. Render `<OpenUIEveChat />` on a page.
 
-See `agent/frontend/README.md` for the full wiring guide and an
-`AgentInterface` alternative that matches the upstream OpenUI chat shell.
+See `agent/skills/openui/references/frontend-wiring.md` for the full wiring
+guide and an `AgentInterface` alternative that matches the upstream OpenUI chat
+shell.
 
 ## Smoke test
 
@@ -84,13 +87,13 @@ See `agent/frontend/README.md` for the full wiring guide and an
 
 ## Troubleshooting
 
-- **Plain text instead of UI** — the model ignored the OpenUI contract. Reload the
+- **Plain text instead of UI** - the model ignored the OpenUI contract. Reload the
   `openui` skill and retry with an explicit layout request.
-- **Parser errors in the browser** — an assistant reply included markdown fences or
+- **Parser errors in the browser** - an assistant reply included markdown fences or
   prose around the program. The agent should output raw OpenUI Lang only.
-- **Missing tool data** — verify the turn includes a `get_weather`,
+- **Missing tool data** - verify the turn includes a `get_weather`,
   `get_stock_price`, or `search_web` tool call before the UI references numbers.
-- **Renderer shows nothing** — confirm `@openuidev/react-lang` and
+- **Renderer shows nothing** - confirm `@openuidev/react-lang` and
   `@openuidev/react-ui` are installed in the host app and that you passed
   `openuiChatLibrary` to `Renderer`.
 

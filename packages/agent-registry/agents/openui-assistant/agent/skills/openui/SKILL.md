@@ -14,7 +14,7 @@ example.
 ## Pipeline
 
 ```
-Component library → system prompt → LLM → OpenUI Lang stream → Renderer → UI
+Component library -> system prompt -> LLM -> OpenUI Lang stream -> Renderer -> UI
 ```
 
 The build-time prompt in `agent/instructions/openui-prompt.ts` is generated from
@@ -24,7 +24,7 @@ The build-time prompt in `agent/instructions/openui-prompt.ts` is generated from
 
 1. One statement per line: `identifier = Expression`
 2. The first statement must assign to `root`
-3. Write top-down: layout → nested components → leaf values
+3. Write top-down: layout -> nested components -> leaf values
 4. Positional arguments map to Zod prop order
 5. Forward references are allowed; the renderer shows placeholders until defined
 

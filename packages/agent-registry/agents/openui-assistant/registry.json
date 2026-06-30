@@ -12,7 +12,8 @@
       "dependencies": [
         "@openuidev/react-lang@^0.2.8",
         "@openuidev/react-ui@^0.12.1",
-        "eve@^0.15.1",
+        "eve@^0.17.1",
+        "just-bash@^3.0.2",
         "zod@^4.4.3"
       ],
       "files": [
@@ -22,14 +23,14 @@
           "target": "~/agent/agent.ts"
         },
         {
-          "path": "agent/frontend/openui-eve-chat.tsx",
+          "path": "agent/skills/openui/references/openui-eve-chat.tsx",
           "type": "registry:file",
-          "target": "~/agent/frontend/openui-eve-chat.tsx"
+          "target": "~/agent/skills/openui/references/openui-eve-chat.tsx"
         },
         {
-          "path": "agent/frontend/README.md",
+          "path": "agent/skills/openui/references/frontend-wiring.md",
           "type": "registry:file",
-          "target": "~/agent/frontend/README.md"
+          "target": "~/agent/skills/openui/references/frontend-wiring.md"
         },
         {
           "path": "agent/instructions/openui-prompt.ts",
@@ -81,7 +82,7 @@
         "slug": "openui-assistant",
         "category": "general",
         "createdAt": "2026-06-30T21:52:44.748Z",
-        "updatedAt": "2026-06-30T22:00:00.000Z"
+        "updatedAt": "2026-06-30T22:05:00.000Z"
       },
       "author": "TommyBez"
     }
