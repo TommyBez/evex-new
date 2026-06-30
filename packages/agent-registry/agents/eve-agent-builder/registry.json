@@ -1,0 +1,92 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "items": [
+    {
+      "name": "eve-agent-builder",
+      "type": "registry:item",
+      "title": "Eve Agent Builder",
+      "description": "An Eve coding agent that creates Eve agents, runs their checks, deploys them to Vercel, and verifies the live routes.",
+      "categories": [
+        "coding"
+      ],
+      "dependencies": [
+        "eve@^0.15.1",
+        "zod@^4.4.3"
+      ],
+      "files": [
+        {
+          "path": "agent/agent.ts",
+          "type": "registry:file",
+          "target": "~/agent/agent.ts"
+        },
+        {
+          "path": "agent/instructions.md",
+          "type": "registry:file",
+          "target": "~/agent/instructions.md"
+        },
+        {
+          "path": "agent/skills/eve-agent-delivery/SKILL.md",
+          "type": "registry:file",
+          "target": "~/agent/skills/eve-agent-delivery/SKILL.md"
+        },
+        {
+          "path": "agent/skills/eve/SKILL.md",
+          "type": "registry:file",
+          "target": "~/agent/skills/eve/SKILL.md"
+        },
+        {
+          "path": "agent/connections/vercel.ts",
+          "type": "registry:file",
+          "target": "~/agent/connections/vercel.ts"
+        },
+        {
+          "path": "agent/lib/vercel-brokered-cli.ts",
+          "type": "registry:file",
+          "target": "~/agent/lib/vercel-brokered-cli.ts"
+        },
+        {
+          "path": "agent/sandbox.ts",
+          "type": "registry:file",
+          "target": "~/agent/sandbox.ts"
+        },
+        {
+          "path": "agent/tools/bash.ts",
+          "type": "registry:file",
+          "target": "~/agent/tools/bash.ts"
+        },
+        {
+          "path": "agent/tools/run_eve_cli.ts",
+          "type": "registry:file",
+          "target": "~/agent/tools/run_eve_cli.ts"
+        },
+        {
+          "path": "agent/tools/run_vercel_cli.ts",
+          "type": "registry:file",
+          "target": "~/agent/tools/run_vercel_cli.ts"
+        },
+        {
+          "path": "agent/tools/verify_vercel_preview.ts",
+          "type": "registry:file",
+          "target": "~/agent/tools/verify_vercel_preview.ts"
+        },
+        {
+          "path": "README.md",
+          "type": "registry:file",
+          "target": "~/agent/README.md"
+        },
+        {
+          "path": ".env.example",
+          "type": "registry:file",
+          "target": "~/.env.example"
+        }
+      ],
+      "meta": {
+        "slug": "eve-agent-builder",
+        "category": "coding",
+        "createdAt": "2026-06-30T10:23:00.000Z",
+        "updatedAt": "2026-06-30T12:05:00.000Z"
+      },
+      "author": "TommyBez"
+    }
+  ]
+}

@@ -380,13 +380,16 @@ function AgentInstallSummary({
       description: `${agent.category} agents and workflows`,
     },
     {
-      label: 'Installs',
+      label: 'Files',
       value: pluralize(files.length, 'file'),
       description: descriptions.installs,
     },
     {
       label: 'Requires',
-      value: deps.length > 0 ? `${deps.length} dependencies` : 'No extras',
+      value:
+        deps.length > 0
+          ? pluralize(deps.length, 'dependency', 'dependencies')
+          : 'No extras',
       description: descriptions.requires,
     },
     {
