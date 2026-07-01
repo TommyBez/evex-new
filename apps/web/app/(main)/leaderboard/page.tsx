@@ -18,9 +18,9 @@ import { createPageMetadata } from '@/lib/metadata'
 import { getTopAgents, getTopAuthors } from '@/lib/queries'
 
 export const metadata: Metadata = createPageMetadata({
-  title: 'Leaderboard',
+  title: 'Leaderboard | Top eve Agents and Authors',
   description:
-    'The most installed agents and top authors on the evex registry.',
+    'See the most installed eve agents and top publishing authors on the evex community registry.',
   path: '/leaderboard',
 })
 

@@ -8,6 +8,7 @@ import { type ReactNode, Suspense } from 'react'
 import { AgentCard } from '@/components/agent-card'
 import { AuthorAvatar } from '@/components/author-avatar'
 import { GitHubIcon } from '@/components/github-icon'
+import { JsonLd } from '@/components/json-ld'
 import { LinkedInIcon } from '@/components/linkedin-icon'
 import { XIcon } from '@/components/x-icon'
 import { applyInstallCounts, getAgentRuntimeState } from '@/lib/agent-runtime'
@@ -23,6 +24,7 @@ import {
   getStaticAgentsByAuthorUsername,
   listStaticAgents,
 } from '@/lib/static-agents'
+import { createAuthorProfileSchema } from '@/lib/structured-data'
 
 export function generateStaticParams() {
   const agents = listStaticAgents()
@@ -102,55 +104,69 @@ async function AuthorContent({ githubUsername }: { githubUsername: string }) {
   }
 
   return (
-    <main className="mx-auto w-full min-w-0 max-w-4xl px-4 py-10">
-      <Link
-        className="inline-flex items-center gap-1.5 text-muted-foreground text-sm hover:text-foreground"
-        href="/"
-      >
-        <ArrowLeft aria-hidden="true" className="size-4" />
-        Back to Registry
-      </Link>
+    <>
+      <JsonLd
+        data={createAuthorProfileSchema(
+          {
+            agentCount: author.agentCount,
+            bio: author.bio,
+            githubUsername: author.githubUsername,
+            name: author.name,
+            totalInstalls: author.totalInstalls,
+          },
+          agents,
+        )}
+      />
+      <main className="mx-auto w-full min-w-0 max-w-4xl px-4 py-10">
+        <Link
+          className="inline-flex items-center gap-1.5 text-muted-foreground text-sm hover:text-foreground"
+          href="/"
+        >
+          <ArrowLeft aria-hidden="true" className="size-4" />
+          Back to Registry
+        </Link>
 
-      <header className="mt-6 flex flex-col items-start gap-5 sm:flex-row sm:items-center">
-        <AuthorAvatar
-          className="size-20 text-3xl"
-          name={author.name}
-          src={author.avatarUrl}
-        />
-        <div className="w-full min-w-0">
-          <h1 className="text-balance font-semibold text-2xl text-foreground">
-            {author.name}
-          </h1>
-          <p className="mt-1 text-muted-foreground text-sm">
-            @{author.githubUsername}
-          </p>
-          {author.bio ? (
-            <p className="mt-3 max-w-xl whitespace-pre-wrap text-pretty text-muted-foreground leading-relaxed">
-              {author.bio}
+        <header className="mt-6 flex flex-col items-start gap-5 sm:flex-row sm:items-center">
+          <AuthorAvatar
+            className="size-20 text-3xl"
+            name={author.name}
+            src={author.avatarUrl}
+          />
+          <div className="w-full min-w-0">
+            <h1 className="text-balance font-semibold text-2xl text-foreground">
+              {author.name}
+            </h1>
+            <p className="mt-1 text-muted-foreground text-sm">
+              @{author.githubUsername}
             </p>
-          ) : null}
-          <p className="mt-3 max-w-xl text-pretty text-muted-foreground leading-relaxed">
-            {author.agentCount} {author.agentCount === 1 ? 'agent' : 'agents'}{' '}
-            published on evex with {author.totalInstalls} total installs.
-          </p>
-          <AuthorProfileLinks author={author} />
-        </div>
-      </header>
+            {author.bio ? (
+              <p className="mt-3 max-w-xl whitespace-pre-wrap text-pretty text-muted-foreground leading-relaxed">
+                {author.bio}
+              </p>
+            ) : null}
+            <p className="mt-3 max-w-xl text-pretty text-muted-foreground leading-relaxed">
+              {author.agentCount} {author.agentCount === 1 ? 'agent' : 'agents'}{' '}
+              published on evex with {author.totalInstalls} total installs.
+            </p>
+            <AuthorProfileLinks author={author} />
+          </div>
+        </header>
 
-      <section className="mt-10">
-        <h2 className="font-semibold text-foreground text-lg">
-          Agents{' '}
-          <span className="font-pixel text-muted-foreground tabular-nums">
-            ({agents.length})
-          </span>
-        </h2>
-        <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <Suspense fallback={<AuthorAgentGridSkeleton />}>
-            <AuthorAgentGrid agents={agents} />
-          </Suspense>
-        </div>
-      </section>
-    </main>
+        <section className="mt-10">
+          <h2 className="font-semibold text-foreground text-lg">
+            Agents{' '}
+            <span className="font-pixel text-muted-foreground tabular-nums">
+              ({agents.length})
+            </span>
+          </h2>
+          <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <Suspense fallback={<AuthorAgentGridSkeleton />}>
+              <AuthorAgentGrid agents={agents} />
+            </Suspense>
+          </div>
+        </section>
+      </main>
+    </>
   )
 }
 

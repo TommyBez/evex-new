@@ -13,6 +13,7 @@ import { AgentFileViewer } from '@/components/agent-file-viewer'
 import { AuthorAvatar } from '@/components/author-avatar'
 import { FavoriteButton } from '@/components/favorite-button'
 import { InstallCommand } from '@/components/install-command'
+import { JsonLd } from '@/components/json-ld'
 import { MobileInstallBar } from '@/components/mobile-install-bar'
 import { applyInstallCounts, getAgentRuntimeState } from '@/lib/agent-runtime'
 import type { AgentRegistryFile, AgentWithAuthor } from '@/lib/agent-types'
@@ -25,6 +26,10 @@ import {
   getStaticAgentsByAuthorUsername,
   listStaticAgents,
 } from '@/lib/static-agents'
+import {
+  createAgentBreadcrumbSchema,
+  createAgentSoftwareSchema,
+} from '@/lib/structured-data'
 
 export function generateStaticParams() {
   const agents = listStaticAgents()
@@ -251,7 +256,7 @@ function AgentDetailContent({ slug }: { slug: string }) {
               {agent.category}
             </Badge>
             <Suspense fallback={<AgentDetailRuntimeFallback />}>
-              <AgentDetailRuntimeControls agentId={agent.id} />
+              <AgentDetailRuntimeSection agent={agent} />
             </Suspense>
           </div>
           <p className="mt-1 max-w-2xl text-pretty text-muted-foreground">
@@ -368,6 +373,37 @@ function AgentDetailContent({ slug }: { slug: string }) {
   )
 }
 
+async function AgentDetailRuntimeSection({
+  agent,
+}: {
+  agent: AgentWithAuthor
+}) {
+  const runtimeState = await getAgentRuntimeState([agent.id])
+  const installCount = runtimeState.installCounts.get(agent.id) ?? 0
+
+  return (
+    <>
+      <JsonLd
+        data={[
+          createAgentSoftwareSchema(agent, installCount),
+          createAgentBreadcrumbSchema(agent),
+        ]}
+      />
+      <FavoriteButton
+        agentId={agent.id}
+        initialIsFavorite={runtimeState.favoriteAgentIdSet.has(agent.id)}
+        isAuthenticated={runtimeState.isAuthenticated}
+        key={`${agent.id}:${runtimeState.favoriteAgentIdSet.has(agent.id)}`}
+        showLabel
+      />
+      <span className="flex items-center gap-1.5">
+        <Download aria-hidden="true" className="size-4" />
+        <span className="font-pixel tabular-nums">{installCount}</span> installs
+      </span>
+    </>
+  )
+}
+
 function AgentInstallSummary({
   agent,
   deps,
@@ -429,27 +465,6 @@ function AgentDetailRuntimeFallback() {
       <span className="flex items-center gap-1.5">
         <Download aria-hidden="true" className="size-4" />
         <Skeleton className="h-4 w-16" />
-      </span>
-    </>
-  )
-}
-
-async function AgentDetailRuntimeControls({ agentId }: { agentId: string }) {
-  const runtimeState = await getAgentRuntimeState([agentId])
-  const installCount = runtimeState.installCounts.get(agentId) ?? 0
-
-  return (
-    <>
-      <FavoriteButton
-        agentId={agentId}
-        initialIsFavorite={runtimeState.favoriteAgentIdSet.has(agentId)}
-        isAuthenticated={runtimeState.isAuthenticated}
-        key={`${agentId}:${runtimeState.favoriteAgentIdSet.has(agentId)}`}
-        showLabel
-      />
-      <span className="flex items-center gap-1.5">
-        <Download aria-hidden="true" className="size-4" />
-        <span className="font-pixel tabular-nums">{installCount}</span> installs
       </span>
     </>
   )
