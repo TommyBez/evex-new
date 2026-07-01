@@ -47,3 +47,5 @@ integration when you already manage chat state with `useEveAgent`.
 3. Ask: `What's the weather in Tokyo?`
 4. Confirm the assistant streams OpenUI Lang and the renderer shows cards instead
    of raw text.
+5. Optional: ask for a demo search (for example `Search for Eve agents`) and
+   confirm results are labeled as demo data, not live web results.

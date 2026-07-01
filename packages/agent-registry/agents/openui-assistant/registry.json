@@ -28,6 +28,11 @@
           "target": "~/agent/skills/openui/references/openui-eve-chat.tsx"
         },
         {
+          "path": "agent/skills/openui/references/syntax-examples.md",
+          "type": "registry:file",
+          "target": "~/agent/skills/openui/references/syntax-examples.md"
+        },
+        {
           "path": "agent/skills/openui/references/frontend-wiring.md",
           "type": "registry:file",
           "target": "~/agent/skills/openui/references/frontend-wiring.md"
@@ -82,7 +87,7 @@
         "slug": "openui-assistant",
         "category": "general",
         "createdAt": "2026-06-30T21:52:44.748Z",
-        "updatedAt": "2026-07-01T11:20:00.000Z"
+        "updatedAt": "2026-07-01T12:00:00.000Z"
       },
       "author": "TommyBez"
     }

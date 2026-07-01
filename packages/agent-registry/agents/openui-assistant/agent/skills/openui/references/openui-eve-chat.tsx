@@ -55,7 +55,7 @@ export function OpenUIEveChat() {
           />
         ) : (
           <p className="text-sm text-muted-foreground">
-            Ask for weather, a stock quote, or a web search to see generative UI.
+            Ask for weather, a stock quote, or a demo search to see generative UI.
           </p>
         )}
       </section>

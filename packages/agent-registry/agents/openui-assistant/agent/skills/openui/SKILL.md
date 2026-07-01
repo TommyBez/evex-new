@@ -1,66 +1,24 @@
 ---
 name: openui
-description: Build generative UI with OpenUI Lang and the bundled openuiChatLibrary. Use when choosing components, debugging OpenUI Lang syntax, extending the library, or wiring the Eve frontend reference.
+description: OpenUI Lang generative UI with openuiChatLibrary. Use when composing layouts, debugging parse/render failures, or extending the chat library.
 ---
 
-# OpenUI generative UI
+# OpenUI Lang
 
-OpenUI Lang is a compact, line-oriented DSL for model-generated interfaces. This
-agent ships with the `openuiChatLibrary` from `@openuidev/react-ui/genui-lib`,
-the same library used by the official
+Every assistant reply is an OpenUI Lang **program** whose first statement assigns
+**root**. This agent uses `openuiChatLibrary` from `@openuidev/react-ui/genui-lib`
+(the same library as the official
 [`openui-chat`](https://github.com/thesysdev/openui/tree/main/examples/openui-chat)
-example.
-
-## Pipeline
-
-```text
-Component library -> system prompt -> LLM -> OpenUI Lang stream -> Renderer -> UI
-```
-
-The build-time prompt in `agent/instructions/openui-prompt.ts` is generated from
+example). The build-time system prompt comes from
 `openuiChatLibrary.prompt(openuiChatPromptOptions)`.
 
-## Syntax rules
+## Chat library constraints
 
-1. One statement per line: `identifier = Expression`
-2. The first statement must assign to `root`
-3. Write top-down: layout -> nested components -> leaf values
-4. Positional arguments map to Zod prop order
-5. Forward references are allowed; the renderer shows placeholders until defined
+`openuiChatLibrary` centers on chat primitives: `Card`, `CardHeader`, `TextContent`,
+`Table`, lists, and follow-ups. Do not use `Stack`; it belongs to the broader
+OpenUI library, not this agent's chat library.
 
-Example:
-
-```text
-root = Card([header, summary, metricsTable, followups])
-header = CardHeader("Q4 Dashboard", "Revenue and user growth")
-summary = TextContent("Revenue is up while user growth is steady.", "default")
-metricsTable = Table([metricCol, valueCol, trendCol])
-metricCol = Col("Metric", ["Revenue", "Users"])
-valueCol = Col("Value", ["$1.2M", "450k"])
-trendCol = Col("Trend", ["up", "flat"])
-followups = FollowUpBlock([details])
-details = FollowUpItem("Show the detailed breakdown")
-```
-
-## When to load this skill
-
-- The user asks for a new component pattern or layout
-- OpenUI Lang fails to parse or render
-- You need to confirm which built-in components are available
-- You are extending the library with custom components
-
-## Built-in library
-
-This agent uses `openuiChatLibrary`, which is centered on chat primitives such
-as `Card`, `CardHeader`, `TextContent`, `Table`, lists, and follow-ups. Do not
-use `Stack`; it belongs to the broader OpenUI library, not the chat library used
-by this agent.
-
-## References
-
-- OpenUI docs: https://www.openui.com/docs/openui-lang/overview
-- Language spec: https://www.openui.com/docs/openui-lang/specification
-- Example app: https://github.com/thesysdev/openui/tree/main/examples/openui-chat
+For a layout example, see [syntax-examples](./references/syntax-examples.md).
 
 ## Debugging checklist
 
@@ -69,3 +27,17 @@ by this agent.
 3. Confirm tool-backed values match the latest tool JSON
 4. Remove markdown fences or prose around the program
 5. Re-run with a smaller layout if the stream was truncated
+
+**Done when** each item is confirmed or ruled out and the reply is a valid OpenUI
+Lang program starting with `root =`.
+
+## Frontend integration
+
+For Next.js + Eve wiring (dependencies, `withEve()`, `OpenUIEveChat`, accessibility,
+smoke tests), see [frontend-wiring](./references/frontend-wiring.md).
+
+## External references
+
+- OpenUI docs: https://www.openui.com/docs/openui-lang/overview
+- Language spec: https://www.openui.com/docs/openui-lang/specification
+- Example app: https://github.com/thesysdev/openui/tree/main/examples/openui-chat
