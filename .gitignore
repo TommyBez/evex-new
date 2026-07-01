@@ -24,6 +24,7 @@ apps/agents/*/.vercel/
 packages/agent-registry/agents/*/.eve/
 packages/agent-registry/agents/*/.output/
 packages/agent-registry/agents/*/.vercel/
+packages/agent-registry/agents/*/.workflow-data/
 .DS_Store
 .vercel
 next-env.d.ts
