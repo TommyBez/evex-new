@@ -1,6 +1,7 @@
 import type { AgentWithAuthor } from '@/lib/agent-types'
+import { HOME_FAQ_ITEMS } from '@/lib/home-faq-content'
 import { getSiteUrl, siteConfig } from '@/lib/metadata'
-import { buildInstallCommand } from '@/lib/site-url'
+import { buildInstallCommand, getAgentUrl, getAuthorUrl } from '@/lib/site-url'
 
 const SCHEMA_CONTEXT = 'https://schema.org'
 const REPO_URL = 'https://github.com/TommyBez/evex'
@@ -47,48 +48,20 @@ export function createHomeFaqSchema(): JsonLdObject {
   return {
     '@context': SCHEMA_CONTEXT,
     '@type': 'FAQPage',
-    mainEntity: [
-      {
-        '@type': 'Question',
-        name: 'What is evex?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'evex is the community registry for eve agents. It lets developers browse reusable agent configurations, preview every file before install, and add agents to eve projects with one shadcn command.',
-        },
+    mainEntity: HOME_FAQ_ITEMS.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.answer,
       },
-      {
-        '@type': 'Question',
-        name: 'How do I install an eve agent from evex?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'Run npx shadcn@latest add @evex/{slug} from your eve app root. The command writes the agent files under agent/ in the layout expected by eve.',
-        },
-      },
-      {
-        '@type': 'Question',
-        name: 'How do I publish an agent to evex?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'Open a pull request to the evex repository with your agent under packages/agent-registry/agents/{slug}, including a registry.json manifest. After merge, the agent appears in the public catalog and shadcn registry.',
-        },
-      },
-      {
-        '@type': 'Question',
-        name: 'What is eve?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'eve is a framework for building durable backend AI agents with instructions, skills, tools, connections, and subagents. evex distributes ready-made agent configurations into eve projects.',
-        },
-      },
-    ],
+    })),
   }
 }
 
 export function createAgentListSchema(
   agents: readonly AgentWithAuthor[],
 ): JsonLdObject {
-  const siteUrl = getSiteUrl()
-
   return {
     '@context': SCHEMA_CONTEXT,
     '@type': 'ItemList',
@@ -98,7 +71,7 @@ export function createAgentListSchema(
     itemListElement: agents.map((agent, index) => ({
       '@type': 'ListItem',
       position: index + 1,
-      url: `${siteUrl}/agents/${agent.slug}`,
+      url: getAgentUrl(agent.slug),
       name: agent.name,
     })),
   }
@@ -108,8 +81,7 @@ export function createAgentSoftwareSchema(
   agent: AgentWithAuthor,
   installCount: number,
 ): JsonLdObject {
-  const siteUrl = getSiteUrl()
-  const agentUrl = `${siteUrl}/agents/${agent.slug}`
+  const agentUrl = getAgentUrl(agent.slug)
 
   return {
     '@context': SCHEMA_CONTEXT,
@@ -125,7 +97,7 @@ export function createAgentSoftwareSchema(
       '@type': 'Person',
       name: agent.authorName,
       ...(agent.authorUsername
-        ? { url: `${siteUrl}/authors/${agent.authorUsername}` }
+        ? { url: getAuthorUrl(agent.authorUsername) }
         : {}),
     },
     offers: {
@@ -155,6 +127,7 @@ export function createAgentBreadcrumbSchema(
   agent: AgentWithAuthor,
 ): JsonLdObject {
   const siteUrl = getSiteUrl()
+  const agentUrl = getAgentUrl(agent.slug)
 
   return {
     '@context': SCHEMA_CONTEXT,
@@ -170,7 +143,7 @@ export function createAgentBreadcrumbSchema(
         '@type': 'ListItem',
         position: 2,
         name: agent.name,
-        item: `${siteUrl}/agents/${agent.slug}`,
+        item: agentUrl,
       },
     ],
   }
@@ -186,8 +159,7 @@ export function createAuthorProfileSchema(
   },
   agents: readonly AgentWithAuthor[],
 ): JsonLdObject {
-  const siteUrl = getSiteUrl()
-  const profileUrl = `${siteUrl}/authors/${author.githubUsername}`
+  const profileUrl = getAuthorUrl(author.githubUsername)
 
   return {
     '@context': SCHEMA_CONTEXT,
@@ -207,7 +179,7 @@ export function createAuthorProfileSchema(
     hasPart: agents.map((agent) => ({
       '@type': 'SoftwareApplication',
       name: agent.name,
-      url: `${siteUrl}/agents/${agent.slug}`,
+      url: getAgentUrl(agent.slug),
     })),
   }
 }

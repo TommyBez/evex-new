@@ -1,6 +1,26 @@
 import type { MetadataRoute } from 'next'
 import { getSiteUrl } from '@/lib/metadata'
+import { getAuthorUrl } from '@/lib/site-url'
 import { listStaticAgents } from '@/lib/static-agents'
+
+function getAuthorLastModified(
+  githubUsername: string,
+  agents: ReturnType<typeof listStaticAgents>,
+): Date {
+  const authorAgents = agents.filter(
+    (agent) => agent.authorUsername === githubUsername,
+  )
+
+  if (authorAgents.length === 0) {
+    return new Date(0)
+  }
+
+  return authorAgents.reduce(
+    (latest, agent) =>
+      agent.updatedAt.getTime() > latest.getTime() ? agent.updatedAt : latest,
+    authorAgents[0].updatedAt,
+  )
+}
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const siteUrl = getSiteUrl()
@@ -38,8 +58,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const authorRoutes: MetadataRoute.Sitemap = authorUsernames.map(
     (githubUsername) => ({
-      url: `${siteUrl}/authors/${githubUsername}`,
-      lastModified: now,
+      url: getAuthorUrl(githubUsername),
+      lastModified: getAuthorLastModified(githubUsername, agents),
       changeFrequency: 'weekly' as const,
       priority: 0.7,
     }),

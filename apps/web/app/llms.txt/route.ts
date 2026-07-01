@@ -1,15 +1,27 @@
 import { getSiteUrl, siteConfig } from '@/lib/metadata'
+import { getAgentUrl } from '@/lib/site-url'
 import { listStaticAgents } from '@/lib/static-agents'
+
+const MAX_FEATURED_AGENTS = 20
+
+function escapeMarkdownLinkText(value: string): string {
+  return value
+    .replace(/\\/g, '\\\\')
+    .replace(/[[\]]/g, '\\$&')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
 
 function buildLlmsTxt(): string {
   const siteUrl = getSiteUrl()
   const agents = listStaticAgents()
   const agentLines = agents
-    .slice(0, 20)
-    .map(
-      (agent) =>
-        `- [${agent.name}](${siteUrl}/agents/${agent.slug}): ${agent.description}`,
-    )
+    .slice(0, MAX_FEATURED_AGENTS)
+    .map((agent) => {
+      const name = escapeMarkdownLinkText(agent.name)
+      const description = escapeMarkdownLinkText(agent.description)
+      return `- [${name}](${getAgentUrl(agent.slug)}): ${description}`
+    })
     .join('\n')
 
   return `# ${siteConfig.name}

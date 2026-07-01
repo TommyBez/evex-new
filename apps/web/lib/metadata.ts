@@ -8,7 +8,7 @@ export const siteConfig = {
   name: 'evex',
   title: 'evex | Install eve Agents with One Command',
   description:
-    'evex is the community registry for eve agents. Browse configurations, preview files before install, and add any agent with npx shadcn add @evex/{slug}.',
+    'evex is the community registry for eve agents. Browse configurations, preview files before install, and add agents with one shadcn command.',
 }
 
 export const defaultOpenGraphImage = {
