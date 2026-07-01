@@ -104,30 +104,12 @@ function Hero() {
             built for the eve framework, preview every file before install, then
             add any agent with one shadcn command.
           </p>
-          <div className="mt-6 flex flex-col items-stretch gap-4 sm:mt-8 min-[400px]:flex-row min-[400px]:flex-wrap min-[400px]:items-center">
+          <div className="mt-6 sm:mt-8">
             <Button
               className="h-11 w-full rounded-md px-4 min-[400px]:w-auto"
               render={<a href="#agents">Browse Agents</a>}
               size="lg"
             />
-            <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
-              <a
-                className="inline-flex min-h-9 items-center gap-1.5 font-medium text-foreground text-sm underline-offset-4 transition-colors hover:text-brand hover:underline"
-                href="https://github.com/TommyBez/evex"
-                rel="noreferrer noopener"
-                target="_blank"
-              >
-                Open Repository
-              </a>
-              <a
-                className="inline-flex min-h-9 items-center gap-1.5 font-medium text-foreground text-sm underline-offset-4 transition-colors hover:text-brand hover:underline"
-                href="https://eve.dev/docs/introduction"
-                rel="noreferrer noopener"
-                target="_blank"
-              >
-                Read Docs →
-              </a>
-            </div>
           </div>
           <Suspense fallback={<StatsSkeleton />}>
             <Stats />
@@ -277,19 +259,7 @@ async function AgentResults({
       >
         {hasActiveFilter ? (
           <Button render={<Link href="/">Clear filters</Link>} />
-        ) : (
-          <Button
-            render={
-              <a
-                href="https://github.com/TommyBez/evex"
-                rel="noreferrer noopener"
-                target="_blank"
-              >
-                Open Repository
-              </a>
-            }
-          />
-        )}
+        ) : null}
       </RegistryEmptyState>
     )
   }
