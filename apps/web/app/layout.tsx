@@ -4,8 +4,13 @@ import { GeistMono } from 'geist/font/mono'
 import { GeistPixelSquare } from 'geist/font/pixel'
 import { GeistSans } from 'geist/font/sans'
 import type { Metadata, Viewport } from 'next'
+import { JsonLd } from '@/components/json-ld'
 import { ThemeProvider } from '@/components/theme-provider'
 import { getMetadataBase, siteConfig } from '@/lib/metadata'
+import {
+  createOrganizationSchema,
+  createWebsiteSchema,
+} from '@/lib/structured-data'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -17,7 +22,16 @@ export const metadata: Metadata = {
   },
   description: siteConfig.description,
   generator: 'Next.js',
-  keywords: ['evex', 'eve', 'agents', 'registry', 'shadcn'],
+  keywords: [
+    'evex',
+    'eve',
+    'eve agents',
+    'agent registry',
+    'shadcn registry',
+    'install eve agent',
+    'AI agents',
+    'developer tools',
+  ],
   authors: [{ name: siteConfig.name }],
   creator: siteConfig.name,
   publisher: siteConfig.name,
@@ -80,6 +94,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="font-sans antialiased">
+        <JsonLd data={[createOrganizationSchema(), createWebsiteSchema()]} />
         <ThemeProvider>
           {children}
           <Toaster />

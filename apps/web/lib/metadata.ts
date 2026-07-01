@@ -6,8 +6,9 @@ const URL_PROTOCOL = /^https?:\/\//
 
 export const siteConfig = {
   name: 'evex',
-  title: 'evex - Install eve agents',
-  description: 'Discover and install eve agents with a single shadcn command.',
+  title: 'evex | Install eve Agents with One Command',
+  description:
+    'evex is the community registry for eve agents. Browse configurations, preview files before install, and add any agent with npx shadcn add @evex/{slug}.',
 }
 
 export const defaultOpenGraphImage = {

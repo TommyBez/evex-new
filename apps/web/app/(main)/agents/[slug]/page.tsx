@@ -13,6 +13,7 @@ import { AgentFileViewer } from '@/components/agent-file-viewer'
 import { AuthorAvatar } from '@/components/author-avatar'
 import { FavoriteButton } from '@/components/favorite-button'
 import { InstallCommand } from '@/components/install-command'
+import { JsonLd } from '@/components/json-ld'
 import { MobileInstallBar } from '@/components/mobile-install-bar'
 import { applyInstallCounts, getAgentRuntimeState } from '@/lib/agent-runtime'
 import type { AgentRegistryFile, AgentWithAuthor } from '@/lib/agent-types'
@@ -25,6 +26,10 @@ import {
   getStaticAgentsByAuthorUsername,
   listStaticAgents,
 } from '@/lib/static-agents'
+import {
+  createAgentBreadcrumbSchema,
+  createAgentSoftwareSchema,
+} from '@/lib/structured-data'
 
 export function generateStaticParams() {
   const agents = listStaticAgents()
@@ -229,142 +234,174 @@ function AgentDetailContent({ slug }: { slug: string }) {
   ).length
 
   return (
-    <main className="mx-auto w-full min-w-0 max-w-4xl px-4 pt-10 pb-28 sm:pb-10">
-      <Link
-        className="inline-flex min-h-9 items-center gap-1.5 text-muted-foreground text-sm hover:text-foreground"
-        href="/"
-      >
-        <ArrowLeft aria-hidden="true" className="size-4" />
-        Back to Registry
-      </Link>
+    <>
+      <Suspense fallback={null}>
+        <AgentStructuredData agentId={agent.id} slug={slug} />
+      </Suspense>
+      <main className="mx-auto w-full min-w-0 max-w-4xl px-4 pt-10 pb-28 sm:pb-10">
+        <Link
+          className="inline-flex min-h-9 items-center gap-1.5 text-muted-foreground text-sm hover:text-foreground"
+          href="/"
+        >
+          <ArrowLeft aria-hidden="true" className="size-4" />
+          Back to Registry
+        </Link>
 
-      <div className="mt-6 flex min-w-0 items-start gap-4">
-        <span className="flex size-14 shrink-0 items-center justify-center rounded-md border border-border bg-muted text-foreground">
-          <Package aria-hidden="true" className="size-7" />
-        </span>
-        <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-center gap-3">
-            <h1 className="text-balance font-semibold text-2xl text-foreground">
-              {agent.name}
-            </h1>
-            <Badge className="capitalize" variant="secondary">
-              {agent.category}
-            </Badge>
-            <Suspense fallback={<AgentDetailRuntimeFallback />}>
-              <AgentDetailRuntimeControls agentId={agent.id} />
-            </Suspense>
-          </div>
-          <p className="mt-1 max-w-2xl text-pretty text-muted-foreground">
-            <AgentDescription>{agent.description}</AgentDescription>
-          </p>
-          <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-muted-foreground text-sm">
-            {agent.authorUsername ? (
-              <Link
-                className="flex items-center gap-1.5 transition-colors hover:text-foreground"
-                href={`/authors/${agent.authorUsername}`}
-              >
-                <AuthorAvatar
-                  className="size-5"
-                  name={agent.authorName}
-                  src={agent.authorAvatarUrl}
-                />
-                by {agent.authorName}
-              </Link>
-            ) : (
+        <div className="mt-6 flex min-w-0 items-start gap-4">
+          <span className="flex size-14 shrink-0 items-center justify-center rounded-md border border-border bg-muted text-foreground">
+            <Package aria-hidden="true" className="size-7" />
+          </span>
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-wrap items-center gap-3">
+              <h1 className="text-balance font-semibold text-2xl text-foreground">
+                {agent.name}
+              </h1>
+              <Badge className="capitalize" variant="secondary">
+                {agent.category}
+              </Badge>
+              <Suspense fallback={<AgentDetailRuntimeFallback />}>
+                <AgentDetailRuntimeControls agentId={agent.id} />
+              </Suspense>
+            </div>
+            <p className="mt-1 max-w-2xl text-pretty text-muted-foreground">
+              <AgentDescription>{agent.description}</AgentDescription>
+            </p>
+            <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-muted-foreground text-sm">
+              {agent.authorUsername ? (
+                <Link
+                  className="flex items-center gap-1.5 transition-colors hover:text-foreground"
+                  href={`/authors/${agent.authorUsername}`}
+                >
+                  <AuthorAvatar
+                    className="size-5"
+                    name={agent.authorName}
+                    src={agent.authorAvatarUrl}
+                  />
+                  by {agent.authorName}
+                </Link>
+              ) : (
+                <span className="flex items-center gap-1.5">
+                  <AuthorAvatar
+                    className="size-5"
+                    name={agent.authorName}
+                    src={agent.authorAvatarUrl}
+                  />
+                  by {agent.authorName}
+                </span>
+              )}
               <span className="flex items-center gap-1.5">
-                <AuthorAvatar
-                  className="size-5"
-                  name={agent.authorName}
-                  src={agent.authorAvatarUrl}
-                />
-                by {agent.authorName}
+                <Package aria-hidden="true" className="size-4" />
+                {files.length} files
               </span>
-            )}
-            <span className="flex items-center gap-1.5">
-              <Package aria-hidden="true" className="size-4" />
-              {files.length} files
+            </div>
+          </div>
+        </div>
+
+        <Card className="mt-8 w-full min-w-0 rounded-md border border-border p-5 shadow-[var(--shadow-card)] ring-0">
+          <h2 className="font-medium text-foreground text-sm">Install</h2>
+          <p className="mt-1 text-muted-foreground text-sm">
+            Run this command in your eve app to add the agent.
+          </p>
+          <div className="mt-4">
+            <InstallCommand
+              command={installCommand}
+              label={`${agent.name} install command`}
+            />
+          </div>
+          <AgentInstallSummary agent={agent} deps={deps} files={files} />
+        </Card>
+
+        <section className="mt-8">
+          <h2 className="font-semibold text-foreground text-lg">
+            What&apos;s included
+          </h2>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <Badge variant="outline">{pluralize(files.length, 'file')}</Badge>
+            {fileKinds.subagents > 0 ? (
+              <Badge variant="outline">
+                {pluralize(fileKinds.subagents, 'subagent')}
+              </Badge>
+            ) : null}
+            {fileKinds.skills > 0 ? (
+              <Badge variant="outline">
+                {pluralize(fileKinds.skills, 'skill file')}
+              </Badge>
+            ) : null}
+            {fileKinds.tools > 0 ? (
+              <Badge variant="outline">
+                {pluralize(fileKinds.tools, 'tool')}
+              </Badge>
+            ) : null}
+          </div>
+          {deps.length > 0 && (
+            <div className="mt-4 flex flex-wrap items-center gap-2">
+              <span className="text-muted-foreground text-sm">
+                Dependencies:
+              </span>
+              {deps.map((dep) => (
+                <Badge className="font-mono" key={dep} variant="outline">
+                  {dep}
+                </Badge>
+              ))}
+            </div>
+          )}
+        </section>
+
+        <Separator className="my-8" />
+
+        <section>
+          <div className="mb-4 flex items-center gap-2">
+            <h2 className="font-semibold text-foreground text-lg">Files</h2>
+            <span className="mono-label font-pixel text-muted-foreground/70 tabular-nums">
+              {files.length}
             </span>
           </div>
-        </div>
-      </div>
+          <AgentFileViewer files={files} />
+        </section>
 
-      <Card className="mt-8 w-full min-w-0 rounded-md border border-border p-5 shadow-[var(--shadow-card)] ring-0">
-        <h2 className="font-medium text-foreground text-sm">Install</h2>
-        <p className="mt-1 text-muted-foreground text-sm">
-          Run this command in your eve app to add the agent.
-        </p>
-        <div className="mt-4">
-          <InstallCommand
-            command={installCommand}
-            label={`${agent.name} install command`}
-          />
-        </div>
-        <AgentInstallSummary agent={agent} deps={deps} files={files} />
-      </Card>
-
-      <section className="mt-8">
-        <h2 className="font-semibold text-foreground text-lg">
-          What&apos;s included
-        </h2>
-        <div className="mt-3 flex flex-wrap gap-2">
-          <Badge variant="outline">{pluralize(files.length, 'file')}</Badge>
-          {fileKinds.subagents > 0 ? (
-            <Badge variant="outline">
-              {pluralize(fileKinds.subagents, 'subagent')}
-            </Badge>
-          ) : null}
-          {fileKinds.skills > 0 ? (
-            <Badge variant="outline">
-              {pluralize(fileKinds.skills, 'skill file')}
-            </Badge>
-          ) : null}
-          {fileKinds.tools > 0 ? (
-            <Badge variant="outline">
-              {pluralize(fileKinds.tools, 'tool')}
-            </Badge>
-          ) : null}
-        </div>
-        {deps.length > 0 && (
-          <div className="mt-4 flex flex-wrap items-center gap-2">
-            <span className="text-muted-foreground text-sm">Dependencies:</span>
-            {deps.map((dep) => (
-              <Badge className="font-mono" key={dep} variant="outline">
-                {dep}
-              </Badge>
-            ))}
-          </div>
+        {relatedCandidates.length > 0 && (
+          <Suspense fallback={<RelatedAgentsSkeleton />}>
+            <RelatedAgentsSection
+              agents={relatedCandidates}
+              authorName={agent.authorName}
+              authorUsername={agent.authorUsername ?? ''}
+              currentAgent={agent}
+              moreFromAuthorCount={moreFromAuthorCount}
+            />
+          </Suspense>
         )}
-      </section>
 
-      <Separator className="my-8" />
+        <MobileInstallBar
+          command={installCommand}
+          label={`${agent.name} install command (quick copy)`}
+        />
+      </main>
+    </>
+  )
+}
 
-      <section>
-        <div className="mb-4 flex items-center gap-2">
-          <h2 className="font-semibold text-foreground text-lg">Files</h2>
-          <span className="mono-label font-pixel text-muted-foreground/70 tabular-nums">
-            {files.length}
-          </span>
-        </div>
-        <AgentFileViewer files={files} />
-      </section>
+async function AgentStructuredData({
+  agentId,
+  slug,
+}: {
+  agentId: string
+  slug: string
+}) {
+  const agent = getStaticAgentBySlug(slug)
+  if (!agent) {
+    return null
+  }
 
-      {relatedCandidates.length > 0 && (
-        <Suspense fallback={<RelatedAgentsSkeleton />}>
-          <RelatedAgentsSection
-            agents={relatedCandidates}
-            authorName={agent.authorName}
-            authorUsername={agent.authorUsername ?? ''}
-            currentAgent={agent}
-            moreFromAuthorCount={moreFromAuthorCount}
-          />
-        </Suspense>
-      )}
+  const runtimeState = await getAgentRuntimeState([agentId])
+  const installCount = runtimeState.installCounts.get(agentId) ?? 0
 
-      <MobileInstallBar
-        command={installCommand}
-        label={`${agent.name} install command (quick copy)`}
-      />
-    </main>
+  return (
+    <JsonLd
+      data={[
+        createAgentSoftwareSchema(agent, installCount),
+        createAgentBreadcrumbSchema(agent),
+      ]}
+    />
   )
 }
 
