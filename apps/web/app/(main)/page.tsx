@@ -50,12 +50,11 @@ const AGENT_GRID_SKELETON_CARD_IDS = [
   'agent-card-f',
 ] as const
 const FEATURED_LEARN_SLUGS = [
-  'tools-vs-skills-vs-subagents',
-  'durable-ai-agents',
+  'mcp-server-for-ai-agents',
+  'agentic-workflows',
+  'ai-agent-frameworks',
+  'ai-agent-tools',
   'mcp-vs-skills',
-  'filesystem-first-agents',
-  'eve-vs-langgraph',
-  'shadcn-registry-for-agents',
 ] as const
 
 export default function HomePage({
