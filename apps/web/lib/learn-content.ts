@@ -275,97 +275,114 @@ export const LEARN_PAGES: readonly LearnPage[] = [
   },
   {
     slug: 'ai-agent-frameworks',
-    title:
-      'AI agent frameworks: compare the mental model, not the feature list',
+    title: 'AI agent frameworks: the practical checklist before you choose',
     shortTitle: 'AI agent frameworks',
     description:
-      'A practical framework for comparing LangGraph, CrewAI, AutoGen-style systems, Eve, and other agent frameworks.',
+      'A practical checklist for comparing LangGraph, CrewAI, AutoGen-style systems, Eve, and other agent frameworks.',
     cluster: 'comparisons',
     primaryKeyword: 'ai agent frameworks',
     relatedKeywords: ['ai agent framework', 'best ai agent framework'],
     summary:
-      'Most AI agent frameworks claim tools, memory, workflows, streaming, and observability. The better comparison is mental model. Graphs, crews, conversations, and files each make different problems easier to see. Choose the framework that makes your hardest production failure easiest to explain.',
+      'Choose an AI agent framework by the work it must survive: tool calls, retries, approvals, state, deployment, observability, and team ownership. A demo tells you whether the framework can run. A failure-path test tells you whether your team can operate it.',
     sections: [
       {
-        heading: 'Feature lists hide the real tradeoff',
+        heading: 'Start with the job the agent must survive',
         body: [
-          'A checklist can make frameworks look interchangeable. In practice, the hard part is not whether a framework has tools. The hard part is how the team understands the run when it fails.',
-          'LangGraph makes state transitions visible. CrewAI makes role-based collaboration quick to describe. AutoGen-style systems emphasize agent conversations. Eve makes the capability inventory visible through files.',
-          'Those differences show up late if you only follow tutorials. They show up early if you test a real workflow: a tool call fails, a human rejects an output, a webhook arrives twice, or a deployment happens while a run is paused. The right framework is the one your team can debug under those conditions.',
+          'Most agent frameworks can run a tool call in a tutorial. That is not enough. The real question is what happens when the run is messy: a webhook arrives twice, a tool partially succeeds, a human rejects an output, or a deployment happens while the agent is waiting.',
+          'Before you compare frameworks, write down the agent’s operational requirements. Does it need durable state? Does it write to external systems? Does a human approve anything? Does it run on a schedule? Does it need to be installed as source in customer projects? Those answers matter more than a generic “best framework” ranking.',
+          'This makes the comparison less abstract. LangGraph, CrewAI, AutoGen-style systems, Eve, Mastra, and vendor SDKs are not interchangeable wrappers around the same thing. They make different tradeoffs around control flow, collaboration, deployment, and ownership.',
         ],
       },
       {
-        heading: 'Pick the model that matches the failure mode',
+        heading: 'The seven checks that actually matter',
         body: [
-          'If the workflow fails because routing is complex, a graph-first system helps. If it fails because role handoffs are unclear, a crew model may help. If it fails because no one can see what the agent can do, a filesystem-first layout is useful.',
-          'This is also why tutorials are misleading. A hello-world agent does not show retries, approvals, duplicate webhooks, bad tool arguments, or source review.',
-          'Before choosing, name the most likely failure. A sales research agent may fail by using weak sources. A code review agent may fail by posting noisy comments. A data analyst may fail by running an unsafe query. Each failure points toward different framework strengths.',
+          'A serious evaluation should cover seven areas. First, state: can the framework resume a run without repeating completed side effects? Second, tools: can you define narrow actions with typed inputs and clear errors? Third, approvals: can a human approve the exact artifact that will be executed?',
+          'Fourth, deployment: does the framework fit your runtime, queue, serverless, or long-running worker model? Fifth, observability: can you inspect prompts, tool calls, retries, approvals, token spend, and final delivery? Sixth, evals: can you run behavior checks in CI? Seventh, ownership: can your team inspect and change the agent’s instructions and tools without fighting the framework?',
+          'If a framework is weak in one of these areas, that does not automatically disqualify it. It tells you where you will need extra infrastructure or stricter conventions.',
+        ],
+        bullets: [
+          'State and recovery',
+          'Tool boundaries and permissions',
+          'Human approval and artifact review',
+          'Deployment and runtime fit',
+          'Observability and cost tracking',
+          'Behavior evals in CI',
+          'Source ownership and local customization',
         ],
       },
       {
-        heading: 'Where Eve belongs in the comparison',
+        heading: 'Where the popular options tend to fit',
         body: [
-          'Eve is most interesting for TypeScript teams that want durable backend agents with a visible project layout. It pairs naturally with source-owned distribution because the agent is already organized as files.',
-          'That does not make Eve the universal answer. It makes Eve a strong answer when inspectability, installable source, and platform entry points are central.',
-          'In practice, this means Eve is a good fit for agents that teams will install, audit, and adapt: a GitHub reviewer, a Slack data analyst, a Linear operations agent, a scheduled digest. The project tree shows the review surface before the agent runs.',
+          'LangGraph is strongest when explicit workflow state is the center of the problem. If you need branches, loops, retries, and human interruptions that are easy to reason about, graph structure helps. The tradeoff is that simple workflows can feel heavy when forced into graph terms.',
+          'CrewAI is strongest when the work naturally maps to roles: researcher, analyst, writer, reviewer. It can be fast for prototypes and internal workflows where role collaboration is the clearest way to describe the task. It becomes less comfortable when exact state recovery and side-effect boundaries are the main concern.',
+          'AutoGen-style systems are strongest when the work is conversational collaboration between agents, especially code or research loops where one agent proposes and another critiques. The risk is that long conversations can hide control flow unless you add strong stop conditions and tracing.',
+          'Eve is strongest when the agent should be a TypeScript backend project with inspectable files: instructions, tools, skills, channels, schedules, and env requirements. That makes it a better fit for source-owned agents distributed through a registry than for every possible orchestration problem.',
         ],
       },
       {
-        heading: 'A useful evaluation exercise',
+        heading: 'Use the failure-path prototype',
         body: [
-          'Build one small end-to-end slice in each candidate framework. Include one platform trigger, one model decision, one external tool, one failure, and one log you would show a teammate. Then compare the code and the trace.',
-          'The result is more useful than a generic ranking. It shows whether the framework makes your actual workflow easier to ship, not whether it wins a feature checklist.',
+          'Do not choose from a hello-world example. Build the smallest version of the real workflow that includes one trigger, one model decision, one tool call, one rejected or failed path, and one log you would show a teammate.',
+          'For a code review agent, that might mean opening a pull request, detecting one real issue, rejecting a noisy finding, and posting a review only after validation. For a data agent, it might mean reading schema, refusing a write query, running a safe read query, and explaining the SQL. For an operations agent, it might mean receiving a Slack message, creating a draft Linear update, and asking for approval before posting.',
+          'Then compare the result. Which framework made the code easier to read? Which made the run easier to inspect? Which made the unsafe action harder to perform by accident?',
+        ],
+      },
+      {
+        heading: 'How Eve and evex change the question',
+        body: [
+          'If you are building reusable Eve agents, the framework choice also becomes a distribution question. Can another developer inspect the files before they install them? Can they see which tools write to external systems? Can they change the instructions and keep the result in their own repository?',
+          'That is where evex is relevant. It does not make Eve the best framework for every workflow. It makes Eve’s source-owned file model easier to discover, preview, and install when that model is the right fit.',
         ],
       },
     ],
     decisionRows: [
       {
-        choice: 'Graph-first',
+        choice: 'Graph-first framework',
         useWhen:
-          'The workflow depends on explicit branching, loops, and checkpointed state.',
+          'The workflow needs explicit branching, loops, checkpointed state, and recoverable interruptions.',
         avoidWhen:
-          'The main challenge is source ownership and capability review.',
+          'The agent is mostly a small source-owned workflow where graph structure adds noise.',
       },
       {
-        choice: 'Role-first',
+        choice: 'Role-first framework',
         useWhen:
-          'The workflow maps cleanly to specialist roles and fast collaboration.',
+          'The task maps cleanly to specialist roles and quick multi-agent collaboration.',
         avoidWhen:
-          'The process needs strict control flow and durable side-effect boundaries.',
+          'The process needs strict state recovery, narrow side effects, and auditability.',
       },
       {
-        choice: 'Filesystem-first',
+        choice: 'Filesystem-first framework',
         useWhen:
-          'The team needs to inspect, install, and modify agent capabilities as source files.',
+          'The team needs installable source files, inspectable tools, and project-level ownership.',
         avoidWhen:
-          'The execution graph is the main artifact the team must reason about.',
+          'The execution graph is the main artifact the team must control.',
       },
     ],
     examples: [
       {
-        label: 'Eve-shaped system',
-        body: 'A GitHub review agent with channel files, tools, skills, evals, and env examples benefits from a visible project tree.',
+        label: 'Framework evaluation slice',
+        body: 'Build a PR-review agent that reads a diff, rejects one false positive, posts one validated comment, and records the run. The best framework is the one that makes that failure path easiest to understand.',
       },
       {
-        label: 'Graph-shaped system',
-        body: 'A claims workflow with many approval states and retry branches benefits from an explicit graph.',
+        label: 'Eve-shaped workflow',
+        body: 'An installable Slack data analyst benefits from visible files: channel, tools, instructions, env example, and query policy. That source-owned shape matters as much as orchestration.',
       },
     ],
     faqs: [
       {
         question: 'What is the best AI agent framework?',
         answer:
-          'There is no universal best. Match the framework to the workflow shape, team language, and failure modes.',
+          'There is no universal best. Start with state, tools, approvals, deployment, observability, evals, and source ownership.',
       },
       {
-        question: 'Is TypeScript support enough to choose a framework?',
+        question: 'Should I choose based on programming language?',
         answer:
-          'No. TypeScript matters, but runtime state, observability, deployment, and project shape matter too.',
+          'Language matters because your team has to maintain the agent, but it should not override runtime fit, recovery, and tool safety.',
       },
       {
-        question: 'How should teams evaluate frameworks?',
+        question: 'How do I compare frameworks quickly?',
         answer:
-          'Build a failure-path prototype with one external write, one retry, and one approval. Compare how easy it is to debug.',
+          'Build one failure-path prototype in each candidate framework. Include a tool error, a duplicate event, and one user-visible output.',
       },
     ],
   },
