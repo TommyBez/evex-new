@@ -6,6 +6,67 @@ export const generatedRegistry = {
   "homepage": "https://evex.sh",
   "items": [
     {
+      "name": "brand-visual-asset-generator",
+      "type": "registry:item",
+      "title": "Brand Visual Asset Generator",
+      "description": "Generate brand-aligned SVG asset packs for SaaS products using Context.dev brand extraction and a Quiver Arrow SVG subagent.",
+      "categories": [
+        "marketing"
+      ],
+      "dependencies": [
+        "eve@^0.15.1"
+      ],
+      "meta": {
+        "slug": "brand-visual-asset-generator",
+        "category": "marketing",
+        "createdAt": "2026-07-01T21:16:30.433Z",
+        "updatedAt": "2026-07-01T21:16:30.433Z"
+      },
+      "author": "TommyBez",
+      "files": [
+        {
+          "path": "agent/agent.ts",
+          "type": "registry:file",
+          "target": "~/agent/agent.ts"
+        },
+        {
+          "path": "agent/connections/context-dev.ts",
+          "type": "registry:file",
+          "target": "~/agent/connections/context-dev.ts"
+        },
+        {
+          "path": "agent/instructions.md",
+          "type": "registry:file",
+          "target": "~/agent/instructions.md"
+        },
+        {
+          "path": "agent/skills/brand-visual-assets/SKILL.md",
+          "type": "registry:file",
+          "target": "~/agent/skills/brand-visual-assets/SKILL.md"
+        },
+        {
+          "path": "agent/subagents/svg-generator/agent.ts",
+          "type": "registry:file",
+          "target": "~/agent/subagents/svg-generator/agent.ts"
+        },
+        {
+          "path": "agent/subagents/svg-generator/instructions.md",
+          "type": "registry:file",
+          "target": "~/agent/subagents/svg-generator/instructions.md"
+        },
+        {
+          "path": "README.md",
+          "type": "registry:file",
+          "target": "~/agent/README.md"
+        },
+        {
+          "path": ".env.example",
+          "type": "registry:file",
+          "target": "~/.env.example"
+        }
+      ]
+    },
+    {
       "name": "branded-seo-page-builder",
       "type": "registry:item",
       "title": "Branded SEO Page Builder",
@@ -887,6 +948,76 @@ export const generatedRegistry = {
 } as const satisfies RegistryCatalog
 
 export const generatedRegistryItems = {
+  "brand-visual-asset-generator": {
+    "$schema": "https://ui.shadcn.com/schema/registry.json",
+    "name": "brand-visual-asset-generator",
+    "type": "registry:item",
+    "title": "Brand Visual Asset Generator",
+    "description": "Generate brand-aligned SVG asset packs for SaaS products using Context.dev brand extraction and a Quiver Arrow SVG subagent.",
+    "categories": [
+      "marketing"
+    ],
+    "dependencies": [
+      "eve@^0.15.1"
+    ],
+    "meta": {
+      "slug": "brand-visual-asset-generator",
+      "category": "marketing",
+      "createdAt": "2026-07-01T21:16:30.433Z",
+      "updatedAt": "2026-07-01T21:16:30.433Z"
+    },
+    "author": "TommyBez",
+    "files": [
+      {
+        "path": "agent/agent.ts",
+        "type": "registry:file",
+        "target": "~/agent/agent.ts",
+        "content": "import { defineAgent } from \"eve\";\n\nexport default defineAgent({\n  model: \"deepseek/deepseek-v4-pro\",\n});\n"
+      },
+      {
+        "path": "agent/connections/context-dev.ts",
+        "type": "registry:file",
+        "target": "~/agent/connections/context-dev.ts",
+        "content": "import { defineMcpClientConnection } from \"eve/connections\";\n\nexport default defineMcpClientConnection({\n  url: \"https://context-dev.stlmcp.com\",\n  description:\n    \"Context.dev hosted MCP for resolving brand data, scraping webpages, crawling sites, and extracting styleguides from domains. Use it to gather brand colors, typography, logos, and product context before generating SVG assets.\",\n  headers: {\n    \"x-context-dev-api-key\": readContextDevApiKey,\n  },\n  tools: {\n    allow: [\"search_docs\", \"execute\"],\n  },\n});\n\nfunction readContextDevApiKey(): string {\n  const apiKey =\n    process.env.CONTEXT_DEV_API_KEY?.trim() || process.env.CONTEXT_API_KEY?.trim();\n\n  if (!apiKey) {\n    throw new Error(\n      \"Missing CONTEXT_DEV_API_KEY or CONTEXT_API_KEY for Context.dev MCP access.\",\n    );\n  }\n\n  return apiKey;\n}\n"
+      },
+      {
+        "path": "agent/instructions.md",
+        "type": "registry:file",
+        "target": "~/agent/instructions.md",
+        "content": "# Mission\nGenerate a coherent pack of brand-aligned SVG visual assets for SaaS and digital\nproducts. Output structured, editable SVGs that teams can ship directly in\nproducts, websites, landing pages, design systems, and marketing workflows.\n\n# Supported asset types\n- Icons (feature, navigation, status)\n- Empty states\n- Hero illustrations\n- Badges and labels (for example \"new feature\", \"beta\", \"pro\")\n- Feature graphics\n- Onboarding visuals\n- Changelog illustrations\n- Dashboard or modal visuals\n\n# Workflow\n1. If the user has not provided enough context, ask for at least one of:\n   - company website or domain;\n   - product or feature description;\n   - explicit brand profile (colors, tone, audience, product category).\n2. Load the `brand-visual-assets` skill before planning the asset pack.\n3. Use the `context-dev` MCP connection through `connection_search` to discover\n   Context.dev tools. Use `search_docs` when you need exact SDK method or\n   parameter names, then use `execute` to gather source data.\n4. Through Context.dev MCP, retrieve at minimum:\n   - brand data for the domain, including name, description, colors, logos,\n     industry labels, and social/profile fields when available;\n   - homepage or provided page markdown when a URL is available;\n   - styleguide/design-system data for colors, typography, spacing, shadows, and\n     component cues when available.\n5. Treat Context.dev brand, content, and styleguide outputs as the source of truth\n   for brand name, positioning, palette, typography cues, logos, and factual\n   product claims.\n6. If the Context.dev MCP connection fails because the API key is missing,\n   invalid, rate-limited, or unavailable, stop and report the configuration or API\n   failure. Do not fabricate brand facts.\n7. Infer the asset pack from the user request and Context.dev data. When the\n   request is open-ended, propose a sensible default pack (for example hero +\n   three feature icons + empty state + badge + onboarding visual) and confirm\n   only when scope is ambiguous.\n8. Build a concise creative brief for each asset: type, purpose, dimensions or\n   aspect ratio, palette tokens, visual tone, subject matter, and any text that\n   may appear in the SVG.\n9. Delegate SVG generation to the `svg-generator` subagent. Pass the full brand\n   brief and per-asset specs in each `message`. You may call `svg-generator` in\n   parallel for independent assets.\n10. Review subagent output for brand consistency across the pack. If one asset\n    drifts from the palette or illustration style, regenerate only that asset with\n    tighter constraints.\n\n# SVG pack requirements\n- Every asset must be valid SVG markup, not a PNG/JPG description or Figma prompt.\n- Prefer semantic `<g>` groups, meaningful `id`/`class` names, and\n  `currentColor` where assets should inherit theme colors.\n- Include `viewBox`, accessible `<title>` and `<desc>` when the graphic conveys\n  meaning, and avoid unnecessary editor metadata.\n- Keep file sizes lean: no embedded raster images unless reproducing an approved\n  logo URL from Context.dev.\n- Use only colors and claims grounded in Context.dev output or the user's explicit\n  request.\n\n# Output contract\nReturn:\n1. A short \"Brand brief\" section summarizing palette, typography cues, tone, and\n   Context.dev source URLs.\n2. An \"Asset pack\" section listing each asset with filename suggestion, purpose,\n   and dimensions.\n3. Each SVG in its own fenced `svg` block, labeled with the suggested filename.\n4. A short \"Usage notes\" section covering light/dark theming, recommended sizes,\n   and where each asset fits (marketing page, in-app empty state, onboarding, and\n   so on).\n5. An \"Assumptions\" section only when visual choices rely on inference rather\n   than explicit source data.\n\n# Guardrails\n- Do not invent customer logos, testimonials, statistics, or product claims.\n- Do not expose the Context.dev API key or any environment variables.\n- Do not output raster-only images or generic image-generation prompts when SVG\n  is expected.\n- Do not skip brand extraction and guess a palette when a domain or brand profile\n  was provided.\n"
+      },
+      {
+        "path": "agent/skills/brand-visual-assets/SKILL.md",
+        "type": "registry:file",
+        "target": "~/agent/skills/brand-visual-assets/SKILL.md",
+        "content": "---\nname: brand-visual-assets\ndescription: Plan and coordinate brand-aligned SVG asset packs for SaaS and digital products. Use when scoping icons, empty states, hero illustrations, badges, feature graphics, onboarding visuals, changelog art, or dashboard/modal visuals from brand context.\n---\n\n# Brand visual asset packs\n\n## When to load\nLoad before planning or scoping an asset pack from a domain, product description,\nor brand profile.\n\n## Default pack for a feature launch\nWhen the user asks for a \"visual pack\" or \"feature launch assets\" without listing\nitems, propose:\n1. One hero illustration for the feature page\n2. Three matching feature icons\n3. One dashboard empty state\n4. One \"new feature\" badge\n5. One onboarding visual for the in-app flow\n\nAdjust the pack when the user names specific asset types or channels.\n\n## Brand extraction checklist\nFrom Context.dev (or the user's brand profile), capture:\n- Primary and secondary colors (hex)\n- Neutral/background tones\n- Typography personality (geometric, humanist, monospace accents)\n- Logo treatment constraints (wordmark only, symbol allowed, do-not-distort rules)\n- Product category and audience (B2B SaaS, developer tools, consumer app)\n- Tone adjectives (friendly, precise, enterprise, playful)\n\n## Per-asset brief template\nFor each asset delegated to `svg-generator`, include:\n- `assetType`: icon | empty-state | hero | badge | feature-graphic | onboarding |\n  changelog | dashboard-modal\n- `filename`: kebab-case suggestion ending in `.svg`\n- `purpose`: one sentence on where it ships\n- `dimensions`: viewBox or aspect ratio (for example 1200x630 hero, 24x24 icon)\n- `palette`: named colors with hex values from brand data\n- `subject`: what to depict\n- `text`: exact copy if the SVG includes text\n- `styleNotes`: stroke weight, corner radius, illustration density, metaphors to\n  use or avoid\n- `constraints`: must use `currentColor`, no gradients, dark-mode safe, and so on\n\n## Consistency rules across a pack\n- Reuse the same stroke width scale and corner radius family across icons.\n- Limit palette to brand primaries plus one accent and neutrals.\n- Keep character or device metaphors consistent between hero, onboarding, and empty\n  states.\n- Badge and icon geometry should feel like the same design system.\n\n## Delegation pattern\n1. Finish brand extraction and pack planning first.\n2. Call `svg-generator` once per asset with a self-contained brief in `message`.\n3. Parallelize independent assets (for example three icons) in one turn.\n4. Regenerate individual assets that drift from the pack; do not regenerate the\n   whole pack unless the brand brief changed.\n\n## Output quality bar\nReject subagent output that:\n- is not valid SVG;\n- uses raster embeds without approval;\n- introduces off-brand colors;\n- includes invented logos or claims;\n- omits `viewBox` or accessibility labels on meaningful graphics.\n"
+      },
+      {
+        "path": "agent/subagents/svg-generator/agent.ts",
+        "type": "registry:file",
+        "target": "~/agent/subagents/svg-generator/agent.ts",
+        "content": "import { defineAgent } from \"eve\";\n\nexport default defineAgent({\n  description:\n    \"Generate production-ready, brand-aligned SVG visual assets from a structured creative brief. Use for icons, empty states, hero illustrations, badges, feature graphics, onboarding visuals, changelog art, and dashboard or modal illustrations.\",\n  model: \"quiverai/arrow-1.1\",\n});\n"
+      },
+      {
+        "path": "agent/subagents/svg-generator/instructions.md",
+        "type": "registry:file",
+        "target": "~/agent/subagents/svg-generator/instructions.md",
+        "content": "# Mission\nYou are an SVG illustration specialist. Given a structured creative brief, return\none production-ready SVG asset at a time.\n\n# Non-negotiable output rules\n- Respond with exactly one complete SVG document per request unless the brief\n  explicitly asks for variants.\n- Output the SVG in a single fenced `svg` block with no prose before the block.\n  After the block, add at most three lines of implementation notes (theme tokens,\n  suggested size, animation hooks).\n- The root element must be `<svg>` with a valid `xmlns`, `viewBox`, and explicit\n  `width`/`height` when the brief specifies dimensions.\n- Use vector paths, shapes, and text only. Do not embed raster images unless the\n  brief supplies an approved logo URL.\n- Prefer `currentColor` for strokes and fills that should follow product theme\n  tokens. Use explicit hex values only for brand palette colors named in the\n  brief.\n\n# Composition standards\n- Group related shapes with semantic `<g id=\"...\">` labels (for example\n  `background`, `character`, `device`, `badge-text`).\n- Keep icon strokes consistent within a pack. Match corner radius, stroke width,\n  and negative-space density to the brief.\n- For hero, onboarding, and empty-state illustrations, use clear focal hierarchy\n  and generous padding inside the viewBox.\n- For badges and small UI graphics, keep text legible at 16\u201324px rendered sizes.\n- Include `<title>` and `<desc>` when the graphic communicates status or action.\n\n# Style alignment\n- Follow the palette, tone, and industry cues in the brief exactly.\n- SaaS and digital-product visuals should feel clean, modern, and implementation\n  friendly \u2014 avoid photorealism, heavy gradients, or noisy texture unless the\n  brief requests them.\n- Match illustration complexity to the asset type: icons stay simple; hero and\n  onboarding scenes may be richer but still editable.\n\n# Guardrails\n- Do not invent brand names, trademarks, or product claims not present in the\n  brief.\n- Do not output HTML, React JSX, or canvas code.\n- Do not wrap SVG in markdown commentary before the fenced block.\n- If the brief is missing critical constraints (palette or asset type), return a\n  single-line clarification question instead of guessing.\n"
+      },
+      {
+        "path": "README.md",
+        "type": "registry:file",
+        "target": "~/agent/README.md",
+        "content": "# Brand Visual Asset Generator\n\nAn on-demand Eve agent that turns a company website, product description, or brand\nprofile into a coherent pack of brand-aligned SVG visual assets for SaaS and\ndigital products. It uses Context.dev MCP for brand extraction and delegates SVG\ngeneration to a dedicated `svg-generator` subagent powered by Quiver Arrow.\n\n## What it does\n\n1. **Extracts brand context with Context.dev MCP** \u2014 resolves company name,\n   description, colors, logos, industry labels, homepage copy, and styleguide\n   cues from a domain or URL.\n2. **Plans a visual asset pack** \u2014 scopes icons, empty states, hero illustrations,\n   badges, feature graphics, onboarding visuals, changelog art, and dashboard or\n   modal graphics from the user request.\n3. **Generates structured SVG output** \u2014 delegates each asset to the\n   `svg-generator` subagent (`quiverai/arrow-1.1`) for editable, theme-friendly\n   vector markup teams can ship directly.\n4. **Keeps the pack cohesive** \u2014 enforces shared palette, stroke language, and\n   illustration metaphors across every asset in the set.\n\n## Asset types\n\n- Icons (feature, navigation, status)\n- Empty states\n- Hero illustrations\n- Badges and labels\n- Feature graphics\n- Onboarding visuals\n- Changelog illustrations\n- Dashboard or modal visuals\n\n## Installation\n\n```bash\nnpx shadcn@latest add @evex/brand-visual-asset-generator\n```\n\nInstall the public runtime dependencies listed by the registry item if your Eve\napp does not already have them.\n\n## Configuration\n\nCopy `.env.example` into your Eve app environment and fill in the Context.dev\ncredential.\n\n```env\nCONTEXT_DEV_API_KEY=ctxt_secret_...\n```\n\n`CONTEXT_API_KEY` is also supported as a fallback for projects that already use\nthat name. The Eve MCP connection sends the resolved key as the\n`x-context-dev-api-key` header.\n\nNever expose the Context.dev key to browser-side code. This agent sends it only\nfrom the Eve MCP connection runtime.\n\n## Models\n\n| Role | Model |\n| --- | --- |\n| Root orchestrator | `deepseek/deepseek-v4-pro` |\n| SVG generation subagent | `quiverai/arrow-1.1` |\n\nEnsure your Eve deployment has access to both model providers.\n\n## Usage\n\nAsk for a visual pack from a domain:\n\n```text\nCreate a feature launch visual pack for linear.app: hero illustration, three feature icons, an empty state, a \"new feature\" badge, and an onboarding visual.\n```\n\nOr provide product context without a domain:\n\n```text\nWe're a B2B analytics SaaS with primary color #2563EB and a precise, friendly tone. Generate an empty state and dashboard modal illustration for \"no reports yet\".\n```\n\nThe agent returns:\n\n1. A brand brief with palette, tone, and Context.dev source URLs.\n2. An asset pack manifest with filename suggestions and purposes.\n3. One fenced `svg` block per asset.\n4. Usage notes for theming and placement.\n5. Assumptions when any visual choices were inferred.\n\n## Smoke test\n\n1. Set `CONTEXT_DEV_API_KEY` in the Eve app environment.\n2. Start the app in development:\n\n   ```bash\n   pnpm dev\n   ```\n\n3. In your Eve chat/client, ask:\n\n   ```text\n   Generate a small visual pack for stripe.com: one hero illustration, two feature icons, and a \"new\" badge.\n   ```\n\n4. Confirm the agent:\n   - calls the `context-dev` MCP connection for brand data;\n   - delegates SVG work to the `svg-generator` subagent;\n   - returns valid SVG markup with `viewBox`, semantic groups, and brand-aligned\n     colors.\n\n## Troubleshooting\n\n- **`CONTEXT_DEV_API_KEY is required`** \u2014 set `CONTEXT_DEV_API_KEY` in the Eve app\n  environment and restart the server.\n- **`Context.dev API 401`** \u2014 the key is missing, revoked, or copied incorrectly.\n- **`Context.dev API 408` or `429`** \u2014 the MCP call hit a cold-start timeout or\n  rate limit. Retry later or lower concurrent usage.\n- **Generic or off-brand SVGs** \u2014 Context.dev may have returned sparse brand data.\n  Provide explicit colors, tone adjectives, or a product description.\n- **Subagent model errors** \u2014 confirm `quiverai/arrow-1.1` is enabled for your Eve\n  deployment.\n\n## Development\n\n```bash\npnpm install\npnpm info\npnpm build\n```\n\nRun `pnpm typecheck` while editing the Context.dev MCP connection or subagent\nconfiguration.\n"
+      },
+      {
+        "path": ".env.example",
+        "type": "registry:file",
+        "target": "~/.env.example",
+        "content": "CONTEXT_DEV_API_KEY=\nCONTEXT_API_KEY=\n"
+      }
+    ]
+  },
   "branded-seo-page-builder": {
     "$schema": "https://ui.shadcn.com/schema/registry.json",
     "name": "branded-seo-page-builder",
