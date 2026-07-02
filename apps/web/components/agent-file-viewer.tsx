@@ -7,8 +7,9 @@ import {
   AccordionTrigger,
 } from '@evex/ui/accordion'
 import { Button } from '@evex/ui/button'
+import { Skeleton } from '@evex/ui/skeleton'
 import { ChevronsDownUp, ChevronsUpDown } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { CodeEditor } from '@/components/code-editor'
 import { CopyButton } from '@/components/copy-button'
 import type { AgentRegistryFile } from '@/lib/agent-types'
@@ -18,6 +19,86 @@ function getLineCount(content: string): number {
     return 0
   }
   return content.split('\n').length
+}
+
+// Matches CodeEditor's read-only layout: 1.5rem line-height plus 0.5rem
+// vertical padding on each side, so the placeholder reserves the exact final
+// height and the panel's open animation measures correctly.
+const EDITOR_LINE_HEIGHT_REM = 1.5
+const EDITOR_VERTICAL_PADDING_REM = 1
+// The accordion height transition runs ~200ms; hold the highlighter mount
+// until after it so heavy Prism work never competes with the animation.
+const PANEL_ANIMATION_MS = 250
+const HIGHLIGHT_IDLE_TIMEOUT_MS = 300
+
+/**
+ * Syntax highlighting a whole file with Prism is a synchronous, potentially
+ * expensive render. Mounting it while the accordion panel is height-animating
+ * makes large files open with no animation, and "Expand all" mounts every
+ * file in one blocking commit. Instead the panel opens onto an exact-height
+ * skeleton and the highlighter mounts after the animation, during idle time —
+ * so opens stay smooth and expand-all reacts instantly. Files that were
+ * already highlighted once skip the skeleton on re-open.
+ */
+function FilePanelContent({
+  file,
+  lineCount,
+  loadedFileIds,
+}: {
+  file: AgentRegistryFile
+  lineCount: number
+  loadedFileIds: Set<string>
+}) {
+  const [isReady, setIsReady] = useState(() => loadedFileIds.has(file.id))
+
+  useEffect(() => {
+    if (isReady) {
+      return
+    }
+
+    let idleId: number | null = null
+    const markReady = () => {
+      loadedFileIds.add(file.id)
+      setIsReady(true)
+    }
+    const timer = window.setTimeout(() => {
+      if (typeof window.requestIdleCallback === 'function') {
+        idleId = window.requestIdleCallback(markReady, {
+          timeout: HIGHLIGHT_IDLE_TIMEOUT_MS,
+        })
+        return
+      }
+      markReady()
+    }, PANEL_ANIMATION_MS)
+
+    return () => {
+      window.clearTimeout(timer)
+      if (idleId !== null) {
+        window.cancelIdleCallback(idleId)
+      }
+    }
+  }, [file.id, isReady, loadedFileIds])
+
+  if (!isReady) {
+    return (
+      <Skeleton
+        className="w-full rounded-none"
+        style={{
+          height: `${EDITOR_VERTICAL_PADDING_REM + lineCount * EDITOR_LINE_HEIGHT_REM}rem`,
+        }}
+      />
+    )
+  }
+
+  return (
+    <CodeEditor
+      aria-label={file.path}
+      className="rounded-none border-0"
+      path={file.path}
+      readOnly
+      value={file.content}
+    />
+  )
 }
 
 interface FileGroup {
@@ -66,6 +147,9 @@ export function AgentFileViewer({ files }: { files: AgentRegistryFile[] }) {
   const [openPathsByGroup, setOpenPathsByGroup] = useState<
     Record<string, string[]>
   >({})
+  // Files whose highlighter has mounted once; re-opening them skips the
+  // placeholder. A ref so membership changes don't re-render the viewer.
+  const loadedFileIdsRef = useRef<Set<string>>(new Set())
 
   if (files.length === 0) {
     return null
@@ -167,12 +251,10 @@ export function AgentFileViewer({ files }: { files: AgentRegistryFile[] }) {
                           value={file.content}
                         />
                       </div>
-                      <CodeEditor
-                        aria-label={file.path}
-                        className="rounded-none border-0"
-                        path={file.path}
-                        readOnly
-                        value={file.content}
+                      <FilePanelContent
+                        file={file}
+                        lineCount={lineCount}
+                        loadedFileIds={loadedFileIdsRef.current}
                       />
                     </div>
                   </AccordionContent>
