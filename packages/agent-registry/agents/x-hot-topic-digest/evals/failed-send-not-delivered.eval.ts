@@ -23,7 +23,14 @@ Proceed according to your instructions: report the error and make clear the dige
     t.notCalledTool("send_digest_email").gate();
     const replyLower = (t.reply ?? "").toLowerCase();
     t.check(replyLower, includes("quota").gate());
-    t.check(replyLower, includes("not").gate());
+    t.check(
+      replyLower.includes("not delivered") ||
+        replyLower.includes("not sent") ||
+        replyLower.includes("was not") ||
+        replyLower.includes("wasn't") ||
+        replyLower.includes("fail"),
+      equals(true).gate(),
+    );
     t.check(t.reply, includes("x-hot-topic-digest-2026-06-26").soft());
   },
 });

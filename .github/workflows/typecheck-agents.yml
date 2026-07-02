@@ -1,5 +1,8 @@
 name: Typecheck agents
 
+permissions:
+  contents: read
+
 on:
   pull_request:
     paths:
@@ -21,6 +24,8 @@ jobs:
       agents: ${{ steps.list.outputs.agents }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - id: list
         run: |
           agents=$(ls -d packages/agent-registry/agents/*/ | xargs -n1 basename | jq -R . | jq -cs .)
@@ -35,6 +40,8 @@ jobs:
         agent: ${{ fromJSON(needs.discover.outputs.agents) }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: pnpm/action-setup@v4
         with:
           version: 10
@@ -44,4 +51,6 @@ jobs:
           cache: pnpm
           cache-dependency-path: packages/agent-registry/agents/${{ matrix.agent }}/package.json
       - name: Typecheck ${{ matrix.agent }}
-        run: node packages/agent-registry/scripts/typecheck-agents.mjs ${{ matrix.agent }}
+        env:
+          AGENT: ${{ matrix.agent }}
+        run: node packages/agent-registry/scripts/typecheck-agents.mjs "$AGENT"

@@ -1,5 +1,5 @@
 import { defineEval } from "eve/evals";
-import { equals } from "eve/evals/expect";
+import { includes } from "eve/evals/expect";
 
 export default defineEval({
   description:
@@ -15,6 +15,6 @@ No schema information is available yet and the question does not define the sign
     t.noFailedActions();
     t.notCalledTool("run_sql").gate();
     t.notCalledTool("describe_schema").gate();
-    t.check((t.reply ?? "").includes("?"), equals(true).gate());
+    t.check(t.reply, includes("?").gate());
   },
 });

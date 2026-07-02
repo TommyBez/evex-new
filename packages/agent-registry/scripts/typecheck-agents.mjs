@@ -24,6 +24,9 @@ function run(command, args, cwd) {
     stdio: 'inherit',
     shell: false,
   })
+  if (result.error) {
+    console.error(result.error)
+  }
   return result.status ?? 1
 }
 
@@ -37,14 +40,22 @@ async function removeInstallArtifacts(agentRoot) {
 
 async function typecheckAgent(slug) {
   const agentRoot = path.join(agentsDir, slug)
-  const packageJson = await readJson(path.join(agentRoot, 'package.json'))
-
-  if (typeof packageJson.scripts?.typecheck !== 'string') {
-    console.error(`${slug}: package.json has no "typecheck" script`)
-    return false
-  }
 
   try {
+    let packageJson
+    try {
+      packageJson = await readJson(path.join(agentRoot, 'package.json'))
+    } catch (error) {
+      console.error(`${slug}: could not read package.json`)
+      console.error(error)
+      return false
+    }
+
+    if (typeof packageJson.scripts?.typecheck !== 'string') {
+      console.error(`${slug}: package.json has no "typecheck" script`)
+      return false
+    }
+
     const installStatus = run(
       'pnpm',
       ['install', '--ignore-workspace', '--prefer-offline', '--silent'],

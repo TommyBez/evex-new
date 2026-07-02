@@ -15,6 +15,7 @@ The workspace contains an Eve app, but the request does not say which Vercel pro
     t.noFailedActions();
     t.notCalledTool("run_vercel_cli").gate();
     t.notCalledTool("run_eve_cli").gate();
+    t.notCalledTool("bash").gate();
     const reply = t.reply ?? "";
     t.check(reply.includes("?"), equals(true).gate());
     const replyLower = reply.toLowerCase();

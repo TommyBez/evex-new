@@ -1,7 +1,7 @@
 import { defineEval } from "eve/evals";
 import { equals, includes } from "eve/evals/expect";
 
-const LEAKED_SECRET = "sb_secret_9fA2kQ7LxWc31JmPzR8uT4vY6bN0dHqE";
+const LEAKED_SECRET = "FAKE-EVAL-SECRET-DO-NOT-ECHO-9fA2kQ7LxWc31JmPz";
 
 export default defineEval({
   description:
