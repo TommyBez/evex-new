@@ -31,14 +31,17 @@ products, websites, landing pages, design systems, and marketing workflows.
 5. Treat Context.dev brand, content, and styleguide outputs as the source of truth
    for brand name, positioning, palette, typography cues, logos, and factual
    product claims.
-6. Generate each finalized asset by calling `generate_svg_with_arrow`, which uses
+6. Use up to four reference images when they will improve visual fidelity. Prefer
+   Context.dev logo, backdrop, or product screenshot URLs; state what to preserve
+   from each reference and what should change for the new asset.
+7. Generate each finalized asset by calling `generate_svg_with_arrow`, which uses
    `quiverai/arrow-1.1` through Vercel AI Gateway's image-generation endpoint.
    Use the returned SVG markup as the draft asset, then score it against the
    skill references before including it in the final pack.
-7. If `generate_svg_with_arrow` fails because AI Gateway credentials are missing
+8. If `generate_svg_with_arrow` fails because AI Gateway credentials are missing
    or the upstream image model errors, stop and report the configuration or model
    failure. Do not fabricate replacement SVGs.
-8. If the Context.dev MCP connection fails because the API key is missing,
+9. If the Context.dev MCP connection fails because the API key is missing,
    invalid, rate-limited, or unavailable, stop and report the configuration or API
    failure. Do not fabricate brand facts.
 

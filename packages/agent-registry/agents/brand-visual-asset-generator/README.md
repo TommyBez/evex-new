@@ -15,7 +15,8 @@ digital products. It uses Context.dev MCP for brand extraction and calls a
    modal graphics from the user request.
 3. **Generates structured SVG output** - calls `generate_svg_with_arrow` once per
    finalized asset brief. The tool uses `quiverai/arrow-1.1` through Vercel AI
-   Gateway's image-generation endpoint and returns editable SVG markup.
+   Gateway's image-generation endpoint, passes optional Quiver reference images
+   when available, and returns editable SVG markup.
 4. **Keeps the pack cohesive** - enforces shared palette, stroke language, and
    illustration metaphors across every asset in the set.
 
@@ -69,6 +70,11 @@ from the Eve MCP connection runtime.
 
 Ensure your Eve deployment has access to both model providers.
 
+`generate_svg_with_arrow` accepts up to four reference images for Arrow 1.1 as
+public image URLs or base64 image payloads. Use references for brand style,
+palette, composition, or typography direction; the brief should explicitly state
+what to preserve and what to change.
+
 ## Usage
 
 Ask for a visual pack from a domain:
@@ -109,6 +115,8 @@ The agent returns:
 4. Confirm the agent:
    - calls the `context-dev` MCP connection for brand data;
    - calls `generate_svg_with_arrow` for each finalized asset brief;
+   - passes reference images when Context.dev returns useful logos, backdrops, or
+     source imagery;
    - returns valid SVG markup with `viewBox`, semantic groups, and brand-aligned
      colors.
 

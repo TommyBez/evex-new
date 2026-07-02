@@ -27,6 +27,10 @@ user's explicit brand profile.
 typography personality, logo constraints, product category, audience, and tone
 adjectives are all recorded before any brief is written.
 
+Also collect up to four useful reference images when available, such as
+Context.dev logo URLs, brand backdrops, or product screenshots. Use them only
+when they improve style, color, layout, or typography fidelity.
+
 ## 3. Write a brief per asset
 
 For each pack slot, compose one self-contained **brief** for
@@ -38,7 +42,7 @@ For each pack slot, compose one self-contained **brief** for
 ## 4. Generate
 
 Call `generate_svg_with_arrow` once per brief. Pass the full brief, asset type,
-filename, and dimensions.
+filename, dimensions, and any reference images selected for that asset.
 
 **Done when:** every brief has a matching tool result with `ok: true` and SVG
 markup. If the tool reports missing AI Gateway credentials or an upstream model

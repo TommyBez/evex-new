@@ -4,6 +4,19 @@ import { z } from "zod";
 
 const ARROW_MODEL = "quiverai/arrow-1.1";
 const RESPONSE_PREVIEW_LENGTH = 1200;
+const MAX_ARROW_REFERENCES = 4;
+
+const referenceImageSchema = z.union([
+  z.object({
+    url: z.string().url().describe("Public HTTP(S) image URL to use as a style or composition reference."),
+  }),
+  z.object({
+    base64: z
+      .string()
+      .min(1)
+      .describe("Base64-encoded PNG, JPEG, WebP, GIF, or SVG reference image payload."),
+  }),
+]);
 
 const inputSchema = z.object({
   filename: z
@@ -22,7 +35,18 @@ const inputSchema = z.object({
     .string()
     .min(1)
     .describe("Intended dimensions or viewBox, for example 1200x720 or 0 0 64 64."),
+  referenceImages: z
+    .array(referenceImageSchema)
+    .max(MAX_ARROW_REFERENCES)
+    .optional()
+    .describe(
+      "Optional Quiver reference images for style, palette, composition, or typography. Arrow 1.1 supports up to 4.",
+    ),
 });
+
+type GenerateSvgInput = z.infer<typeof inputSchema>;
+type ReferenceImageInput = z.infer<typeof referenceImageSchema>;
+type QuiverReference = { base64: string } | { url: string };
 
 type GenerateSvgOutput =
   | {
@@ -60,7 +84,10 @@ export default defineTool({
     }
 
     const prompt = buildPrompt(input);
-    const generatedSvg = await generateSvgWithGateway(prompt);
+    const generatedSvg = await generateSvgWithGateway({
+      prompt,
+      referenceImages: input.referenceImages,
+    });
     if (!generatedSvg.ok) {
       return {
         ok: false,
@@ -116,27 +143,39 @@ function readGatewayCredential(): string | undefined {
   );
 }
 
-function buildPrompt(input: z.infer<typeof inputSchema>): string {
+function buildPrompt(input: GenerateSvgInput): string {
   return [
-    `Generate ${input.filename} as a production-ready SVG.`,
-    `Asset type: ${input.assetType}.`,
-    `Dimensions or viewBox: ${input.dimensions}.`,
-    "",
-    input.brief,
-    "",
-    "Hard requirements:",
-    "- Return complete SVG markup only.",
-    "- Include a viewBox, title, and desc.",
-    "- Use semantic group ids for meaningful sections.",
-    "- Keep the artwork editable. Do not embed raster images.",
-    "- For icons, use currentColor for all strokes and only one fixed accent fill when needed.",
-    "- Avoid generic SaaS filler such as globes, random node networks, decorative dot grids, and disconnected floating dashboards.",
+    JSON.stringify(
+      {
+        subject: input.brief,
+        intended_use: `${input.assetType} saved as ${input.filename}`,
+        style:
+          "Production-ready SVG/vector output. Use one clear vector concept, clean geometry, and deliberate negative space.",
+        composition: `Fit ${input.dimensions}. Prefer a simple, balanced composition over dense UI mockups or many small details.`,
+        color_palette:
+          "Use only colors named in the brief. For icons, use currentColor for strokes and no fixed fills except one purposeful accent if requested.",
+        typography:
+          "Avoid text unless the brief explicitly requires exact copy. If text is required, keep it short and optically centered.",
+        preserve_from_reference:
+          "When referenceImages are provided, preserve the reference style, color relationships, composition, and typography direction.",
+        change_from_reference:
+          "Change only the subject, dimensions, and asset-specific details requested in the brief.",
+        constraints:
+          "Return complete editable SVG markup only. Include viewBox, title, desc, and semantic group ids. Do not embed raster images. Avoid generic SaaS filler such as globes, random node networks, decorative dot grids, and disconnected floating dashboards.",
+      },
+      null,
+      2,
+    ),
   ].join("\n");
 }
 
-async function generateSvgWithGateway(
-  prompt: string,
-): Promise<{ ok: true; svg: string } | { error: string; ok: false; responsePreview?: string }> {
+async function generateSvgWithGateway({
+  prompt,
+  referenceImages,
+}: {
+  prompt: string;
+  referenceImages?: ReferenceImageInput[];
+}): Promise<{ ok: true; svg: string } | { error: string; ok: false; responsePreview?: string }> {
   try {
     const { image } = await generateImage({
       model: ARROW_MODEL,
@@ -148,6 +187,7 @@ async function generateSvgWithGateway(
           instructions:
             "Return a complete SVG document only. The SVG must be editable markup, not raster data.",
           maxOutputTokens: 6000,
+          references: normalizeReferenceImages(referenceImages),
           temperature: 0.45,
           topP: 0.9,
         },
@@ -173,6 +213,22 @@ async function generateSvgWithGateway(
       responsePreview: preview(errorMessage(error)),
     };
   }
+}
+
+function normalizeReferenceImages(
+  referenceImages: ReferenceImageInput[] | undefined,
+): QuiverReference[] | undefined {
+  if (!referenceImages || referenceImages.length === 0) {
+    return undefined;
+  }
+
+  return referenceImages.map((referenceImage) => {
+    if ("url" in referenceImage) {
+      return { url: referenceImage.url };
+    }
+
+    return { base64: referenceImage.base64 };
+  });
 }
 
 function errorMessage(error: unknown): string {
