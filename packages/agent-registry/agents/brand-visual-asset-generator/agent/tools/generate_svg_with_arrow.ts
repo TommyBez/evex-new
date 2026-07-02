@@ -382,17 +382,25 @@ function addIconRootDefaults(svg: string): string {
 }
 
 function addStrokeToUnstyledIconPaths(svg: string): string {
-  return svg.replace(/<path\b([^>]*)>/giu, (tag: string, attributes: string) => {
-    const hasVisualStyle = /\s(class|fill|stroke)\s*=/iu.test(attributes);
-    if (hasVisualStyle) {
-      return tag;
-    }
+  return svg.replace(
+    /<(path|line|polyline|polygon|circle|rect)\b([^>]*)>/giu,
+    (tag: string, tagName: string, attributes: string) => {
+      if (/\sstroke\s*=/iu.test(attributes)) {
+        return tag;
+      }
 
-    return tag.replace(
-      /<path\b/iu,
-      '<path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"',
-    );
-  });
+      const strokeAttributes =
+        ' stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"';
+      const fillAttribute = /\s(fill|class)\s*=/iu.test(attributes)
+        ? ""
+        : ' fill="none"';
+
+      return tag.replace(
+        new RegExp(`<${tagName}\\b`, "iu"),
+        `<${tagName}${fillAttribute}${strokeAttributes}`,
+      );
+    },
+  );
 }
 
 function isAccentColor(color: string): boolean {
