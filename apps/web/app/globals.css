@@ -341,6 +341,17 @@
     line-height: 1;
     letter-spacing: 0;
   }
+  /* Bulk expand/collapse in the file viewer applies instantly: a dozen
+     concurrent accordion height animations force a full-page relayout on
+     every frame. Items keep this mark for as long as their panel stays open —
+     restoring the animation on an open panel restarts it from zero height
+     (a visible closed→open flicker) — and are unmarked after closing, so
+     individual toggles animate normally. */
+  [data-instant-toggle] [data-slot="accordion-content"],
+  [data-instant-toggle] [data-slot="accordion-content"] > div {
+    transition-duration: 0s !important;
+    animation-duration: 0s !important;
+  }
 }
 
 /* transitions-dev — semantic tokens + snippets for the transitions wired into

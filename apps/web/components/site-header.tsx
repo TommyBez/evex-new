@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { BrandMark } from '@/components/brand-mark'
 import { GitHubStarButton } from '@/components/github-star-button'
 import { MobileNavMenu } from '@/components/mobile-nav-menu'
+import { NavLink } from '@/components/nav-link'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { UserMenu } from '@/components/user-menu'
 import { auth } from '@/lib/auth'
@@ -54,25 +55,20 @@ export async function SiteHeader() {
             <BrandMark />
             <span className="brand-wordmark">evex</span>
           </Link>
-          <Link
-            className="hidden font-medium text-muted-foreground text-sm transition-colors hover:text-foreground sm:inline-flex"
+          <NavLink
+            activePrefixes={['/agents', '/authors']}
+            className="hidden sm:inline-flex"
             href="/"
           >
             Browse
-          </Link>
-          <Link
-            className="hidden font-medium text-muted-foreground text-sm transition-colors hover:text-foreground sm:inline-flex"
-            href="/leaderboard"
-          >
+          </NavLink>
+          <NavLink className="hidden sm:inline-flex" href="/leaderboard">
             Leaderboard
-          </Link>
+          </NavLink>
           {user ? (
-            <Link
-              className="hidden font-medium text-muted-foreground text-sm transition-colors hover:text-foreground sm:inline-flex"
-              href="/favorites"
-            >
+            <NavLink className="hidden sm:inline-flex" href="/favorites">
               Favorites
-            </Link>
+            </NavLink>
           ) : null}
         </div>
 
