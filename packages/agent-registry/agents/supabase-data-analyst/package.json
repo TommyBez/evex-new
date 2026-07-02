@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@vercel/connect": "^0.2.6",
-    "eve": "^0.15.1"
+    "eve": "^0.18.2"
   },
   "devDependencies": {
     "@types/node": "^24",

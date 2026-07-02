@@ -15,7 +15,7 @@ export const generatedRegistry = {
       ],
       "dependencies": [
         "ai@^7.0.11",
-        "eve@^0.15.1",
+        "eve@^0.18.2",
         "zod@^4.4.3"
       ],
       "meta": {
@@ -102,7 +102,7 @@ export const generatedRegistry = {
         "marketing"
       ],
       "dependencies": [
-        "eve@^0.15.1"
+        "eve@^0.18.2"
       ],
       "meta": {
         "slug": "branded-seo-page-builder",
@@ -190,7 +190,7 @@ export const generatedRegistry = {
       "dependencies": [
         "@upstash/ratelimit@^2.0.8",
         "@upstash/redis@^1.38.0",
-        "eve@^0.15.1",
+        "eve@^0.18.2",
         "zod@4.3.6"
       ],
       "meta": {
@@ -277,7 +277,7 @@ export const generatedRegistry = {
         "coding"
       ],
       "dependencies": [
-        "eve@^0.15.1",
+        "eve@^0.18.2",
         "zod@^4.4.3"
       ],
       "meta": {
@@ -375,7 +375,7 @@ export const generatedRegistry = {
       ],
       "dependencies": [
         "@vercel/connect@^0.2.6",
-        "eve@^0.15.1"
+        "eve@^0.18.2"
       ],
       "meta": {
         "slug": "linear-operations-agent",
@@ -518,7 +518,7 @@ export const generatedRegistry = {
       "dependencies": [
         "@openuidev/react-lang@^0.2.8",
         "@openuidev/react-ui@^0.12.1",
-        "eve@^0.17.1",
+        "eve@^0.18.2",
         "just-bash@^3.0.2",
         "zod@^4.4.3"
       ],
@@ -607,7 +607,7 @@ export const generatedRegistry = {
       ],
       "dependencies": [
         "@vercel/connect@^0.2.6",
-        "eve@^0.15.1",
+        "eve@^0.18.2",
         "pg@^8.21.0",
         "pgsql-ast-parser@^12.0.1",
         "zod@4.3.6"
@@ -678,7 +678,7 @@ export const generatedRegistry = {
       ],
       "dependencies": [
         "@vercel/connect@^0.2.6",
-        "eve@^0.15.1"
+        "eve@^0.18.2"
       ],
       "meta": {
         "slug": "supabase-data-analyst",
@@ -733,7 +733,7 @@ export const generatedRegistry = {
         "general"
       ],
       "dependencies": [
-        "eve@^0.15.1",
+        "eve@^0.18.2",
         "parallel-web@^1.1.0",
         "zod@4.3.6"
       ],
@@ -871,7 +871,7 @@ export const generatedRegistry = {
         "research"
       ],
       "dependencies": [
-        "eve@^0.15.1",
+        "eve@^0.18.2",
         "parallel-web@^1.1.0",
         "resend@^6.14.0",
         "zod@4.3.6"
@@ -986,7 +986,7 @@ export const generatedRegistryItems = {
     ],
     "dependencies": [
       "ai@^7.0.11",
-      "eve@^0.15.1",
+      "eve@^0.18.2",
       "zod@^4.4.3"
     ],
     "meta": {
@@ -1087,7 +1087,7 @@ export const generatedRegistryItems = {
       "marketing"
     ],
     "dependencies": [
-      "eve@^0.15.1"
+      "eve@^0.18.2"
     ],
     "meta": {
       "slug": "branded-seo-page-builder",
@@ -1189,7 +1189,7 @@ export const generatedRegistryItems = {
     "dependencies": [
       "@upstash/ratelimit@^2.0.8",
       "@upstash/redis@^1.38.0",
-      "eve@^0.15.1",
+      "eve@^0.18.2",
       "zod@4.3.6"
     ],
     "meta": {
@@ -1290,7 +1290,7 @@ export const generatedRegistryItems = {
       "coding"
     ],
     "dependencies": [
-      "eve@^0.15.1",
+      "eve@^0.18.2",
       "zod@^4.4.3"
     ],
     "meta": {
@@ -1404,7 +1404,7 @@ export const generatedRegistryItems = {
     ],
     "dependencies": [
       "@vercel/connect@^0.2.6",
-      "eve@^0.15.1"
+      "eve@^0.18.2"
     ],
     "meta": {
       "slug": "linear-operations-agent",
@@ -1572,7 +1572,7 @@ export const generatedRegistryItems = {
     "dependencies": [
       "@openuidev/react-lang@^0.2.8",
       "@openuidev/react-ui@^0.12.1",
-      "eve@^0.17.1",
+      "eve@^0.18.2",
       "just-bash@^3.0.2",
       "zod@^4.4.3"
     ],
@@ -1675,7 +1675,7 @@ export const generatedRegistryItems = {
     ],
     "dependencies": [
       "@vercel/connect@^0.2.6",
-      "eve@^0.15.1",
+      "eve@^0.18.2",
       "pg@^8.21.0",
       "pgsql-ast-parser@^12.0.1",
       "zod@4.3.6"
@@ -1756,7 +1756,7 @@ export const generatedRegistryItems = {
     ],
     "dependencies": [
       "@vercel/connect@^0.2.6",
-      "eve@^0.15.1"
+      "eve@^0.18.2"
     ],
     "meta": {
       "slug": "supabase-data-analyst",
@@ -1819,7 +1819,7 @@ export const generatedRegistryItems = {
       "general"
     ],
     "dependencies": [
-      "eve@^0.15.1",
+      "eve@^0.18.2",
       "parallel-web@^1.1.0",
       "zod@4.3.6"
     ],
@@ -1981,7 +1981,7 @@ export const generatedRegistryItems = {
       "research"
     ],
     "dependencies": [
-      "eve@^0.15.1",
+      "eve@^0.18.2",
       "parallel-web@^1.1.0",
       "resend@^6.14.0",
       "zod@4.3.6"

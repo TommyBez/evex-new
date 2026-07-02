@@ -10,7 +10,7 @@
         "coding"
       ],
       "dependencies": [
-        "eve@^0.15.1",
+        "eve@^0.18.2",
         "zod@^4.4.3"
       ],
       "files": [

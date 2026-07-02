@@ -10,7 +10,7 @@
         "marketing"
       ],
       "dependencies": [
-        "eve@^0.15.1"
+        "eve@^0.18.2"
       ],
       "files": [
         {
