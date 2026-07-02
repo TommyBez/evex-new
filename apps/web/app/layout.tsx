@@ -1,4 +1,5 @@
 import { Toaster } from '@evex/ui/sonner'
+import { TooltipProvider } from '@evex/ui/tooltip'
 import { Analytics } from '@vercel/analytics/next'
 import { GeistMono } from 'geist/font/mono'
 import { GeistPixelSquare } from 'geist/font/pixel'
@@ -96,7 +97,7 @@ export default function RootLayout({
       <body className="font-sans antialiased">
         <JsonLd data={[createOrganizationSchema(), createWebsiteSchema()]} />
         <ThemeProvider>
-          {children}
+          <TooltipProvider>{children}</TooltipProvider>
           <Toaster />
           {process.env.NODE_ENV === 'production' && <Analytics />}
         </ThemeProvider>

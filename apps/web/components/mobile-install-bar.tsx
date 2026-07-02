@@ -3,6 +3,8 @@
 import { Button } from '@evex/ui/button'
 import { Check, Copy } from 'lucide-react'
 import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard'
+import { usePackageManager } from '@/hooks/use-package-manager'
+import { buildInstallCommandForManager } from '@/lib/package-managers'
 
 /**
  * Thumb-reachable install action pinned to the bottom of the viewport on
@@ -11,13 +13,15 @@ import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard'
  * card. Hidden on sm+ where the install card is already in easy reach.
  */
 export function MobileInstallBar({
-  command,
+  slug,
   label = 'install command',
 }: {
-  command: string
+  slug: string
   label?: string
 }) {
   const { copied, copy } = useCopyToClipboard()
+  const [packageManager] = usePackageManager()
+  const command = buildInstallCommandForManager(packageManager, slug)
 
   const handleCopy = () => {
     copy(command, { successMessage: 'Copied install command' })

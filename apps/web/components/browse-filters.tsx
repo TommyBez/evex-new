@@ -6,6 +6,7 @@ import {
   InputGroupButton,
   InputGroupInput,
 } from '@evex/ui/input-group'
+import { Kbd } from '@evex/ui/kbd'
 import { cn } from '@evex/ui/lib/utils'
 import { NativeSelect, NativeSelectOption } from '@evex/ui/native-select'
 import { ToggleGroup, ToggleGroupItem } from '@evex/ui/toggle-group'
@@ -116,6 +117,28 @@ export function BrowseFilters() {
     input.value = activeSearch
   }, [activeSearch])
 
+  // Press "/" anywhere on the page to jump into the search field, matching
+  // the muscle memory from GitHub and most doc sites.
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== '/' || event.metaKey || event.ctrlKey || event.altKey) {
+        return
+      }
+      const target = event.target
+      if (
+        target instanceof HTMLElement &&
+        target.closest('input, textarea, select, [contenteditable="true"]')
+      ) {
+        return
+      }
+      event.preventDefault()
+      searchInputRef.current?.focus()
+      searchInputRef.current?.select()
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [])
+
   const scheduleSearchSync = useCallback(
     (nextSearch: string) => {
       clearPendingSearchSync()
@@ -190,7 +213,11 @@ export function BrowseFilters() {
                 <X aria-hidden="true" />
               </InputGroupButton>
             </InputGroupAddon>
-          ) : null}
+          ) : (
+            <InputGroupAddon align="inline-end" className="hidden sm:flex">
+              <Kbd aria-hidden="true">/</Kbd>
+            </InputGroupAddon>
+          )}
         </InputGroup>
         <div className="flex items-center gap-2">
           <span className="mono-label hidden text-muted-foreground sm:inline">

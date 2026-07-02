@@ -19,7 +19,6 @@ import { applyInstallCounts, getAgentRuntimeState } from '@/lib/agent-runtime'
 import type { AgentRegistryFile, AgentWithAuthor } from '@/lib/agent-types'
 import { parseDependencies } from '@/lib/agents'
 import { createPageMetadata, siteConfig } from '@/lib/metadata'
-import { buildInstallCommand } from '@/lib/site-url'
 import {
   getStaticAgentBySlug,
   getStaticAgentFiles,
@@ -226,7 +225,6 @@ function AgentDetailContent({ slug }: { slug: string }) {
     ? getStaticAgentsByAuthorUsername(agent.authorUsername)
     : []
   const relatedCandidates = listStaticAgents().filter((a) => a.id !== agent.id)
-  const installCommand = buildInstallCommand(agent.slug)
   const deps = parseDependencies(agent.dependencies)
   const fileKinds = countFilesByKind(files)
   const moreFromAuthorCount = authorAgents.filter(
@@ -252,9 +250,17 @@ function AgentDetailContent({ slug }: { slug: string }) {
             <h1 className="text-balance font-semibold text-2xl text-foreground">
               {agent.name}
             </h1>
-            <Badge className="capitalize" variant="secondary">
-              {agent.category}
-            </Badge>
+            <Link
+              aria-label={`Browse ${agent.category} agents`}
+              href={`/?category=${agent.category}`}
+            >
+              <Badge
+                className="capitalize transition-colors hover:bg-muted hover:text-foreground"
+                variant="secondary"
+              >
+                {agent.category}
+              </Badge>
+            </Link>
             <Suspense fallback={<AgentDetailRuntimeFallback />}>
               <AgentDetailRuntimeSection agent={agent} />
             </Suspense>
@@ -300,8 +306,8 @@ function AgentDetailContent({ slug }: { slug: string }) {
         </p>
         <div className="mt-4">
           <InstallCommand
-            command={installCommand}
             label={`${agent.name} install command`}
+            slug={agent.slug}
           />
         </div>
         <AgentInstallSummary agent={agent} deps={deps} files={files} />
@@ -344,12 +350,6 @@ function AgentDetailContent({ slug }: { slug: string }) {
       <Separator className="my-8" />
 
       <section>
-        <div className="mb-4 flex items-center gap-2">
-          <h2 className="font-semibold text-foreground text-lg">Files</h2>
-          <span className="mono-label font-pixel text-muted-foreground/70 tabular-nums">
-            {files.length}
-          </span>
-        </div>
         <AgentFileViewer files={files} />
       </section>
 
@@ -366,8 +366,8 @@ function AgentDetailContent({ slug }: { slug: string }) {
       )}
 
       <MobileInstallBar
-        command={installCommand}
         label={`${agent.name} install command (quick copy)`}
+        slug={agent.slug}
       />
     </main>
   )

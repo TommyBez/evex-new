@@ -2,6 +2,7 @@
 
 import { Button } from '@evex/ui/button'
 import { cn } from '@evex/ui/lib/utils'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@evex/ui/tooltip'
 import { Heart } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useState, useTransition } from 'react'
@@ -61,7 +62,7 @@ export function FavoriteButton({
     })
   }
 
-  return (
+  const button = (
     <Button
       aria-label={label}
       aria-pressed={isFavorite}
@@ -82,5 +83,17 @@ export function FavoriteButton({
       />
       {showLabel ? <span>{isFavorite ? 'Saved' : 'Save'}</span> : null}
     </Button>
+  )
+
+  if (showLabel) {
+    return button
+  }
+
+  // Icon-only mode gets a tooltip so the action is discoverable on hover.
+  return (
+    <Tooltip>
+      <TooltipTrigger render={button} />
+      <TooltipContent>{label}</TooltipContent>
+    </Tooltip>
   )
 }

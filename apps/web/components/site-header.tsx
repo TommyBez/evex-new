@@ -3,11 +3,23 @@ import { Skeleton } from '@evex/ui/skeleton'
 import { headers } from 'next/headers'
 import Link from 'next/link'
 import { BrandMark } from '@/components/brand-mark'
+import { CommandMenu, type CommandMenuAgent } from '@/components/command-menu'
 import { GitHubStarButton } from '@/components/github-star-button'
 import { MobileNavMenu } from '@/components/mobile-nav-menu'
+import { NavLink } from '@/components/nav-link'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { UserMenu } from '@/components/user-menu'
 import { auth } from '@/lib/auth'
+import { listStaticAgents } from '@/lib/static-agents'
+
+function getCommandMenuAgents(): CommandMenuAgent[] {
+  return listStaticAgents().map((agent) => ({
+    authorName: agent.authorName,
+    category: agent.category,
+    name: agent.name,
+    slug: agent.slug,
+  }))
+}
 
 export function SiteHeaderFallback() {
   return (
@@ -33,6 +45,7 @@ export function SiteHeaderFallback() {
         </div>
 
         <div className="flex items-center gap-2">
+          <Skeleton className="hidden h-8 w-44 md:block lg:w-52" />
           <Skeleton className="h-7 w-14 sm:w-20" />
           <Skeleton className="size-7 rounded-md" />
           <Skeleton className="h-8 w-16" />
@@ -45,6 +58,7 @@ export function SiteHeaderFallback() {
 export async function SiteHeader() {
   const session = await auth.api.getSession({ headers: await headers() })
   const user = session?.user
+  const commandMenuAgents = getCommandMenuAgents()
 
   return (
     <header className="sticky top-0 z-40 w-full border-border border-b bg-background/90 backdrop-blur-md">
@@ -54,29 +68,28 @@ export async function SiteHeader() {
             <BrandMark />
             <span className="brand-wordmark">evex</span>
           </Link>
-          <Link
-            className="hidden font-medium text-muted-foreground text-sm transition-colors hover:text-foreground sm:inline-flex"
+          <NavLink
+            activePrefixes={['/agents', '/authors']}
+            className="hidden sm:inline-flex"
             href="/"
           >
             Browse
-          </Link>
-          <Link
-            className="hidden font-medium text-muted-foreground text-sm transition-colors hover:text-foreground sm:inline-flex"
-            href="/leaderboard"
-          >
+          </NavLink>
+          <NavLink className="hidden sm:inline-flex" href="/leaderboard">
             Leaderboard
-          </Link>
+          </NavLink>
           {user ? (
-            <Link
-              className="hidden font-medium text-muted-foreground text-sm transition-colors hover:text-foreground sm:inline-flex"
-              href="/favorites"
-            >
+            <NavLink className="hidden sm:inline-flex" href="/favorites">
               Favorites
-            </Link>
+            </NavLink>
           ) : null}
         </div>
 
         <nav className="flex shrink-0 items-center gap-1.5 sm:gap-2">
+          <CommandMenu
+            agents={commandMenuAgents}
+            isAuthenticated={Boolean(user)}
+          />
           <GitHubStarButton />
           <ThemeToggle />
           {user ? (

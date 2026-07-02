@@ -6,6 +6,9 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@evex/ui/accordion'
+import { Button } from '@evex/ui/button'
+import { ChevronsDownUp, ChevronsUpDown } from 'lucide-react'
+import { useState } from 'react'
 import { CodeEditor } from '@/components/code-editor'
 import { CopyButton } from '@/components/copy-button'
 import type { AgentRegistryFile } from '@/lib/agent-types'
@@ -60,14 +63,57 @@ function groupFiles(files: readonly AgentRegistryFile[]): FileGroup[] {
 }
 
 export function AgentFileViewer({ files }: { files: AgentRegistryFile[] }) {
+  const [openPathsByGroup, setOpenPathsByGroup] = useState<
+    Record<string, string[]>
+  >({})
+
   if (files.length === 0) {
     return null
   }
 
   const groups = groupFiles(files)
+  const openCount = groups.reduce(
+    (total, group) => total + (openPathsByGroup[group.label]?.length ?? 0),
+    0,
+  )
+  const allOpen = openCount === files.length
+
+  const toggleAll = () => {
+    if (allOpen) {
+      setOpenPathsByGroup({})
+      return
+    }
+    const next: Record<string, string[]> = {}
+    for (const group of groups) {
+      next[group.label] = group.files.map((file) => file.path)
+    }
+    setOpenPathsByGroup(next)
+  }
 
   return (
     <div className="grid gap-6">
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-2">
+          <h2 className="font-semibold text-foreground text-lg">Files</h2>
+          <span className="mono-label font-pixel text-muted-foreground/70 tabular-nums">
+            {files.length}
+          </span>
+        </div>
+        <Button
+          className="text-muted-foreground hover:text-foreground"
+          onClick={toggleAll}
+          size="sm"
+          type="button"
+          variant="ghost"
+        >
+          {allOpen ? (
+            <ChevronsDownUp aria-hidden="true" />
+          ) : (
+            <ChevronsUpDown aria-hidden="true" />
+          )}
+          {allOpen ? 'Collapse all' : 'Expand all'}
+        </Button>
+      </div>
       {groups.map((group) => (
         <section className="min-w-0" key={group.label}>
           <div className="mb-2 flex items-center gap-2">
@@ -76,7 +122,16 @@ export function AgentFileViewer({ files }: { files: AgentRegistryFile[] }) {
               {group.files.length}
             </span>
           </div>
-          <Accordion className="w-full min-w-0">
+          <Accordion
+            className="w-full min-w-0"
+            onValueChange={(value) =>
+              setOpenPathsByGroup((prev) => ({
+                ...prev,
+                [group.label]: value.map((entry) => String(entry)),
+              }))
+            }
+            value={openPathsByGroup[group.label] ?? []}
+          >
             {group.files.map((file) => {
               const lineCount = getLineCount(file.content)
               const basename = getFileBasename(file.path)
