@@ -192,7 +192,9 @@ export async function listTypefullyTags(
     });
   }
 
-  const parsed = JSON.parse(responseText) as TypefullyListTagsResponse | readonly TypefullyTagResponse[];
+  const parsed = JSON.parse(responseText) as
+    | TypefullyListTagsResponse
+    | TypefullyTagResponse[];
   if (Array.isArray(parsed)) {
     return parsed;
   }
