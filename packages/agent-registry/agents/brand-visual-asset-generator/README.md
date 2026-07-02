@@ -47,7 +47,9 @@ credential plus an AI Gateway credential for Quiver Arrow.
 
 ```env
 CONTEXT_DEV_API_KEY=ctxt_secret_...
+CONTEXT_API_KEY=
 AI_GATEWAY_API_KEY=vck_...
+VERCEL_OIDC_TOKEN=
 ```
 
 `CONTEXT_API_KEY` is also supported as a fallback for projects that already use

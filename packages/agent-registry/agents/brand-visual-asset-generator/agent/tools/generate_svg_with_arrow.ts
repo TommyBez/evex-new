@@ -5,15 +5,29 @@ import { z } from "zod";
 const ARROW_MODEL = "quiverai/arrow-1.1";
 const RESPONSE_PREVIEW_LENGTH = 1200;
 const MAX_ARROW_REFERENCES = 4;
+const BASE64_PATTERN =
+  /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/u;
+const MIN_ACCENT_LIGHTNESS = 0.15;
+const MAX_ACCENT_LIGHTNESS = 0.9;
+const MIN_ACCENT_SATURATION = 0.25;
 
 const referenceImageSchema = z.union([
   z.object({
-    url: z.string().url().describe("Public HTTP(S) image URL to use as a style or composition reference."),
+    url: z
+      .string()
+      .url()
+      .refine(isHttpUrl, {
+        message: "Reference image URL must use http or https.",
+      })
+      .describe("Public HTTP(S) image URL to use as a style or composition reference."),
   }),
   z.object({
     base64: z
       .string()
       .min(1)
+      .refine(isBase64Payload, {
+        message: "Reference image must be a standard base64 payload.",
+      })
       .describe("Base64-encoded PNG, JPEG, WebP, GIF, or SVG reference image payload."),
   }),
 ]);
@@ -116,6 +130,15 @@ export default defineTool({
       };
     }
 
+    if (hasUnsafeSvgContent(rawSvg)) {
+      return {
+        ok: false,
+        filename: input.filename,
+        error: "Quiver Arrow returned SVG markup with raster or active content.",
+        responsePreview: preview(rawSvg),
+      };
+    }
+
     const normalizedSvg = normalizeViewBox(rawSvg, input);
     const themeableSvg = enforceThemeableIconSvg(normalizedSvg, input);
     const svg = ensureAccessibleSvg(themeableSvg, input);
@@ -179,7 +202,7 @@ async function generateSvgWithGateway({
   try {
     const { image } = await generateImage({
       model: ARROW_MODEL,
-      prompt,
+      prompt: buildImagePrompt({ prompt, referenceImages }),
       n: 1,
       providerOptions: {
         quiverai: {
@@ -215,6 +238,28 @@ async function generateSvgWithGateway({
   }
 }
 
+function buildImagePrompt({
+  prompt,
+  referenceImages,
+}: {
+  prompt: string;
+  referenceImages?: ReferenceImageInput[];
+}): string | { images: string[]; text: string } {
+  const base64Images =
+    referenceImages?.flatMap((referenceImage) =>
+      "base64" in referenceImage ? [referenceImage.base64] : [],
+    ) ?? [];
+
+  if (base64Images.length === 0) {
+    return prompt;
+  }
+
+  return {
+    text: prompt,
+    images: base64Images,
+  };
+}
+
 function normalizeReferenceImages(
   referenceImages: ReferenceImageInput[] | undefined,
 ): QuiverReference[] | undefined {
@@ -245,6 +290,14 @@ function looksLikeSvg(value: string): boolean {
 
 function hasViewBox(value: string): boolean {
   return /\sviewBox\s*=/iu.test(value);
+}
+
+function hasUnsafeSvgContent(svg: string): boolean {
+  return (
+    /<\s*(script|foreignObject|iframe|object|embed|image)\b/iu.test(svg) ||
+    /\son[a-z]+\s*=/iu.test(svg) ||
+    /\b(?:href|xlink:href)\s*=\s*["']\s*(?:javascript:|data:(?!image\/svg\+xml)|https?:\/\/|\/\/)/iu.test(svg)
+  );
 }
 
 type ViewBox = {
@@ -407,10 +460,10 @@ function enforceThemeableIconSvg(
         .replace(/\bfill\s*:\s*url\([^)]*\)/giu, "fill:none")
         .replace(/\bfill\s*=\s*(["'])url\([^)]*\)\1/giu, 'fill="none"')
         .replace(/\bfill\s*:\s*(#[0-9a-f]{3,8})\b/giu, (_, color: string) =>
-          isAccentColor(color) ? "fill:#7170ff" : "fill:none",
+          isAccentColor(color) ? `fill:${color}` : "fill:none",
         )
         .replace(/\bfill\s*=\s*(["'])(#[0-9a-f]{3,8})\b\1/giu, (_, quote: string, color: string) =>
-          isAccentColor(color) ? `fill=${quote}#7170ff${quote}` : `fill=${quote}none${quote}`,
+          isAccentColor(color) ? `fill=${quote}${color}${quote}` : `fill=${quote}none${quote}`,
         ),
     ),
   );
@@ -439,7 +492,7 @@ function addIconRootDefaults(svg: string): string {
 
 function addStrokeToUnstyledIconPaths(svg: string): string {
   return svg.replace(
-    /<(path|line|polyline|polygon|circle|rect)\b([^>]*)>/giu,
+    /<(path|line|polyline|polygon|circle|ellipse|rect)\b([^>]*)>/giu,
     (tag: string, tagName: string, attributes: string) => {
       if (/\sstroke\s*=/iu.test(attributes)) {
         return tag;
@@ -465,14 +518,33 @@ function isAccentColor(color: string): boolean {
     return false;
   }
 
-  const linearAccent = { blue: 255, green: 112, red: 113 };
-  const distance = Math.hypot(
-    rgb.red - linearAccent.red,
-    rgb.green - linearAccent.green,
-    rgb.blue - linearAccent.blue,
-  );
+  const red = rgb.red / 255;
+  const green = rgb.green / 255;
+  const blue = rgb.blue / 255;
+  const max = Math.max(red, green, blue);
+  const min = Math.min(red, green, blue);
+  const delta = max - min;
+  if (delta === 0) {
+    return false;
+  }
 
-  return distance <= 90;
+  const lightness = (max + min) / 2;
+  const saturation = delta / (1 - Math.abs(2 * lightness - 1));
+
+  return (
+    lightness >= MIN_ACCENT_LIGHTNESS &&
+    lightness <= MAX_ACCENT_LIGHTNESS &&
+    saturation >= MIN_ACCENT_SATURATION
+  );
+}
+
+function isHttpUrl(value: string): boolean {
+  const { protocol } = new URL(value);
+  return protocol === "http:" || protocol === "https:";
+}
+
+function isBase64Payload(value: string): boolean {
+  return value.length % 4 === 0 && BASE64_PATTERN.test(value);
 }
 
 function parseHexColor(
