@@ -146,7 +146,9 @@ export default defineTool({
       };
     }
 
-    const svg = ensureAccessibleSvg(normalizeViewBox(rawSvg, input), input);
+    const normalizedSvg = normalizeViewBox(rawSvg, input);
+    const themeableSvg = enforceThemeableIconSvg(normalizedSvg, input);
+    const svg = ensureAccessibleSvg(themeableSvg, input);
     return {
       ok: true,
       filename: input.filename,
@@ -185,7 +187,7 @@ function buildPrompt(input: z.infer<typeof inputSchema>): string {
     "- Include a viewBox, title, and desc.",
     "- Use semantic group ids for meaningful sections.",
     "- Keep the artwork editable. Do not embed raster images.",
-    "- For icons, prefer currentColor unless the brief explicitly requires fixed brand colors.",
+    "- For icons, use currentColor for all strokes and only one fixed accent fill when needed.",
     "- Avoid generic SaaS filler such as globes, random node networks, decorative dot grids, and disconnected floating dashboards.",
   ].join("\n");
 }
@@ -353,6 +355,121 @@ function ensureAccessibleSvg(
   return svg.replace(/<svg\b[^>]*>/iu, (openingTag) =>
     [openingTag, ...additions].join("\n"),
   );
+}
+
+function enforceThemeableIconSvg(
+  svg: string,
+  input: z.infer<typeof inputSchema>,
+): string {
+  if (!isIconAsset(input)) {
+    return svg;
+  }
+
+  return addIconRootDefaults(
+    addStrokeToUnstyledIconPaths(
+      svg
+        .replace(/\bstroke\s*:\s*#[0-9a-f]{3,8}\b/giu, "stroke:currentColor")
+        .replace(/\bstroke\s*=\s*(["'])#[0-9a-f]{3,8}\b\1/giu, 'stroke="currentColor"')
+        .replace(/\bfill\s*:\s*url\([^)]*\)/giu, "fill:none")
+        .replace(/\bfill\s*=\s*(["'])url\([^)]*\)\1/giu, 'fill="none"')
+        .replace(/\bfill\s*:\s*(#[0-9a-f]{3,8})\b/giu, (_, color: string) =>
+          isAccentColor(color) ? "fill:#7170ff" : "fill:none",
+        )
+        .replace(/\bfill\s*=\s*(["'])(#[0-9a-f]{3,8})\b\1/giu, (_, quote: string, color: string) =>
+          isAccentColor(color) ? `fill=${quote}#7170ff${quote}` : `fill=${quote}none${quote}`,
+        ),
+    ),
+  );
+}
+
+function isIconAsset(input: z.infer<typeof inputSchema>): boolean {
+  const targetViewBox = parseTargetViewBox(input.dimensions);
+  const isSmallViewBox =
+    targetViewBox !== undefined &&
+    targetViewBox.width <= 64 &&
+    targetViewBox.height <= 64;
+
+  return /\bicon\b/iu.test(input.assetType) || isSmallViewBox;
+}
+
+function addIconRootDefaults(svg: string): string {
+  return svg.replace(/<svg\b([^>]*)>/iu, (openingTag: string, attributes: string) => {
+    const withFill = /\sfill\s*=/iu.test(attributes)
+      ? openingTag
+      : openingTag.replace(/>$/u, ' fill="none">');
+    return /\scolor\s*=/iu.test(attributes)
+      ? withFill
+      : withFill.replace(/>$/u, ' color="currentColor">');
+  });
+}
+
+function addStrokeToUnstyledIconPaths(svg: string): string {
+  return svg.replace(/<path\b([^>]*)>/giu, (tag: string, attributes: string) => {
+    const hasVisualStyle = /\s(class|fill|stroke)\s*=/iu.test(attributes);
+    if (hasVisualStyle) {
+      return tag;
+    }
+
+    return tag.replace(
+      /<path\b/iu,
+      '<path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"',
+    );
+  });
+}
+
+function isAccentColor(color: string): boolean {
+  const rgb = parseHexColor(color);
+  if (!rgb) {
+    return false;
+  }
+
+  const linearAccent = { blue: 255, green: 112, red: 113 };
+  const distance = Math.hypot(
+    rgb.red - linearAccent.red,
+    rgb.green - linearAccent.green,
+    rgb.blue - linearAccent.blue,
+  );
+
+  return distance <= 90;
+}
+
+function parseHexColor(
+  color: string,
+): { blue: number; green: number; red: number } | undefined {
+  const normalized = color.replace(/^#/u, "");
+  if (normalized.length === 3) {
+    const [red, green, blue] = normalized.split("").map((part) => part + part);
+    return parseRgbComponents(red, green, blue);
+  }
+
+  if (normalized.length === 6 || normalized.length === 8) {
+    return parseRgbComponents(
+      normalized.slice(0, 2),
+      normalized.slice(2, 4),
+      normalized.slice(4, 6),
+    );
+  }
+
+  return undefined;
+}
+
+function parseRgbComponents(
+  redHex: string | undefined,
+  greenHex: string | undefined,
+  blueHex: string | undefined,
+): { blue: number; green: number; red: number } | undefined {
+  if (!redHex || !greenHex || !blueHex) {
+    return undefined;
+  }
+
+  const red = Number.parseInt(redHex, 16);
+  const green = Number.parseInt(greenHex, 16);
+  const blue = Number.parseInt(blueHex, 16);
+  if (![red, green, blue].every(Number.isFinite)) {
+    return undefined;
+  }
+
+  return { blue, green, red };
 }
 
 function svgTitle(filename: string): string {
