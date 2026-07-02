@@ -1353,7 +1353,7 @@ export const generatedRegistryItems = {
         "path": "agent/sandbox.ts",
         "type": "registry:file",
         "target": "~/agent/sandbox.ts",
-        "content": "import { defineSandbox } from \"eve/sandbox\";\nimport { vercel } from \"eve/sandbox/vercel\";\n\nexport default defineSandbox({\n  backend: vercel({\n    runtime: \"node24\",\n    resources: {\n      vcpus: 2,\n    },\n  }),\n});\n"
+        "content": "import { defineSandbox } from \"eve/sandbox\";\nimport { vercel } from \"eve/sandbox/vercel\";\n\nexport default defineSandbox({\n  backend: vercel({\n    resources: {\n      vcpus: 2,\n    },\n  }),\n});\n"
       },
       {
         "path": "agent/tools/bash.ts",
