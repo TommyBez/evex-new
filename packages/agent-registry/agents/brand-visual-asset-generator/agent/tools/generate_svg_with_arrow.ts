@@ -1,7 +1,7 @@
+import { createGateway, generateImage, NoImageGeneratedError } from "ai";
 import { defineTool } from "eve/tools";
 import { z } from "zod";
 
-const AI_GATEWAY_IMAGE_URL = "https://ai-gateway.vercel.sh/v1/images/generations";
 const ARROW_MODEL = "quiverai/arrow-1.1";
 const RESPONSE_PREVIEW_LENGTH = 1200;
 
@@ -22,17 +22,6 @@ const inputSchema = z.object({
     .string()
     .min(1)
     .describe("Intended dimensions or viewBox, for example 1200x720 or 0 0 64 64."),
-});
-
-const imageGenerationResponseSchema = z.object({
-  data: z
-    .array(
-      z.object({
-        b64_json: z.string().min(1).optional(),
-        revised_prompt: z.string().optional(),
-      }),
-    )
-    .min(1),
 });
 
 type GenerateSvgOutput =
@@ -71,63 +60,17 @@ export default defineTool({
     }
 
     const prompt = buildPrompt(input);
-    const response = await fetch(AI_GATEWAY_IMAGE_URL, {
-      method: "POST",
-      headers: {
-        authorization: `Bearer ${credential}`,
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({
-        model: ARROW_MODEL,
-        prompt,
-        n: 1,
-        response_format: "b64_json",
-        providerOptions: {
-          quiverai: {
-            operation: "generate",
-            instructions:
-              "Return a complete SVG document only. The SVG must be editable markup, not raster data.",
-            maxOutputTokens: 6000,
-            temperature: 0.45,
-            topP: 0.9,
-          },
-        },
-      }),
-    });
-
-    const responseText = await response.text();
-    if (!response.ok) {
+    const generatedSvg = await generateSvgWithGateway(credential, prompt);
+    if (!generatedSvg.ok) {
       return {
         ok: false,
         filename: input.filename,
-        error: "Quiver Arrow SVG generation failed through AI Gateway.",
-        status: response.status,
-        responsePreview: preview(responseText),
+        error: generatedSvg.error,
+        responsePreview: generatedSvg.responsePreview,
       };
     }
 
-    const parsedJson = parseJson(responseText);
-    const parsedResponse = imageGenerationResponseSchema.safeParse(parsedJson);
-    if (!parsedResponse.success) {
-      return {
-        ok: false,
-        filename: input.filename,
-        error: "AI Gateway returned an unexpected image-generation response.",
-        responsePreview: preview(responseText),
-      };
-    }
-
-    const firstImage = parsedResponse.data.data[0];
-    if (!firstImage.b64_json) {
-      return {
-        ok: false,
-        filename: input.filename,
-        error: "AI Gateway did not return base64 SVG data.",
-        responsePreview: preview(responseText),
-      };
-    }
-
-    const rawSvg = decodeSvg(firstImage.b64_json);
+    const rawSvg = generatedSvg.svg;
     if (!looksLikeSvg(rawSvg)) {
       return {
         ok: false,
@@ -156,7 +99,6 @@ export default defineTool({
       mediaType: "image/svg+xml",
       byteLength: Buffer.byteLength(svg, "utf8"),
       svg,
-      revisedPrompt: firstImage.revised_prompt,
     };
   },
   toModelOutput(output) {
@@ -192,17 +134,55 @@ function buildPrompt(input: z.infer<typeof inputSchema>): string {
   ].join("\n");
 }
 
-function parseJson(value: string): unknown {
+async function generateSvgWithGateway(
+  credential: string,
+  prompt: string,
+): Promise<{ ok: true; svg: string } | { error: string; ok: false; responsePreview?: string }> {
   try {
-    return JSON.parse(value);
-  } catch {
-    return undefined;
+    const gateway = createGateway({ apiKey: credential });
+    const { image } = await generateImage({
+      model: gateway.imageModel(ARROW_MODEL),
+      prompt,
+      n: 1,
+      providerOptions: {
+        quiverai: {
+          operation: "generate",
+          instructions:
+            "Return a complete SVG document only. The SVG must be editable markup, not raster data.",
+          maxOutputTokens: 6000,
+          temperature: 0.45,
+          topP: 0.9,
+        },
+      },
+    });
+
+    return {
+      ok: true,
+      svg: new TextDecoder().decode(image.uint8Array).trim(),
+    };
+  } catch (error) {
+    if (NoImageGeneratedError.isInstance(error)) {
+      return {
+        ok: false,
+        error: "AI Gateway did not return SVG image data.",
+        responsePreview: preview(String(error.cause ?? error.message)),
+      };
+    }
+
+    return {
+      ok: false,
+      error: "Quiver Arrow SVG generation failed through AI Gateway.",
+      responsePreview: preview(errorMessage(error)),
+    };
   }
 }
 
-function decodeSvg(encoded: string): string {
-  const base64 = encoded.includes(",") ? encoded.split(",").at(-1) ?? "" : encoded;
-  return Buffer.from(base64, "base64").toString("utf8").trim();
+function errorMessage(error: unknown): string {
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  return String(error);
 }
 
 function looksLikeSvg(value: string): boolean {

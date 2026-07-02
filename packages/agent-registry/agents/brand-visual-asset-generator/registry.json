@@ -10,6 +10,7 @@
         "marketing"
       ],
       "dependencies": [
+        "ai@^7.0.11",
         "eve@^0.15.1",
         "zod@^4.4.3"
       ],
