@@ -10,7 +10,7 @@
         "general"
       ],
       "dependencies": [
-        "eve@^0.15.1",
+        "eve@^0.18.2",
         "parallel-web@^1.1.0",
         "zod@4.3.6"
       ],
@@ -109,6 +109,11 @@
           "path": "evals/evals.config.ts",
           "type": "registry:file",
           "target": "~/evals/evals.config.ts"
+        },
+        {
+          "path": "evals/failed-create-no-retry.eval.ts",
+          "type": "registry:file",
+          "target": "~/evals/failed-create-no-retry.eval.ts"
         },
         {
           "path": "evals/missing-config-does-not-create.eval.ts",

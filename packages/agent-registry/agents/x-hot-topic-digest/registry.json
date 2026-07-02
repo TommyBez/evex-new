@@ -10,7 +10,7 @@
         "research"
       ],
       "dependencies": [
-        "eve@^0.15.1",
+        "eve@^0.18.2",
         "parallel-web@^1.1.0",
         "resend@^6.14.0",
         "zod@4.3.6"
@@ -75,6 +75,11 @@
           "path": "evals/evals.config.ts",
           "type": "registry:file",
           "target": "~/evals/evals.config.ts"
+        },
+        {
+          "path": "evals/failed-send-not-delivered.eval.ts",
+          "type": "registry:file",
+          "target": "~/evals/failed-send-not-delivered.eval.ts"
         },
         {
           "path": "evals/hot-topic-digest.eval.ts",

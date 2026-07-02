@@ -12,7 +12,7 @@
       "dependencies": [
         "@upstash/ratelimit@^2.0.8",
         "@upstash/redis@^1.38.0",
-        "eve@^0.15.1",
+        "eve@^0.18.2",
         "zod@4.3.6"
       ],
       "files": [
@@ -60,6 +60,11 @@
           "path": "evals/evals.config.ts",
           "type": "registry:file",
           "target": "~/evals/evals.config.ts"
+        },
+        {
+          "path": "evals/pr-review-input-contract.eval.ts",
+          "type": "registry:file",
+          "target": "~/evals/pr-review-input-contract.eval.ts"
         },
         {
           "path": "evals/pr-review-no-findings.eval.ts",

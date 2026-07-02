@@ -10,7 +10,7 @@
         "marketing"
       ],
       "dependencies": [
-        "eve@^0.15.1"
+        "eve@^0.18.2"
       ],
       "files": [
         {
@@ -67,6 +67,21 @@
           "path": "agent/skills/seo-audit/SKILL.md",
           "type": "registry:file",
           "target": "~/agent/skills/seo-audit/SKILL.md"
+        },
+        {
+          "path": "evals/evals.config.ts",
+          "type": "registry:file",
+          "target": "~/evals/evals.config.ts"
+        },
+        {
+          "path": "evals/missing-domain-asks.eval.ts",
+          "type": "registry:file",
+          "target": "~/evals/missing-domain-asks.eval.ts"
+        },
+        {
+          "path": "evals/page-structure-contract.eval.ts",
+          "type": "registry:file",
+          "target": "~/evals/page-structure-contract.eval.ts"
         },
         {
           "path": "README.md",

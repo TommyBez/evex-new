@@ -11,7 +11,7 @@
       ],
       "dependencies": [
         "@vercel/connect@^0.2.6",
-        "eve@^0.15.1"
+        "eve@^0.18.2"
       ],
       "files": [
         {
@@ -123,6 +123,21 @@
           "path": "agent/skills/triage/SKILL.md",
           "type": "registry:file",
           "target": "~/agent/skills/triage/SKILL.md"
+        },
+        {
+          "path": "evals/evals.config.ts",
+          "type": "registry:file",
+          "target": "~/evals/evals.config.ts"
+        },
+        {
+          "path": "evals/triage-proposes-without-writing.eval.ts",
+          "type": "registry:file",
+          "target": "~/evals/triage-proposes-without-writing.eval.ts"
+        },
+        {
+          "path": "evals/unconfigured-initiative-no-update.eval.ts",
+          "type": "registry:file",
+          "target": "~/evals/unconfigured-initiative-no-update.eval.ts"
         },
         {
           "path": "README.md",
