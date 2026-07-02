@@ -53,3 +53,13 @@ Run the pack through the scorecard before accepting it.
 `references/scorecard.md`; any asset that is ugly, generic, off-palette,
 visually incoherent, or scores 8 or below is regenerated individually with a
 tighter brief, not the whole pack unless the brand profile changed.
+
+## 6. Deliver the SVGs
+
+Return the actual final SVG markup for every accepted asset. Put each asset under
+a Markdown heading that includes the filename, followed by exactly one fenced
+`svg` block containing only that asset's SVG markup.
+
+**Done when:** the final answer contains one fenced `svg` block per accepted
+asset. A summary that says the pack is complete but omits the SVG blocks is a
+failed delivery and must be corrected before finishing.
