@@ -146,7 +146,7 @@ export default defineTool({
       };
     }
 
-    const svg = ensureAccessibleSvg(rawSvg, input);
+    const svg = ensureAccessibleSvg(normalizeViewBox(rawSvg, input), input);
     return {
       ok: true,
       filename: input.filename,
@@ -209,6 +209,127 @@ function looksLikeSvg(value: string): boolean {
 
 function hasViewBox(value: string): boolean {
   return /\sviewBox\s*=/iu.test(value);
+}
+
+type ViewBox = {
+  height: number;
+  minX: number;
+  minY: number;
+  width: number;
+};
+
+function normalizeViewBox(
+  svg: string,
+  input: z.infer<typeof inputSchema>,
+): string {
+  const targetViewBox = parseTargetViewBox(input.dimensions);
+  const sourceViewBox = parseSvgViewBox(svg);
+
+  if (!targetViewBox || !sourceViewBox || sameViewBox(sourceViewBox, targetViewBox)) {
+    return svg;
+  }
+
+  const innerSvg = extractInnerSvg(svg);
+  if (!innerSvg) {
+    return svg;
+  }
+
+  const scale = Math.min(
+    targetViewBox.width / sourceViewBox.width,
+    targetViewBox.height / sourceViewBox.height,
+  );
+  const scaledWidth = sourceViewBox.width * scale;
+  const scaledHeight = sourceViewBox.height * scale;
+  const translateX =
+    targetViewBox.minX +
+    (targetViewBox.width - scaledWidth) / 2 -
+    sourceViewBox.minX * scale;
+  const translateY =
+    targetViewBox.minY +
+    (targetViewBox.height - scaledHeight) / 2 -
+    sourceViewBox.minY * scale;
+  const transform = `translate(${formatNumber(translateX)} ${formatNumber(translateY)}) scale(${formatNumber(scale)})`;
+  const outerTag = buildSvgOpeningTag(svg, targetViewBox);
+
+  return `${outerTag}\n<g id="arrow-generated-artwork" transform="${transform}">\n${innerSvg.trim()}\n</g>\n</svg>`;
+}
+
+function parseTargetViewBox(value: string): ViewBox | undefined {
+  const viewBoxParts = value
+    .trim()
+    .split(/\s+/u)
+    .map((part) => Number(part));
+
+  if (viewBoxParts.length === 4 && viewBoxParts.every(Number.isFinite)) {
+    const [minX, minY, width, height] = viewBoxParts;
+    if (width > 0 && height > 0) {
+      return { height, minX, minY, width };
+    }
+  }
+
+  const sizeMatch = /^(?<width>\d+(?:\.\d+)?)x(?<height>\d+(?:\.\d+)?)$/iu.exec(
+    value.trim(),
+  );
+  if (!sizeMatch?.groups) {
+    return undefined;
+  }
+
+  const width = Number(sizeMatch.groups.width);
+  const height = Number(sizeMatch.groups.height);
+  if (!(width > 0 && height > 0)) {
+    return undefined;
+  }
+
+  return { height, minX: 0, minY: 0, width };
+}
+
+function parseSvgViewBox(svg: string): ViewBox | undefined {
+  const match = /\sviewBox\s*=\s*["']([^"']+)["']/iu.exec(svg);
+  if (!match?.[1]) {
+    return undefined;
+  }
+
+  return parseTargetViewBox(match[1]);
+}
+
+function sameViewBox(left: ViewBox, right: ViewBox): boolean {
+  return (
+    left.minX === right.minX &&
+    left.minY === right.minY &&
+    left.width === right.width &&
+    left.height === right.height
+  );
+}
+
+function extractInnerSvg(svg: string): string | undefined {
+  const match = /<svg\b[^>]*>([\s\S]*?)<\/svg>/iu.exec(svg);
+  return match?.[1];
+}
+
+function buildSvgOpeningTag(svg: string, viewBox: ViewBox): string {
+  const openingMatch = /<svg\b[^>]*>/iu.exec(svg);
+  const openingTag = openingMatch?.[0] ?? '<svg xmlns="http://www.w3.org/2000/svg">';
+  const withoutSizing = openingTag
+    .replace(/\sviewBox\s*=\s*["'][^"']*["']/iu, "")
+    .replace(/\s(width|height)\s*=\s*["'][^"']*["']/giu, "");
+
+  return withoutSizing.replace(
+    /<svg\b/iu,
+    `<svg viewBox="${formatViewBox(viewBox)}"`,
+  );
+}
+
+function formatViewBox(viewBox: ViewBox): string {
+  return [
+    formatNumber(viewBox.minX),
+    formatNumber(viewBox.minY),
+    formatNumber(viewBox.width),
+    formatNumber(viewBox.height),
+  ].join(" ");
+}
+
+function formatNumber(value: number): string {
+  return Number(value.toFixed(4)).toString();
 }
 
 function ensureAccessibleSvg(
