@@ -28,6 +28,8 @@ export interface LearnExample {
 
 export interface LearnPage {
   cluster: LearnClusterId
+  dateModified: string
+  datePublished: string
   decisionRows: readonly LearnDecisionRow[]
   description: string
   examples: readonly LearnExample[]
@@ -82,6 +84,8 @@ export const LEARN_PAGES: readonly LearnPage[] = [
     description:
       'A practical guide to MCP servers for agent builders: tools, resources, prompts, permissions, and where MCP stops.',
     cluster: 'protocols',
+    datePublished: '2026-07-01',
+    dateModified: '2026-07-01',
     primaryKeyword: 'mcp server',
     relatedKeywords: ['model context protocol', 'mcp tools', 'mcp server ai'],
     summary:
@@ -188,6 +192,8 @@ export const LEARN_PAGES: readonly LearnPage[] = [
     description:
       'How to decide when a workflow should be agentic, deterministic, or a hybrid of both.',
     cluster: 'agent-engineering',
+    datePublished: '2026-07-01',
+    dateModified: '2026-07-01',
     primaryKeyword: 'agentic workflow',
     relatedKeywords: ['ai agent workflow', 'agentic workflows', 'ai workflows'],
     summary:
@@ -280,6 +286,8 @@ export const LEARN_PAGES: readonly LearnPage[] = [
     description:
       'A practical checklist for comparing LangGraph, CrewAI, AutoGen-style systems, Eve, and other agent frameworks.',
     cluster: 'comparisons',
+    datePublished: '2026-07-01',
+    dateModified: '2026-07-01',
     primaryKeyword: 'ai agent frameworks',
     relatedKeywords: ['ai agent framework', 'best ai agent framework'],
     summary:
@@ -393,6 +401,8 @@ export const LEARN_PAGES: readonly LearnPage[] = [
     description:
       'How to design agent tools with narrow authority, typed inputs, clear descriptions, and observable results.',
     cluster: 'agent-engineering',
+    datePublished: '2026-07-01',
+    dateModified: '2026-07-01',
     primaryKeyword: 'ai agent tools',
     relatedKeywords: ['agent tools', 'llm tools', 'tool calling'],
     summary:
@@ -488,6 +498,8 @@ export const LEARN_PAGES: readonly LearnPage[] = [
     description:
       'A grounded distinction between MCP servers, tools, resources, prompts, and skills for teams extending AI agents.',
     cluster: 'protocols',
+    datePublished: '2026-07-01',
+    dateModified: '2026-07-01',
     primaryKeyword: 'mcp vs skills',
     relatedKeywords: ['model context protocol', 'ai skills', 'mcp tools'],
     summary:
@@ -581,6 +593,8 @@ export const LEARN_PAGES: readonly LearnPage[] = [
     description:
       'What an AI agent registry must expose before developers can reuse agents safely.',
     cluster: 'distribution',
+    datePublished: '2026-07-01',
+    dateModified: '2026-07-01',
     primaryKeyword: 'agent registry',
     relatedKeywords: [
       'ai agent registry',
@@ -683,6 +697,8 @@ export const LEARN_PAGES: readonly LearnPage[] = [
     description:
       'How the shadcn registry model applies to AI agent workflows, where users need source files rather than opaque packages.',
     cluster: 'distribution',
+    datePublished: '2026-07-01',
+    dateModified: '2026-07-01',
     primaryKeyword: 'shadcn registry',
     relatedKeywords: [
       'custom shadcn registry',
@@ -781,6 +797,8 @@ export const LEARN_PAGES: readonly LearnPage[] = [
     description:
       'A builder-focused comparison of LangGraph and CrewAI, with Eve as a file-based reference point.',
     cluster: 'comparisons',
+    datePublished: '2026-07-01',
+    dateModified: '2026-07-01',
     primaryKeyword: 'langgraph vs crewai',
     relatedKeywords: [
       'langgraph alternatives',

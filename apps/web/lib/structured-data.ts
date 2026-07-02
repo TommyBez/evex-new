@@ -184,8 +184,8 @@ export function createLearnArticleSchema(page: LearnPage): JsonLdObject {
     description: page.description,
     url,
     mainEntityOfPage: url,
-    datePublished: '2026-07-01',
-    dateModified: '2026-07-01',
+    datePublished: page.datePublished,
+    dateModified: page.dateModified,
     author: {
       '@type': 'Organization',
       name: siteConfig.name,
