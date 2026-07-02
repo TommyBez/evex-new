@@ -1,6 +1,6 @@
 # Quality bar
 
-Reject subagent output — regenerate the individual asset — when any of these fail:
+Reject tool output and regenerate the individual asset when any of these fail:
 
 - Not valid SVG markup
 - Raster embed without an approved logo URL from brand data
@@ -13,5 +13,8 @@ Reject subagent output — regenerate the individual asset — when any of these
 - Hardcoded brand colors in icons that should use `currentColor`
 - Repeated primitive filler that could be a pattern, symbol, or omitted entirely
 - A generic SaaS cliché when the brief asked for brand-specific visual direction
+- Sloppy overlaps, clipped shapes, abrupt path endpoints, or messy crossings
+- Badge text that is not optically centered
+- Icons that are muddy at 24px or fail when mentally scaled to 16px
 
 Also check `references/consistency.md` before accepting the full pack.

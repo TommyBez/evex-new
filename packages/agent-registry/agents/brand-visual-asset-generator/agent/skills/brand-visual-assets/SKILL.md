@@ -20,7 +20,7 @@ pack unless they named specific types or channels.
 
 ## 2. Lock the brand profile
 
-Capture the palette and tone the pack will obey — from Context.dev output or the
+Capture the palette and tone the pack will obey from Context.dev output or the
 user's explicit brand profile.
 
 **Done when:** primary and secondary hex colors, neutral/background tones,
@@ -29,25 +29,27 @@ adjectives are all recorded before any brief is written.
 
 ## 3. Write a brief per asset
 
-For each pack slot, compose one self-contained **brief** for `svg-generator`.
+For each pack slot, compose one self-contained **brief** for
+`generate_svg_with_arrow`.
 
 **Done when:** every slot has a brief containing every field in
 `references/brief-template.md`.
 
-## 4. Delegate
+## 4. Generate
 
-Call `svg-generator` once per brief. Pass the full brief in `message`; the
-subagent does not see parent history.
+Call `generate_svg_with_arrow` once per brief. Pass the full brief, asset type,
+filename, and dimensions.
 
-**Done when:** every brief has a matching `svg-generator` call; independent assets
-(for example three icons) are delegated in parallel when possible.
+**Done when:** every brief has a matching tool result with `ok: true` and SVG
+markup. If the tool reports missing AI Gateway credentials or an upstream model
+error, stop and report the configuration failure instead of inventing SVGs.
 
-## 5. Review taste and drift
+## 5. Score the pack
 
-Compare returned SVGs against the locked brand profile, pack consistency rules,
-and the visual taste bar.
+Run the pack through the scorecard before accepting it.
 
 **Done when:** every asset passes `references/quality-bar.md`,
-`references/consistency.md`, and `references/visual-taste.md`; any asset that is
-ugly, generic, off-palette, or visually incoherent is regenerated individually
-with a tighter brief — not the whole pack unless the brand profile changed.
+`references/consistency.md`, `references/visual-taste.md`, and scores above 8 on
+`references/scorecard.md`; any asset that is ugly, generic, off-palette,
+visually incoherent, or scores 8 or below is regenerated individually with a
+tighter brief, not the whole pack unless the brand profile changed.

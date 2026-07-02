@@ -5,12 +5,13 @@
       "name": "brand-visual-asset-generator",
       "type": "registry:item",
       "title": "Brand Visual Asset Generator",
-      "description": "Generate brand-aligned SVG asset packs for SaaS products using Context.dev brand extraction and a Quiver Arrow SVG subagent.",
+      "description": "Generate brand-aligned SVG asset packs for SaaS products using Context.dev brand extraction and a Quiver Arrow SVG tool.",
       "categories": [
         "marketing"
       ],
       "dependencies": [
-        "eve@^0.15.1"
+        "eve@^0.15.1",
+        "zod@^4.4.3"
       ],
       "files": [
         {
@@ -27,6 +28,11 @@
           "path": "agent/instructions.md",
           "type": "registry:file",
           "target": "~/agent/instructions.md"
+        },
+        {
+          "path": "agent/tools/generate_svg_with_arrow.ts",
+          "type": "registry:file",
+          "target": "~/agent/tools/generate_svg_with_arrow.ts"
         },
         {
           "path": "agent/skills/brand-visual-assets/references/brief-template.md",
@@ -49,6 +55,11 @@
           "target": "~/agent/skills/brand-visual-assets/references/quality-bar.md"
         },
         {
+          "path": "agent/skills/brand-visual-assets/references/scorecard.md",
+          "type": "registry:file",
+          "target": "~/agent/skills/brand-visual-assets/references/scorecard.md"
+        },
+        {
           "path": "agent/skills/brand-visual-assets/references/visual-taste.md",
           "type": "registry:file",
           "target": "~/agent/skills/brand-visual-assets/references/visual-taste.md"
@@ -57,16 +68,6 @@
           "path": "agent/skills/brand-visual-assets/SKILL.md",
           "type": "registry:file",
           "target": "~/agent/skills/brand-visual-assets/SKILL.md"
-        },
-        {
-          "path": "agent/subagents/svg-generator/agent.ts",
-          "type": "registry:file",
-          "target": "~/agent/subagents/svg-generator/agent.ts"
-        },
-        {
-          "path": "agent/subagents/svg-generator/instructions.md",
-          "type": "registry:file",
-          "target": "~/agent/subagents/svg-generator/instructions.md"
         },
         {
           "path": "README.md",
@@ -83,7 +84,7 @@
         "slug": "brand-visual-asset-generator",
         "category": "marketing",
         "createdAt": "2026-07-01T21:16:30.433Z",
-        "updatedAt": "2026-07-02T03:38:00.000Z"
+        "updatedAt": "2026-07-02T04:38:00.000Z"
       },
       "author": "TommyBez"
     }

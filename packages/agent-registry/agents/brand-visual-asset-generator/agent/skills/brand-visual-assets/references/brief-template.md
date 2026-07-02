@@ -1,6 +1,6 @@
 # Per-asset brief template
 
-Include every field in each `svg-generator` message:
+Include every field in each `generate_svg_with_arrow` brief:
 
 | Field | Value |
 | --- | --- |
@@ -17,5 +17,5 @@ Include every field in each `svg-generator` message:
 
 Every brief must include at least one negative constraint, such as "avoid generic
 globe/network art", "avoid repeated decorative dot grids", or "avoid stock SaaS
-dashboard cards". Negative constraints prevent the SVG subagent from falling back
+dashboard cards". Negative constraints prevent the SVG tool from falling back
 to obvious visual clichés.

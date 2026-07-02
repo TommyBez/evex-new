@@ -3,6 +3,8 @@
 Apply across every asset in the run:
 
 - Reuse the same stroke-width scale and corner-radius family across icons.
+- Keep the hero and icons close in line weight: icons may be bolder for legibility,
+  but they must not feel chunky next to hairline hero art.
 - Limit palette to brand primaries plus one accent and neutrals.
 - Keep character or device metaphors consistent between hero, onboarding, and empty
   states.

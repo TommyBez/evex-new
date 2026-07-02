@@ -13,11 +13,15 @@ without purpose.
 - Simple reusable structures: `<symbol>`, `<pattern>`, or grouped motifs instead
   of dozens of copied primitives
 - Icons that read at 16px and feel crisp at 24px
+- Integrated compositions where interface, data, and product metaphors interact
+  as one scene
 
 ## Avoid
 
 - Generic fintech globes, random network nodes, stock dashboard cards, and
   floating rectangles unless the brief explicitly asks for them
+- Split scenes where a literal UI wireframe sits beside unrelated abstract lines
+  or floating nodes
 - Decorative dot grids that do not support the composition
 - Centered "everything connected to everything" layouts
 - Gradients, shadows, or glows used to compensate for weak composition
